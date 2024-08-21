@@ -22,6 +22,8 @@ public class PlayerAnimationController : MonoBehaviour
     public bool isMoving = false;
     private Vector3 targetPosition;
 
+    private bool stopMoving = false;
+
     private void Awake()
     {
         playerController = transform.gameObject.GetComponent<PlayerController>();
@@ -100,6 +102,7 @@ public class PlayerAnimationController : MonoBehaviour
 
     private IEnumerator MoveToPositionCoroutine(Vector3 targetPos, float speed)
     {
+        stopMoving = false;
         lastInputVector = targetPos;
         while (Vector3.Distance(transform.position, targetPos) > 0.1f)
         {
@@ -137,6 +140,16 @@ public class PlayerAnimationController : MonoBehaviour
             animator.SetBool("isMove", false);
         }
     }*/
+
+    public void StopMovingCoroutine()
+    {
+        stopMoving = true;
+        if (moveCoroutine != null)
+        {
+            StopCoroutine(moveCoroutine);
+            moveCoroutine = null;
+        }
+    }
 
     public void StopAllCoroutines()
     {

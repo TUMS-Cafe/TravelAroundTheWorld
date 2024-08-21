@@ -135,6 +135,7 @@ public class PlayerController : MonoBehaviour
         canMove = false;
         inputVector = Vector2.zero;
         playerAnimationController.SetMoveDirection(Vector2.zero);
+        playerAnimationController.StopMovingCoroutine(); 
         gameObject.GetComponent<Rigidbody2D>().velocity = Vector2.zero;
         currentTargetClick.SetActive(false);
         currentTargetClickAnimator.SetBool("isTargeted", false);
@@ -150,6 +151,7 @@ public class PlayerController : MonoBehaviour
     {
         isColliding = true;
         StopMove();
+        //마우스 클릭으로 설정해놓은 MoveToPosition 함수 
     }
 
     public void ColliderEnd()
