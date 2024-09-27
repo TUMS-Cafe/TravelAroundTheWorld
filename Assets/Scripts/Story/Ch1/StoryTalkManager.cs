@@ -106,57 +106,58 @@ public class StoryTalkManager : MonoBehaviour
         }
     }
 
-    // CSV 데이터를 읽어와 StoryDialogueNode 생성
+    void Update()
+    {
+        // 마우스 왼쪽 버튼 클릭 시
+        if (Input.GetMouseButtonDown(0))
+        {
+            // 현재 노드의 ID를 가져와서 전달
+            int currentNodeId = dialogueTree.currentNode.nodeId; // 예시: 현재 노드의 ID를 가져옴
+            HandleDialogueProgression(currentNodeId); // 매개변수로 currentNodeId를 전달
+        }
+    }
+
     void LoadDialogueFromCSV()
     {
+        // CSV 파일을 읽어옴
         List<Dictionary<string, object>> data_Dialog = Ch0CSVReader.Read("Travel Around The World - CH1 (1)");
 
-        // 첫 번째 줄은 헤더이므로 무시
         bool isFirstRow = true;
 
         foreach (var row in data_Dialog)
         {
-            // 첫 번째 줄은 컬럼명 헤더이므로 스킵
             if (isFirstRow)
             {
                 isFirstRow = false;
                 continue;
             }
 
-            // "일자"에서 숫자만 추출
             string dayString = row["일자"].ToString();
             int day = int.Parse(System.Text.RegularExpressions.Regex.Match(dayString, @"\d+").Value);
 
-            // NodeID와 NextNodeID가 숫자가 아닌 경우 스킵
-            int nodeId;
-            if (!int.TryParse(row["NodeID"].ToString(), out nodeId))
-            {
-                Debug.LogWarning($"NodeID가 잘못되었거나 숫자가 아님: {row["NodeID"]}. 항목을 건너뜁니다.");
-                continue; // 잘못된 NodeID가 있으면 건너뜁니다.
-            }
+            int nodeId=0;
+            int nextNodeId=0;
 
-            int nextNodeId;
-            if (!int.TryParse(row["NextNodeID"].ToString(), out nextNodeId))
-            {
-                Debug.LogWarning($"NextNodeID가 잘못되었거나 숫자가 아님: {row["NextNodeID"]}. 항목을 건너뜁니다.");
-                continue; // 잘못된 NextNodeID가 있으면 건너뜁니다.
-            }
+            string placeTag = row["placeTag"].ToString();
+            string dayTag = row["DayTag"].ToString(); 
 
-            // StoryDialogue 객체 생성
             StoryDialogue dialogue = new StoryDialogue(
                 day,
-                row["장소"].ToString(),
-                row["인물"].ToString(),
-                row["대사"].ToString(),
-                row["화면"].ToString(),
-                row["배경음악"].ToString(),
-                row["표정"].ToString(),
-                row["비고"].ToString(),
-                row["퀘스트"].ToString(),
-                row["퀘스트 내용"].ToString()
+                row["장소"].ToString(),              // location
+                row["인물"].ToString(),              // speaker
+                row["대사"].ToString(),              // line
+                row["화면"].ToString(),              // screenEffect
+                row["배경음악"].ToString(),          // backgroundMusic
+                row["표정"].ToString(),              // expression
+                row["비고"].ToString(),              // note
+                row["퀘스트"].ToString(),            // quest
+                row["퀘스트 내용"].ToString(),       // questContent
+                nodeId,                              // NodeID
+                nextNodeId,                          // NextNodeID
+                placeTag,                            // PlaceTag
+                dayTag                               // DayTag
             );
 
-            // StoryDialogueNode 생성 및 딕셔너리에 저장
             StoryDialogueNode node = new StoryDialogueNode(dialogue, nodeId, row["장소"].ToString());
             dialogueNodes[nodeId] = node;
         }
