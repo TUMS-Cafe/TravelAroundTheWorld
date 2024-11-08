@@ -7,6 +7,7 @@ public class UIManager : MonoBehaviour
 {
     public static UIManager Instance { get; private set; }
 
+    //필요한 UI 리스트
     public GameObject inventoryUIPrefab;
     public GameObject settingUIPrefab;
     public GameObject mapUIPrefab;
@@ -14,12 +15,17 @@ public class UIManager : MonoBehaviour
     public GameObject saveDataUIPrefab;
     public GameObject saveDataPopupPrefab;
     public GameObject bedInteractionUIPrefab;
-    public GameObject diaryInteractionUIPrefab;
+    public GameObject diaryUIPrefab;
     public GameObject groupUIPrefab;
+    public GameObject questionGroupUIPrefab;
+    //public GameObject saveUIPrefab;
 
     private Dictionary<string, GameObject> uiInstances = new Dictionary<string, GameObject>();
-    private Canvas canvas;
+    private Canvas staticUICanvas;
+    private Canvas dynamicUICanvas;
     private string currentActiveUI = null;
+    private Stack<string> activeUIStack = new Stack<string>();
+
 
     // 제외할 씬 리스트
     private readonly List<string> excludedScenes = new List<string>
@@ -30,6 +36,8 @@ public class UIManager : MonoBehaviour
         "CafeTutorialScene"
     };
 
+
+    //UIManager 싱글톤 적용
     private void Awake()
     {
         if (Instance == null)
@@ -45,6 +53,8 @@ public class UIManager : MonoBehaviour
         SceneManager.sceneLoaded += OnSceneLoaded;
     }
 
+
+    //씬 로드될 때 이벤트 추가
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
         if (!excludedScenes.Contains(scene.name))
@@ -57,25 +67,41 @@ public class UIManager : MonoBehaviour
         }
     }
 
+
+    //씬 로드될 때 기본 세팅
     private void SetupUIForScene()
     {
-        canvas = GameObject.Find("StaticUICanvas")?.GetComponent<Canvas>();
+        staticUICanvas = GameObject.Find("StaticUICanvas")?.GetComponent<Canvas>();
+        dynamicUICanvas = GameObject.Find("DynamicUICanvas")?.GetComponent<Canvas>();
 
-        if (canvas == null)
+        if (staticUICanvas == null || dynamicUICanvas == null)
         {
-            Debug.LogError("StaticUICanvas를 찾을 수 없습니다.");
+            Debug.LogError("UIManager can't find StaticUICanvas or DynamicUICanvas");
             return;
         }
 
-        string[] uiNames = { "Inventory", "Setting", "Map", "Load", "SaveData", "SaveDataPopup", "Bed", "Diary", "Group" };
+        //Static : 고정된 데이터
+        //Dynamic : 플레이어에 연관된 데이터
+        string[] staticUINames = {};
+        string[] dynamicUINames = {"Group","Inventory", "Map", "Load", "Bed", "Diary", "Setting", "SaveData", "SaveDataPopup", "QuestionGroup"};
 
-        foreach (var uiName in uiNames)
+
+        //Static Canvas에 필요한 UI 생성
+        foreach (var uiName in staticUINames)
         {
-            InstantiateAndDeactivateUI(uiName);
+            InstantiateAndDeactivateUI(uiName, staticUICanvas);
+        }
+
+        // Dynamic Canvas에 필요한 UI 생성
+        foreach (var uiName in dynamicUINames)
+        {
+            InstantiateAndDeactivateUI(uiName, dynamicUICanvas);
         }
     }
 
-    private void InstantiateAndDeactivateUI(string uiName)
+
+    //UI 생성 및 파괴
+    private void InstantiateAndDeactivateUI(string uiName, Canvas canvas)
     {
         if (!uiInstances.ContainsKey(uiName))
         {
@@ -90,22 +116,33 @@ public class UIManager : MonoBehaviour
         }
     }
 
+
+    //UI 활성화 및 비활성화
     public void ToggleUI(string uiName)
     {
         EnsureUIIsInitialized(uiName);
 
         if (uiInstances.ContainsKey(uiName) && uiInstances[uiName] != null)
         {
-            if (currentActiveUI == uiName)
+            if (uiInstances[uiName].activeSelf)
             {
-                DeactivateAllUI();
-                currentActiveUI = null;
+                DeactivateCurrentUI();
             }
             else
             {
-                DeactivateAllUI();
+                // 기존 UI 비활성화
+                /*if (activeUIStack.Count > 0)
+                {
+                    string lastActiveUI = activeUIStack.Pop();
+                    if (uiInstances.ContainsKey(lastActiveUI) && uiInstances[lastActiveUI] != null)
+                    {
+                        uiInstances[lastActiveUI].SetActive(false);
+                    }
+                }
+                */
+                // 새 UI 활성화
                 uiInstances[uiName].SetActive(true);
-                currentActiveUI = uiName;
+                activeUIStack.Push(uiName);
             }
         }
         else
@@ -114,15 +151,41 @@ public class UIManager : MonoBehaviour
         }
     }
 
+
+    //가장 최근에 활성화된 UI 비활성화
+    public void DeactivateCurrentUI()
+    {
+        if (activeUIStack.Count > 0)
+        {
+            string lastActiveUI = activeUIStack.Pop();
+            if (uiInstances.ContainsKey(lastActiveUI) && uiInstances[lastActiveUI] != null)
+            {
+                uiInstances[lastActiveUI].SetActive(false);
+            }
+
+            if (activeUIStack.Count > 0)
+            {
+                string previousUI = activeUIStack.Peek();
+                if (uiInstances.ContainsKey(previousUI) && uiInstances[previousUI] != null)
+                {
+                    uiInstances[previousUI].SetActive(true);
+                }
+            }
+        }
+    }
+
+
+    //UI 비활성화
     public void DeactivatedUI(string uiName)
     {
         if (uiInstances.ContainsKey(uiName) && uiInstances[uiName] != null)
         {
             uiInstances[uiName].SetActive(false);
-            currentActiveUI = null;
         }
     }
 
+
+    //모든 UI 비활성화
     private void DeactivateAllUI()
     {
         foreach (var key in uiInstances.Keys.ToList())
@@ -141,6 +204,8 @@ public class UIManager : MonoBehaviour
         currentActiveUI = null;
     }
 
+
+    //필요한 UI프리팹 가져오기
     private GameObject GetUIPrefab(string uiName)
     {
         return uiName switch
@@ -152,17 +217,22 @@ public class UIManager : MonoBehaviour
             "SaveData" => saveDataUIPrefab,
             "SaveDataPopup" => saveDataPopupPrefab,
             "Bed" => bedInteractionUIPrefab,
-            "Diary" => diaryInteractionUIPrefab,
+            "Diary" => diaryUIPrefab,
             "Group" => groupUIPrefab,
+            "QuestionGroup" => questionGroupUIPrefab,
             _ => null,
         };
     }
 
+
+    //현재 활성화된 UI 존재 여부 판단
     public bool IsUIActive()
     {
-        return currentActiveUI != null;
+        return activeUIStack.Count > 0;
     }
 
+
+    //원하는 UI 오브젝트 반환하는 함수
     public GameObject FindChildByName(GameObject parent, string childName)
     {
         if (parent == null)
@@ -176,6 +246,8 @@ public class UIManager : MonoBehaviour
         return childTransform != null ? childTransform.gameObject : null;
     }
 
+
+    //UI 활성화
     public void ActiveUI(string uiName)
     {
         EnsureUIIsInitialized(uiName);
@@ -183,29 +255,42 @@ public class UIManager : MonoBehaviour
         if (uiInstances.ContainsKey(uiName) && uiInstances[uiName] != null)
         {
             uiInstances[uiName].SetActive(true);
-            currentActiveUI = uiName;
+            activeUIStack.Push(uiName);
         }
     }
 
-    // canvas, UI 초기화 여부 확인 및 초기화
+
+    // Canvas, UI 초기화 여부 확인 및 초기화
     private void EnsureUIIsInitialized(string uiName)
     {
-        if (canvas == null)
+        if (staticUICanvas == null || dynamicUICanvas == null)
         {
-            canvas = GameObject.Find("StaticUICanvas")?.GetComponent<Canvas>();
-            if (canvas == null)
+            staticUICanvas = GameObject.Find("StaticUICanvas")?.GetComponent<Canvas>();
+            dynamicUICanvas = GameObject.Find("DynamicUICanvas")?.GetComponent<Canvas>();
+
+            if (staticUICanvas == null || dynamicUICanvas == null)
             {
-                Debug.LogError("StaticUICanvas를 찾을 수 없습니다.");
+                Debug.LogError("StaticUICanvas 또는 DynamicUICanvas를 찾을 수 없습니다.");
                 return;
             }
         }
 
         if (!uiInstances.ContainsKey(uiName) || uiInstances[uiName] == null)
         {
-            InstantiateAndDeactivateUI(uiName);
+            //StaticUI에 붙는 UI
+            if (uiName == "Inventory" || uiName == "Setting" || uiName == "SaveData")
+            {
+                InstantiateAndDeactivateUI(uiName, staticUICanvas);
+            }
+            else
+            {
+                InstantiateAndDeactivateUI(uiName, dynamicUICanvas);
+            }
         }
     }
 
+
+    //데이터 초기화
     private void ClearUIInstances()
     {
         foreach (var uiInstance in uiInstances.Values)
@@ -217,23 +302,56 @@ public class UIManager : MonoBehaviour
         }
 
         uiInstances.Clear();
-        currentActiveUI = null;
+        activeUIStack.Clear();
     }
 
+
+    //씬매니저에서 이벤트 제거
     private void OnDestroy()
     {
         SceneManager.sceneLoaded -= OnSceneLoaded;
     }
 
-    //현재 활성화된 UI를 확인 후 해당 UI를 종료하는 기능으로 수정 예정
-    public void CancleUIFunc()
+    //UI 생성
+    public void CreateUIComponent(GameObject obj, Vector2 pos, GameObject parentObj)
     {
-        if (SceneManagerEx.Instance.GetCurrentSceneName() != "StartScene")
-        {
-            GameObject.FindWithTag("Player").GetComponent<PlayerController>().StartMove();
-        }
+        GameObject placedObj = Instantiate(obj);
+        placedObj.transform.SetParent(parentObj.transform, false);
 
-        SoundManager.Instance.PlaySFX("click sound");
-        UIManager.Instance.DeactivatedUI("SaveData");
+        RectTransform rectTransform = placedObj.GetComponent<RectTransform>();
+        rectTransform.anchoredPosition = pos;
+    }
+
+    public void CreateUIComponentInParent(GameObject obj, Vector2 pos)
+    {
+        GameObject placedObj = Instantiate(obj);
+        GameObject staticUICanvas = GameObject.Find("StaticUICanvas");
+        placedObj.transform.SetParent(staticUICanvas.transform, false);
+
+        RectTransform rectTransform = placedObj.GetComponent<RectTransform>();
+        rectTransform.anchoredPosition = pos;
+
+    }
+
+    public void CreateUIComponent(GameObject obj, Vector2 pos, bool isActivated, GameObject parentObj)
+    {
+        GameObject placedObj = Instantiate(obj);
+        placedObj.transform.SetParent(parentObj.transform, false);
+
+        RectTransform rectTransform = placedObj.GetComponent<RectTransform>();
+        rectTransform.anchoredPosition = pos;
+        placedObj.SetActive(isActivated);
+    }
+
+    public GameObject CreateUIComponentWithScale(GameObject obj, GameObject parentObj, Vector2 scaleData)
+    {
+        GameObject placedObj = Instantiate(obj);
+        placedObj.transform.SetParent(parentObj.transform, false);
+
+        RectTransform rectTransform = placedObj.GetComponent<RectTransform>();
+        rectTransform.localScale = scaleData;
+        placedObj.SetActive(false);
+
+        return placedObj;
     }
 }
