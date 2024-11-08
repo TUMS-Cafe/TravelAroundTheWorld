@@ -128,6 +128,56 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 2482505830252439801, guid: 0750962c5b8a8e74cb88e83b8ce51ffd, type: 3}
   m_PrefabInstance: {fileID: 8706913255436489758}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &48156033
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 48156032}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7d4aa952fac14a5418f9b863cfe514b8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  narration: {fileID: 7828712047346695203}
+  dialogue: {fileID: 531058503}
+  imageObj: {fileID: 1337448569}
+  nameObj: {fileID: 1675166227}
+  bigImageObj: {fileID: 1486565717}
+  playerImageObj: {fileID: 795734519}
+  letter: {fileID: 1364585290}
+  letterText: {fileID: 1822435432}
+  player: {fileID: 406368607}
+  map: {fileID: 2091999174}
+  questObject: {fileID: 961399668}
+  questText: {fileID: 1416922351}
+  cafe: {fileID: 766867296}
+  trainRoom: {fileID: 1146598505}
+  trainRoomHallway: {fileID: 2049399584}
+  garden: {fileID: 783363968}
+  bakery: {fileID: 1057802141}
+  medicalRoom: {fileID: 1652038943}
+  jazzBar: {fileID: 1959825618}
+  balcony: {fileID: 6118748160087181158}
+  Npc_Rayviyak: {fileID: 302479978}
+  Npc_MrHam: {fileID: 370653972}
+  Npc_Rusk: {fileID: 1894486045}
+  Npc_Violet: {fileID: 4023244193274919520}
+  cheetahShopCh0: {fileID: 71731770}
+  isShopActive: 0
+  screenFader: {fileID: 2116026555}
+  dialogueBar: {fileID: 1586590508}
+  narrationBar: {fileID: 90073244}
+  bedUsed: 0
+  destPointObject: {fileID: 1313748267}
+  currentDialogueIndex: 0
+  playerController: {fileID: 1372797962}
+  mapManager: {fileID: 2091999175}
+  currentMusic: 
+  isWaitingForPlayer: 0
+  isTransition: 0
+  speakerKey: 
 --- !u!1 &71731770 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 8859767317848302922, guid: 79d8fae37ea638345adffa0062d95829, type: 3}
@@ -914,56 +964,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &1428910366
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 48156032}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b64abc4074058eb4b9bf6f11d936ae3d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  narration: {fileID: 7828712047346695203}
-  dialogue: {fileID: 531058503}
-  imageObj: {fileID: 1337448569}
-  nameObj: {fileID: 1675166227}
-  bigImageObj: {fileID: 1486565717}
-  playerImageObj: {fileID: 795734519}
-  letter: {fileID: 1364585290}
-  letterText: {fileID: 1822435432}
-  player: {fileID: 406368607}
-  map: {fileID: 2091999174}
-  questObject: {fileID: 961399668}
-  questText: {fileID: 1416922351}
-  cafe: {fileID: 766867296}
-  trainRoom: {fileID: 1146598505}
-  trainRoomHallway: {fileID: 2049399584}
-  garden: {fileID: 783363968}
-  bakery: {fileID: 1057802141}
-  medicalRoom: {fileID: 1652038943}
-  jazzBar: {fileID: 1959825618}
-  balcony: {fileID: 6118748160087181158}
-  Npc_Rayviyak: {fileID: 302479978}
-  Npc_MrHam: {fileID: 370653972}
-  Npc_Rusk: {fileID: 1894486045}
-  Npc_Violet: {fileID: 4023244193274919520}
-  cheetahShopCh0: {fileID: 71731770}
-  isShopActive: 0
-  screenFader: {fileID: 2116026555}
-  dialogueBar: {fileID: 1586590508}
-  narrationBar: {fileID: 90073244}
-  bedUsed: 0
-  destPointObject: {fileID: 1313748267}
-  playerController: {fileID: 1372797962}
-  playerTransform: {fileID: 1372797961}
-  mapManager: {fileID: 2091999175}
-  currentMusic: 
-  isWaitingForPlayer: 0
-  isTransition: 0
-  speakerKey: 
 --- !u!1 &1486565717
 GameObject:
   m_ObjectHideFlags: 0
@@ -1473,7 +1473,7 @@ MonoBehaviour:
   playerPosition: {x: 0, y: 0}
   playerTransform: {fileID: 1372797961}
   isInCafeBarZone: 0
-  talkManager: {fileID: 1428910366}
+  talkManager: {fileID: 0}
 --- !u!1001 &2111450866
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4587,7 +4587,7 @@ PrefabInstance:
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 2482505830252439801, guid: 0750962c5b8a8e74cb88e83b8ce51ffd, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 1428910366}
+      addedObject: {fileID: 48156033}
   m_SourcePrefab: {fileID: 100100000, guid: 0750962c5b8a8e74cb88e83b8ce51ffd, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
