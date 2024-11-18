@@ -52,6 +52,7 @@ public class Ch2TalkManager : MonoBehaviour
         {
             DialogueList dialogueList = JsonUtility.FromJson<DialogueList>(jsonFile.text);
             dialogues = dialogueList.dialogues;
+            Debug.Log($"대사 데이터 로드 완료. 총 {dialogues.Count}개의 대사가 로드되었습니다.");
         }
         else
         {
@@ -62,7 +63,8 @@ public class Ch2TalkManager : MonoBehaviour
     void DisplayCurrentDialogue()
     {
         if (dialogues != null && currentDialogueIndex < dialogues.Count)
-        { 
+        {
+            Debug.Log($"현재 대사 인덱스: {currentDialogueIndex}, 대사: {dialogues[currentDialogueIndex].대사}");
             //표정 데이터 가져오기
             var currentDialogue = dialogues[currentDialogueIndex];
             //대사 표시
@@ -123,8 +125,12 @@ public class Ch2TalkManager : MonoBehaviour
 
     void NextDialogue()
     {
-        currentDialogueIndex++;
-        DisplayCurrentDialogue();
+        if (currentDialogueIndex < dialogues.Count - 1)
+        {
+            currentDialogueIndex++;
+            Debug.Log($"다음 대사: {dialogues[currentDialogueIndex].대사}");
+            DisplayCurrentDialogue();
+        }
     }
 
     // 화면 변경 함수
