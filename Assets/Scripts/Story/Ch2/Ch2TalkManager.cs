@@ -21,12 +21,14 @@ public class Ch2TalkManager : MonoBehaviour
     private Dictionary<string, Sprite> characterImages; // 캐릭터 이미지 딕셔너리
     private Dictionary<string, Sprite> characterBigImages; // 캐릭터 큰 이미지 딕셔너리
 
+    public GameObject Npc_Rusk; // 빵집 npc
 
     public GameObject backGround; //검은 배경
     public GameObject cafe; // 카페 화면
     public GameObject cafe2; //카페 3인칭 화면
     public GameObject trainRoom; // 객실 화면
     public GameObject trainRoomHallway; // 객실 복도 화면
+    public GameObject bakery; //빵집 화면 
 
     public Ch0DialogueBar dialogueBar; // 대화창 스크립트 (타이핑 효과 호출을 위해)
     public Ch0DialogueBar narrationBar; // 나레이션창 스크립트 (타이핑 효과 호출을 위해)
@@ -65,35 +67,51 @@ public class Ch2TalkManager : MonoBehaviour
         if (dialogues != null && currentDialogueIndex < dialogues.Count)
         {
             Debug.Log($"현재 대사 인덱스: {currentDialogueIndex}, 대사: {dialogues[currentDialogueIndex].대사}");
-            //표정 데이터 가져오기
+
             var currentDialogue = dialogues[currentDialogueIndex];
-            //대사 표시
-            narrationText.text = dialogues[currentDialogueIndex].대사;
-            dialogueText.text = dialogues[currentDialogueIndex].대사;
+
+            // 대사 표시
+            narrationText.text = currentDialogue.대사;
+            dialogueText.text = currentDialogue.대사;
 
             // 이름 설정
             nameObj.GetComponent<TMP_Text>().text = currentDialogue.인물;
 
-            // Sol의 표정을 설정
-            if (currentDialogue.인물 == "솔" && !string.IsNullOrEmpty(currentDialogue.표정))
+            // ???를 쿠라야로 처리
+            string characterKey = currentDialogue.인물 == "???" ? "쿠라야" : currentDialogue.인물;
+
+            // 다이얼로그가 활성화될 조건
+            if (characterKey == "솔" || characterKey == "쿠라야" || characterKey == "러스크")
             {
-                string expressionKey = "솔_" + currentDialogue.표정; // "솔_화남" 같은 키 생성
+                // 표정 키 생성
+                string expressionKey = !string.IsNullOrEmpty(currentDialogue.표정)
+                    ? characterKey + "_" + currentDialogue.표정
+                    : characterKey + "_일반";
+
+                // 표정 이미지 설정
                 if (characterImages.ContainsKey(expressionKey))
                 {
                     imageObj.GetComponent<Image>().sprite = characterImages[expressionKey];
+                    Debug.Log($"{characterKey} 표정 변경: {expressionKey}");
                 }
                 else
                 {
-                    Debug.LogWarning("표정 이미지를 찾을 수 없습니다: " + expressionKey);
+                    Debug.LogWarning($"표정 이미지를 찾을 수 없습니다: {expressionKey}");
                 }
-            }
 
-            // 인물에 따라 나레이션 활성화 여부 결정
-            HandleNarrationVisibility(dialogues[currentDialogueIndex].인물);
+                // 다이얼로그 활성화
+                SetScene(dialogue, true);
+                SetScene(narration, false); // 나레이션 비활성화
+            }
+            else
+            {
+                // 나레이션 활성화
+                SetScene(narration, true);
+                SetScene(dialogue, false); // 다이얼로그 비활성화
+            }
 
             // 화면 변경
             UpdateSceneBasedOnDialogueIndex(currentDialogueIndex);
-
         }
         else
         {
@@ -109,9 +127,9 @@ public class Ch2TalkManager : MonoBehaviour
             SetScene(narration, true);
             SetScene(dialogue, false); // 대화창 비활성화
         }
-        else if (character == "솔" || character=="???")
+        else if (character == "솔" || character=="???" || character == "러스크" || character == "쿠라야")
         {
-            // '솔', '???'일 경우 대화창 활성화
+            // '솔', '???', '러스크', '쿠라야'일 경우 대화창 활성화
             SetScene(dialogue, true);
             SetScene(narration, false); // 나레이션 비활성화
         }
@@ -165,6 +183,30 @@ public class Ch2TalkManager : MonoBehaviour
             case 49:
                 DeactivateAllScenes();
                 SetScene(cafe, true);
+                break;
+            case 79:
+                DeactivateAllScenes();
+                SetScene(backGround, true);
+                break;
+            case 80:
+                DeactivateAllScenes();
+                SetScene(trainRoom, true);
+                break;
+            case 85:
+                DeactivateAllScenes();
+                SetScene(cafe2, true);
+                break;
+            case 98:
+                DeactivateAllScenes();
+                SetScene(backGround, true);
+                break;
+            case 99:
+                DeactivateAllScenes();
+                SetScene(cafe2, true);
+                break;
+            case 102:
+                DeactivateAllScenes();
+                SetScene(bakery, true);
                 break;
             default:
                 break; //아무 것도 활성화하지 않음
@@ -242,6 +284,7 @@ public class Ch2TalkManager : MonoBehaviour
         SetScene(trainRoom, false);
         SetScene(trainRoomHallway, false);
         SetScene(cafe2, false);
+        SetScene(bakery, false);
     }
 
     // 이미지 가져오는 코드
@@ -263,10 +306,16 @@ public class Ch2TalkManager : MonoBehaviour
             ["솔_당황"] = Resources.Load<Sprite>("PlayerImage/당황"),
             ["솔_웃음"] = Resources.Load<Sprite>("PlayerImage/웃음"),
             ["솔_화남"] = Resources.Load<Sprite>("PlayerImage/화남"),
+            ["솔_찡그림"] = Resources.Load<Sprite>("PlayerImage/찡그림"),
 
             // 레이비야크 표정 이미지
             ["레이비야크_일반"] = Resources.Load<Sprite>("NpcImage/Leviac"),
             ["레이비야크_웃음"] = Resources.Load<Sprite>("NpcImage/Leviac_웃음"),
+
+            // 쿠라야 표정 이미지
+            ["쿠라야_일반"] = Resources.Load<Sprite>("NpcImage/Kuraya"),
+            ["쿠라야_웃음"] = Resources.Load<Sprite>("NpcImage/Kuraya_웃음"),
+            ["쿠라야_화남"] = Resources.Load<Sprite>("NpcImage/Kuraya_화남"),
 
             // 바이올렛 표정 이미지
             ["바이올렛_일반"] = Resources.Load<Sprite>("NpcImage/Violet"),
@@ -276,6 +325,8 @@ public class Ch2TalkManager : MonoBehaviour
             // 러스크 표정 이미지
             ["러스크_일반"] = Resources.Load<Sprite>("NpcImage/Rusk"),
             ["러스크_웃음"] = Resources.Load<Sprite>("NpcImage/Rusk_웃음"),
+            ["러스크_화남"] = Resources.Load<Sprite>("NpcImage/Rusk_화남"),
+            ["러스크_당황"] = Resources.Load<Sprite>("NpcImage/Rusk_당황"),
 
             // Mr. Ham 표정 이미지
             ["Mr. Ham_일반"] = Resources.Load<Sprite>("NpcImage/MrHam"),
