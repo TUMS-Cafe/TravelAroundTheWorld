@@ -16,8 +16,8 @@ public class GameManager : MonoBehaviour
     public GameObject Milk;
     public GameObject TeaInventory;
 
-    private bool buyMilk = PlayerManager.Instance.IsBoughtCafeItem("우유");
-    private bool buyTeaSet = PlayerManager.Instance.IsBoughtCafeItem("티 세트");
+    private bool buyMilk = PlayerManager.Instance.IsBoughtCafeItem("milk");
+    private bool buyTeaSet = PlayerManager.Instance.IsBoughtCafeItem("teaSet");
 
     private int Day = PlayerManager.Instance.GetDay();
 

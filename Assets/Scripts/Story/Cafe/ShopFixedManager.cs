@@ -23,9 +23,9 @@ public class ShopFixedManager : MonoBehaviour
     public void HideShop()
     {
         SoundManager.Instance.PlaySFX("click sound");
-        Debug.Log("우유 구매 여부 : " + PlayerManager.Instance.IsBoughtCafeItem("우유"));
-        Debug.Log("티세트 구매 여부 : " + PlayerManager.Instance.IsBoughtCafeItem("티 세트"));
-        if (PlayerManager.Instance.IsBoughtCafeItem("우유") || PlayerManager.Instance.IsBoughtCafeItem("티 세트"))
+        Debug.Log("우유 구매 여부 : " + PlayerManager.Instance.IsBoughtCafeItem("milk"));
+        Debug.Log("티세트 구매 여부 : " + PlayerManager.Instance.IsBoughtCafeItem("teaSet"));
+        if (PlayerManager.Instance.IsBoughtCafeItem("milk") || PlayerManager.Instance.IsBoughtCafeItem("teaSet"))
         {
             if (talkManager != null)
             {
@@ -47,9 +47,9 @@ public class ShopFixedManager : MonoBehaviour
     public void HideShopMilk()
     {
         SoundManager.Instance.PlaySFX("click sound");
-        Debug.Log("우유 구매 여부 : " + PlayerManager.Instance.IsBoughtCafeItem("우유"));
-        Debug.Log("티세트 구매 여부 : " + PlayerManager.Instance.IsBoughtCafeItem("티 세트"));
-        if (PlayerManager.Instance.IsBoughtCafeItem("우유"))
+        Debug.Log("우유 구매 여부 : " + PlayerManager.Instance.IsBoughtCafeItem("milk"));
+        Debug.Log("티세트 구매 여부 : " + PlayerManager.Instance.IsBoughtCafeItem("teaSet"));
+        if (PlayerManager.Instance.IsBoughtCafeItem("milk"))
         {
             if (talkManager != null)
             {
@@ -68,9 +68,9 @@ public class ShopFixedManager : MonoBehaviour
     public void HideShopTeaSet()
     {
         SoundManager.Instance.PlaySFX("click sound");
-        Debug.Log("우유 구매 여부 : " + PlayerManager.Instance.IsBoughtCafeItem("우유"));
-        Debug.Log("티세트 구매 여부 : " + PlayerManager.Instance.IsBoughtCafeItem("티 세트"));
-        if (PlayerManager.Instance.IsBoughtCafeItem("티 세트"))
+        Debug.Log("우유 구매 여부 : " + PlayerManager.Instance.IsBoughtCafeItem("milk"));
+        Debug.Log("티세트 구매 여부 : " + PlayerManager.Instance.IsBoughtCafeItem("teaSet"));
+        if (PlayerManager.Instance.IsBoughtCafeItem("teaSet"))
         {
             if (talkManager != null)
             {

@@ -5,7 +5,7 @@ using UnityEngine;
 public class OrderController : MonoBehaviour
 {
     private int Day = PlayerManager.Instance.GetDay();
-    private bool buyMilk = PlayerManager.Instance.IsBoughtCafeItem("우유");
+    private bool buyMilk = PlayerManager.Instance.IsBoughtCafeItem("milk");
 
     public GameObject orderEspressoPrefab;
     public GameObject orderHotAmericanoPrefab;
