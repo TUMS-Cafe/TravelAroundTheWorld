@@ -38,7 +38,7 @@ public class MakeOrderList : MonoBehaviour
         else if(day < 5)
         {
             MakeFull(OrderStruct.RoomServiceOrder_before[day-2]);
-        }else if (PlayerManager.Instance.IsBoughtCafeItem("milk"))
+        }else if (PlayerManager.Instance.IsBoughtCafeItem("우유"))
         {
             MakeFull(OrderStruct.RoomServiceOrder_after_milk[day - 5]);
         }
