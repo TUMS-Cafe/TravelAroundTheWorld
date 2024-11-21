@@ -51,6 +51,6 @@ MonoBehaviour:
   saveDataUIPrefab: {fileID: 4675369338822652522, guid: 53f1732f1af9f4cdd96371632dcf39d4, type: 3}
   saveDataPopupPrefab: {fileID: 4837505057921801157, guid: c7a8c87ea3f4d46348f213c69115eb7f, type: 3}
   bedInteractionUIPrefab: {fileID: 3300009883695447684, guid: 85c61b05deaa34e29992576c7c8cef2f, type: 3}
-  diaryInteractionUIPrefab: {fileID: 2207630081899318860, guid: 3837c05ca628540a8a130935001ce110, type: 3}
-  staticUICanvasPrefab: {fileID: 0}
-  dynamicUICanvasPrefab: {fileID: 0}
+  diaryUIPrefab: {fileID: 2207630081899318860, guid: 3837c05ca628540a8a130935001ce110, type: 3}
+  groupUIPrefab: {fileID: 8643062832397242663, guid: 50f16d1e706734cb18de70f17140c5bf, type: 3}
+  questionGroupUIPrefab: {fileID: 6169148483069694057, guid: e44bbd9a0859d4952b95f9e2b4941589, type: 3}

@@ -149,10 +149,10 @@ public class PlayerController : MonoBehaviour
 
     void OnShowGroupUI()
     {
-        //
+        Debug.Log("Show GroupUI");
         if(canMove)
         {
-            UIManager.Instance.ToggleUI("GroupUI");
+            UIManager.Instance.ToggleUI("Group");
         }
     }
 
@@ -187,16 +187,6 @@ void OnSetting()
         UIManager.Instance.ToggleUI("Setting");
     }
 }
-
-인벤토리창 활성화
-void OnInventory()
-{
-    if (canMove)
-    {
-        UIManager.Instance.ToggleUI("Inventory");
-    }
-}
-*/
 
     /*
     맵 활성화

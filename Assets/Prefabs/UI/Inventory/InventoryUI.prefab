@@ -59,3 +59,4 @@ MonoBehaviour:
   selectedImg: {fileID: 1411950494501221423, guid: 180698b0067a9435eaeb11ada3469fd0, type: 3}
   selectedSlotImg: {fileID: 0}
   selectedItemImg: {fileID: 0}
+  exitBtn: {fileID: 8555358475479682115, guid: 2e4e5ebbcf38d49a188ec5edc6d1ca35, type: 3}

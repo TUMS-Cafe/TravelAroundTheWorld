@@ -16,17 +16,14 @@ public class SaveDataUI : MonoBehaviour
     private Vector2 scrollPos;
     private Vector2 exitPos;
 
-    private UnityEngine.Events.UnityAction exitBtnEvent;
-
     void Start()
     {
         SetInitData();
-        CreateUIComponent(saveDataBackground, defaultPos);
-        CreateUIComponent(titleTxt, titlePos);
-        CreateUIComponent(scrollView, scrollPos); 
+        UIManager.Instance.CreateUIComponent(saveDataBackground, defaultPos, gameObject);
+        UIManager.Instance.CreateUIComponent(titleTxt, titlePos, gameObject);
+        UIManager.Instance.CreateUIComponent(scrollView, scrollPos, gameObject); 
         SetScrollViewData();
-        CreateUIComponent(exitBtn, exitPos);
-        SetBtnEvent();
+        UIManager.Instance.CreateUIComponent(exitBtn, exitPos, gameObject);
     }
 
 
@@ -37,37 +34,7 @@ public class SaveDataUI : MonoBehaviour
         scrollPos = new Vector2(0, -25);
         exitPos = new Vector2(494, 315);
     }
-
-    public void CreateUIComponent(GameObject obj, Vector2 pos)
-    {
-        GameObject placedObj = Instantiate(obj);
-        placedObj.transform.SetParent(gameObject.transform, false);
-
-        RectTransform rectTransform = placedObj.GetComponent<RectTransform>();
-        rectTransform.anchoredPosition = pos;
-
-    }
-
-    public void CreateUIComponentInParent(GameObject obj, Vector2 pos)
-    {
-        GameObject placedObj = Instantiate(obj);
-        GameObject staticUICanvas = GameObject.Find("StaticUICanvas");
-        placedObj.transform.SetParent(staticUICanvas.transform, false);
-
-        RectTransform rectTransform = placedObj.GetComponent<RectTransform>();
-        rectTransform.anchoredPosition = pos;
-
-    }
-
-    public void CreateUIComponent(GameObject obj, Vector2 pos, bool isActivated)
-    {
-        GameObject placedObj = Instantiate(obj);
-        placedObj.transform.SetParent(gameObject.transform, false);
-
-        RectTransform rectTransform = placedObj.GetComponent<RectTransform>();
-        rectTransform.anchoredPosition = pos;
-        placedObj.SetActive(isActivated);
-    }
+    
 
     public void SetScrollViewData()
     {
@@ -94,24 +61,4 @@ public class SaveDataUI : MonoBehaviour
         }
         
     }
-
-    void SetBtnEvent()
-    {
-        exitBtnEvent = CancleUIFunc;
-        Button btn = exitBtn.GetComponent<Button>();
-        btn.onClick.AddListener(exitBtnEvent);
-    }
-
-    public void CancleUIFunc()
-    {
-        if (SceneManagerEx.Instance.GetCurrentSceneName() != "StartScene")
-        {
-            GameObject.FindWithTag("Player").GetComponent<PlayerController>().StartMove();
-        }
-
-        SoundManager.Instance.PlaySFX("click sound");
-        //UIManager.Instance.ToggleUI("SaveData");
-        UIManager.Instance.DeactivatedUI("SaveData");
-    }
-
 }

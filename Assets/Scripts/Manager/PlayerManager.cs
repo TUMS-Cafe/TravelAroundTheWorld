@@ -43,6 +43,7 @@ public class PlayerManager : MonoBehaviour
             InitializePlayerData();
             //Debug.LogError("Failed to load save data.");
         }
+        SaveDataManager.Instance.SetActiveSlot(idx);
     }
 
     public bool GetIsLoaded()

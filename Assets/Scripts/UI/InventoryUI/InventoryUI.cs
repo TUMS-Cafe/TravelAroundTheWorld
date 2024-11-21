@@ -33,24 +33,28 @@ public class InventoryUI : MonoBehaviour
     private Vector2 inventoryBackgroundImgPos;
     private Vector2 itemNamePos;
     private Vector2 inventoryTitlePos;
+    private Vector2 exitPos;
 
     private Vector2 selectedImgScale;
+
+    public GameObject exitBtn;
 
 
     private void Start()
     {
         SetInitData();
-        CreateUIComponent(BlurredImgPrefab, blurredImgPos);
-        CreateUIComponent(inventoryBackgroundPrefab, inventoryBackgroundImgPos);
+        UIManager.Instance.CreateUIComponent(inventoryBackgroundPrefab, inventoryBackgroundImgPos, gameObject);
 
         CreateItemSlots();
-        CreateUIComponent(itemNamePrefab, itemNamePos, false);
-        CreateUIComponent(itemImagePrefab, itemImagePos, false);
-        CreateUIComponent(itemDescPrefab, itemDescPos, false);
-        CreateUIComponent(inventoryTitlePrefab, inventoryTitlePos);
+        UIManager.Instance.CreateUIComponent(itemNamePrefab, itemNamePos, false, gameObject);
+        UIManager.Instance.CreateUIComponent(itemImagePrefab, itemImagePos, false, gameObject);
+        UIManager.Instance.CreateUIComponent(itemDescPrefab, itemDescPos, false, gameObject);
+        UIManager.Instance.CreateUIComponent(inventoryTitlePrefab, inventoryTitlePos, gameObject);
 
-        selectedSlotImg = CreateUIComponent(selectedImg, gameObject, selectedImgScale);
-        selectedItemImg = CreateUIComponent(selectedImg, gameObject, selectedImgScale);
+        selectedSlotImg = UIManager.Instance.CreateUIComponentWithScale(selectedImg, gameObject, selectedImgScale);
+        selectedItemImg = UIManager.Instance.CreateUIComponentWithScale(selectedImg, gameObject, selectedImgScale);
+
+        UIManager.Instance.CreateUIComponent(exitBtn, exitPos, gameObject);
     }
 
     void SetInitData()
@@ -65,6 +69,7 @@ public class InventoryUI : MonoBehaviour
 
         selectedImgScale = new Vector2(1.7f, 1.7f);
 
+        exitPos = new Vector2(550, 350);
     }
 
     void CreateItemSlots()
@@ -102,37 +107,4 @@ public class InventoryUI : MonoBehaviour
             //슬롯 텍스쳐 생성하기
         }
     }
-
-    public void CreateUIComponent(GameObject obj, Vector2 pos)
-    {
-        GameObject placedObj = Instantiate(obj);
-        placedObj.transform.SetParent(gameObject.transform, false);
-
-        RectTransform rectTransform = placedObj.GetComponent<RectTransform>();
-        rectTransform.anchoredPosition = pos;
-
-    }
-
-    public void CreateUIComponent(GameObject obj, Vector2 pos, bool isActivated)
-    {
-        GameObject placedObj = Instantiate(obj);
-        placedObj.transform.SetParent(gameObject.transform, false);
-
-        RectTransform rectTransform = placedObj.GetComponent<RectTransform>();
-        rectTransform.anchoredPosition = pos;
-        placedObj.SetActive(isActivated);
-    }
-
-    public GameObject CreateUIComponent(GameObject obj, GameObject backgroundObj, Vector2 scaleData)
-    {
-        GameObject placedObj = Instantiate(obj);
-        placedObj.transform.SetParent(backgroundObj.transform, false);
-
-        RectTransform rectTransform = placedObj.GetComponent<RectTransform>();
-        rectTransform.localScale = scaleData;
-        placedObj.SetActive(false);
-
-        return placedObj;
-    }
-
 }

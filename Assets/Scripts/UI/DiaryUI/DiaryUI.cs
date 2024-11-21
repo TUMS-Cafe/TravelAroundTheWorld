@@ -7,47 +7,29 @@ using UnityEngine.EventSystems;
 
 public class DiaryUI : MonoBehaviour
 {
-    [SerializeField] public GameObject saveBtn;
-    [SerializeField] public GameObject loadBtn;
-    [SerializeField] public GameObject cancelBtn;
+    public GameObject saveBtn;
+    public GameObject exitBtn;
+
+    private Vector2 saveBtnPos;
+    private Vector2 exitBtnPos;
 
     private UnityEngine.Events.UnityAction btnEvent;
 
     private void Start()
     {
-        Button saveBtnComponent = saveBtn.GetComponent<Button>();
-        btnEvent = SaveCurData;
-        saveBtnComponent.onClick.AddListener(btnEvent);
-
-        Button loadBtnComponent = loadBtn.GetComponent<Button>();
-        btnEvent = LoadCurData;
-        loadBtnComponent.onClick.AddListener(btnEvent);
-
-        Button cancelBtnComponent = cancelBtn.GetComponent<Button>();
-        btnEvent = CancelDataUI;
-        cancelBtnComponent.onClick.AddListener(btnEvent);
-
+        SetInitData();
+        CreateBtn();
     }
 
-
-    void SaveCurData()
+    void SetInitData()
     {
-        Debug.Log("H");
+        saveBtnPos = new Vector2(200, 200);
+        exitBtnPos = new Vector2(100, -100);
     }
 
-    void LoadCurData()
+    void CreateBtn()
     {
-        Debug.Log("I");
-        UIManager.Instance.ToggleUI("SaveData");
+        UIManager.Instance.CreateUIComponent(saveBtn, saveBtnPos, gameObject);
+        UIManager.Instance.CreateUIComponent(exitBtn, exitBtnPos, gameObject);
     }
-
-    void CancelDataUI()
-    {
-        Debug.Log("K");
-        UIManager.Instance.DeactivatedUI("Diary");
-        PlayerController playerController = GameObject.FindWithTag("Player").GetComponent<PlayerController>();
-        playerController.StartMove();
-    }
-
-    
 }
