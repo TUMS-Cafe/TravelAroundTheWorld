@@ -7,11 +7,11 @@ public class BedButton : MonoBehaviour
 {
     public GameObject BedUI;
 
-    public void OnYesButtonClicked(string sceneName)
+    public void OnYesButtonClicked(string ch1Scene)
     {
-        if (!string.IsNullOrEmpty(sceneName))
+        if (!string.IsNullOrEmpty(ch1Scene))
         {
-            SceneManager.LoadScene(sceneName);
+            SceneManager.LoadScene(ch1Scene);
         }
         else
         {
