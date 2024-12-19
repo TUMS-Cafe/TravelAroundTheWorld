@@ -113,7 +113,7 @@ public class TalkManager : MonoBehaviour
 
     void Update()
     {
-        if (isActivated && !isFadingOut && Input.GetKeyDown(KeyCode.Space))
+        if (isActivated && !isFadingOut && (Input.GetKeyDown(KeyCode.Space) || Input.GetMouseButtonDown(0)))
         {
             if (isAnimationPlaying)
             {
@@ -157,7 +157,7 @@ public class TalkManager : MonoBehaviour
         }
 
         // 맵 이동 조작 튜토리얼
-        if (currentDialogueIndex == 63)
+        if (currentDialogueIndex == 67)
         {
             mapTutorial.SetActive(true);
             DeactivateTalk(); // 대화 잠시 종료
@@ -494,10 +494,10 @@ public class TalkManager : MonoBehaviour
                         {
                             SoundManager.Instance.StopSFX();
                         }
-                        if (currentDialogueIndex == 48)
+                        if (currentDialogueIndex == 49)
                         {
                             OnAnimationStart();
-                            StartCoroutine(PerformFadeInAndHandleDialogue(48, 50));
+                            StartCoroutine(PerformFadeInAndHandleDialogue(49, 50));
                         }
                     }
                 }
@@ -509,10 +509,10 @@ public class TalkManager : MonoBehaviour
                 {
                     StartCoroutine(screenFader.FadeIn(cafe));
                 }
-                else if (currentDialogueIndex <= 62)
+                else if (currentDialogueIndex <= 66)
                 {
                     cafe.SetActive(true);
-                    if (currentDialogueIndex == 62)
+                    if (currentDialogueIndex == 66)
                     {
                         StartCoroutine(screenFader.FadeOut(cafe));
                     }
@@ -520,28 +520,6 @@ public class TalkManager : MonoBehaviour
                 break;
             // 맵 튜토리얼
             case locationEngineRoom:
-                if (currentDialogueIndex == 64)
-                {
-                    StartCoroutine(screenFader.FadeIn(trainRoomHallway));
-                }
-                else if (currentDialogueIndex == 65)
-                {
-                    DeactivateTalk();
-                    playerController.StartMove(); //대사 끝나고 플레이어 움직임 재개
-                }
-                break;
-            case locationOtherRoom1:
-                if (currentDialogueIndex == 66)
-                {
-                    StartCoroutine(screenFader.FadeIn(trainRoomHallway));
-                }
-                else if (currentDialogueIndex == 67)
-                {
-                    DeactivateTalk();
-                    playerController.StartMove(); //대사 끝나고 플레이어 움직임 재개
-                }
-                break;
-            case locationOtherRoom2:
                 if (currentDialogueIndex == 68)
                 {
                     StartCoroutine(screenFader.FadeIn(trainRoomHallway));
@@ -552,16 +530,38 @@ public class TalkManager : MonoBehaviour
                     playerController.StartMove(); //대사 끝나고 플레이어 움직임 재개
                 }
                 break;
+            case locationOtherRoom1:
+                if (currentDialogueIndex == 70)
+                {
+                    StartCoroutine(screenFader.FadeIn(trainRoomHallway));
+                }
+                else if (currentDialogueIndex == 71)
+                {
+                    DeactivateTalk();
+                    playerController.StartMove(); //대사 끝나고 플레이어 움직임 재개
+                }
+                break;
+            case locationOtherRoom2:
+                if (currentDialogueIndex == 72)
+                {
+                    StartCoroutine(screenFader.FadeIn(trainRoomHallway));
+                }
+                else if (currentDialogueIndex == 73)
+                {
+                    DeactivateTalk();
+                    playerController.StartMove(); //대사 끝나고 플레이어 움직임 재개
+                }
+                break;
             case locationGarden:
                 PlayMusic(locationGarden);
-                if (currentDialogueIndex == 70)
+                if (currentDialogueIndex == 74)
                 {
                     StartCoroutine(screenFader.FadeIn(garden));
                 }
                 else
                 {
                     garden.SetActive(true);
-                    if (currentDialogueIndex == 78)
+                    if (currentDialogueIndex == 82)
                     {
                         StartCoroutine(FadeOutAndDeactivateTalk(garden)); //npc 대화 끝나고 대화 종료
                     }
@@ -569,14 +569,14 @@ public class TalkManager : MonoBehaviour
                 break;
             case locationBakery:
                 PlayMusic(locationBakery);
-                if (currentDialogueIndex == 79)
+                if (currentDialogueIndex == 83)
                 {
                     StartCoroutine(screenFader.FadeIn(bakery));
                 }
                 else
                 {
                     bakery.SetActive(true);
-                    if (currentDialogueIndex == 104)
+                    if (currentDialogueIndex == 108)
                     {
                         StartCoroutine(FadeOutAndDeactivateTalk(bakery)); //npc 대화 끝나고 대화 종료
                     }
@@ -584,14 +584,14 @@ public class TalkManager : MonoBehaviour
                 break;
             case locationMedicalRoom:
                 PlayMusic(locationMedicalRoom);
-                if (currentDialogueIndex == 105)
+                if (currentDialogueIndex == 109)
                 {
                     StartCoroutine(screenFader.FadeIn(medicalRoom));
                 }
                 else
                 {
                     medicalRoom.SetActive(true);
-                    if (currentDialogueIndex == 128)
+                    if (currentDialogueIndex == 132)
                     {
                         StartCoroutine(FadeOutAndDeactivateTalk(medicalRoom)); //npc 대화 끝나고 대화 종료
                     }
@@ -605,19 +605,19 @@ public class TalkManager : MonoBehaviour
                     if (isAllNPCActivated)
                     {
                         
-                        if (currentDialogueIndex == 129)
+                        if (currentDialogueIndex == 133)
                         {
                             StartCoroutine(screenFader.FadeIn(trainRoom));
                         }
-                        else if (currentDialogueIndex >= 130 && currentDialogueIndex <= 132)
+                        else if (currentDialogueIndex >= 134 && currentDialogueIndex <= 136)
                         {
                             trainRoom.SetActive(true);
-                            if(currentDialogueIndex == 130)
+                            if(currentDialogueIndex == 134)
                             {
                                 DayNightCycleManager.Instance.ChangeDayTime();
                                 Debug.Log(DayNightCycleManager.Instance.GetNowDayTime());
                             }
-                            if (currentDialogueIndex == 132)
+                            if (currentDialogueIndex == 136)
                             {
                                 StartCoroutine(FadeOutAndLoadScene(trainRoom, "ch1Scene 1"));
                             }
