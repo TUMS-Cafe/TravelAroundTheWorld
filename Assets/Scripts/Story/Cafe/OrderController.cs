@@ -4,9 +4,11 @@ using UnityEngine;
 
 public class OrderController : MonoBehaviour
 {
+    //날짜, 우유 구매 여부를 PlayerManager에서 받아옴.
     private int Day = PlayerManager.Instance.GetDay();
     private bool buyMilk = PlayerManager.Instance.IsBoughtCafeItem("우유");
 
+    //왼쪽 위 만들어야 할 주문을 띄워주기 위한 prefab
     public GameObject orderEspressoPrefab;
     public GameObject orderHotAmericanoPrefab;
     public GameObject orderIceAmericanoPrefab;
@@ -27,6 +29,7 @@ public class OrderController : MonoBehaviour
     public DeliveryData deliveryData;
     public string deliveryOrder;
 
+    //처리해야 할 랜덤 주문의 수
     private int randomNum = SceneTransitionManager.Instance.GetRandomMenuNum();
     private int deliveryNum = SceneTransitionManager.Instance.GetDeliveryNum();
 
@@ -35,11 +38,13 @@ public class OrderController : MonoBehaviour
         Debug.Log("Day = " + Day);
         Debug.Log("randomNum = " + randomNum);
         deliveryOrder = deliveryData.deliveryOrder;
+        //랜덤 주문을 하는 경우, randomNum을 이용하여 주문 생성
         if (randomNum > 0)
         {
             GenerateOrder(randomNum);
             DisplayRandomOrders();
         }
+        //npc직접 주문 or delivery 주문 띄워지는 경우
         else
         {
             DisplayOrder();
@@ -47,6 +52,8 @@ public class OrderController : MonoBehaviour
 
     }
 
+    //날짜가 5일 이전이면 상점 구매 전이므로 에스프레소, 아메리카노 중에 주문 생성.
+    //상점 구매 이후에는 우유 구매 여부(우유 구매X면 티백 구매함)에 따라 주문 생성)
     public void GenerateOrder(int randomNum)
     {
         List<string> availableKeys = new List<string>();
@@ -94,6 +101,7 @@ public class OrderController : MonoBehaviour
         }
     }
 
+    //가장 오른쪽 부분부터 음료 주문을 띄우기 시작 (start Position) 
     public void DisplayRandomOrders()
     {
         Vector3 currentPosition = startPosition;
