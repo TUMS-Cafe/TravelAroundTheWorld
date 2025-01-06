@@ -35,6 +35,7 @@ public class Ch2TalkManager : MonoBehaviour
 
     void Start()
     {
+        //currentDialogueIndex = 192; //text
         InitializeCharacterImages(); // 캐릭터 이미지 초기화
         LoadDialogueData(); // 대사 데이터 로드
         DisplayCurrentDialogue(); // 현재 대사 표시
@@ -42,7 +43,7 @@ public class Ch2TalkManager : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (Input.GetKeyDown(KeyCode.Space) || Input.GetMouseButtonDown(0))
         {
             NextDialogue();
         }
@@ -81,7 +82,7 @@ public class Ch2TalkManager : MonoBehaviour
             string characterKey = currentDialogue.인물 == "???" ? "쿠라야" : currentDialogue.인물;
 
             // 다이얼로그가 활성화될 조건
-            if (characterKey == "솔" || characterKey == "쿠라야" || characterKey == "러스크")
+            if (characterKey == "솔" || characterKey == "솔 " || characterKey == "쿠라야" || characterKey == "러스크")
             {
                 // 표정 키 생성
                 string expressionKey = !string.IsNullOrEmpty(currentDialogue.표정)
@@ -127,7 +128,7 @@ public class Ch2TalkManager : MonoBehaviour
             SetScene(narration, true);
             SetScene(dialogue, false); // 대화창 비활성화
         }
-        else if (character == "솔" || character=="???" || character == "러스크" || character == "쿠라야")
+        else if (character == "솔" || character =="???" || character == "러스크" || character == "쿠라야")
         {
             // '솔', '???', '러스크', '쿠라야'일 경우 대화창 활성화
             SetScene(dialogue, true);
@@ -182,6 +183,7 @@ public class Ch2TalkManager : MonoBehaviour
                 break;
             case 49:
                 DeactivateAllScenes();
+                
                 SetScene(cafe, true);
                 break;
             case 79:
@@ -207,6 +209,66 @@ public class Ch2TalkManager : MonoBehaviour
             case 102:
                 DeactivateAllScenes();
                 SetScene(bakery, true);
+                break;
+            case 157:
+                DeactivateAllScenes();
+                SetScene(trainRoom, true);
+                break;
+            case 161:
+                DeactivateAllScenes();
+                SetScene(cafe2, true);
+                break;
+            case 172:
+                DeactivateAllScenes();
+                SetScene(trainRoom, true);
+                break;
+            case 194: //5일차 낮
+                DeactivateAllScenes();
+                SetScene(trainRoom, true);
+                break;
+            case 196:
+                DeactivateAllScenes();
+                SetScene(cafe2, true);
+                break;
+            case 215:
+                DeactivateAllScenes();
+                SetScene(backGround, true);
+                break;
+            case 217:
+                DeactivateAllScenes();
+                SetScene(cafe2, true);
+                break;
+            case 234:
+                DeactivateAllScenes();
+                SetScene(bakery, true);
+                break;
+            case 269:
+                DeactivateAllScenes();
+                SetScene(trainRoom, true);
+                break;
+            case 271:
+                DeactivateAllScenes();
+                SetScene(cafe, true);
+                break;
+            case 293:
+                DeactivateAllScenes();
+                SetScene(trainRoom, true);
+                break;
+            case 295:
+                DeactivateAllScenes();
+                SetScene(cafe2, true);
+                break;
+            case 304:
+                DeactivateAllScenes();
+                SetScene(bakery, true);
+                break;
+            case 382: //8일차 낮
+                DeactivateAllScenes();
+                SetScene(trainRoom, true);
+                break;
+            case 384: 
+                DeactivateAllScenes();
+                SetScene(cafe2, true);
                 break;
             default:
                 break; //아무 것도 활성화하지 않음
