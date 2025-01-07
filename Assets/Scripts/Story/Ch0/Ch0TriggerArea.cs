@@ -10,7 +10,6 @@ public class Ch0TriggerArea : MonoBehaviour
     public float interactionDistance = 1.0f; // 상호작용 거리
     public bool talkActived = false; // 대화 활성화 상태
     public TalkManager talkManager; // TalkManager 인스턴스
-    public PlayerController playerController;
 
     private void Start()
     {
@@ -31,9 +30,6 @@ public class Ch0TriggerArea : MonoBehaviour
         if (distance <= interactionDistance)
         {
             interactionButton.SetActive(true); // 버튼 활성화
-
-            //이동 멈춤
-            playerController.StopMove();
 
             Ch0InteractionButton interactionButtonScript = interactionButton.GetComponent<Ch0InteractionButton>();
             if (interactionButtonScript != null)
