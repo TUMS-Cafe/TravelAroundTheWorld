@@ -14,6 +14,11 @@ public class Ch2TalkManager : MonoBehaviour
     public GameObject narration;
     public GameObject dialogue;
 
+    public string currentMusic = ""; // 현재 재생 중인 음악의 이름을 저장
+
+    public GameObject player; // 플레이어 캐릭터
+    public GameObject map; // 맵
+
     public GameObject imageObj; // 초상화 이미지
     public GameObject nameObj; // 이름
     public GameObject bigImageObj; // 큰 이미지
@@ -30,11 +35,26 @@ public class Ch2TalkManager : MonoBehaviour
     public GameObject trainRoomHallway; // 객실 복도 화면
     public GameObject bakery; //빵집 화면 
 
+    public bool isWaitingForPlayer = false; // 플레이어가 특정 위치에 도달할 때까지 기다리는 상태인지 여부
+    public Ch2MapManager mapManager; // 맵 매니저 참조
+
     public Ch0DialogueBar dialogueBar; // 대화창 스크립트 (타이핑 효과 호출을 위해)
     public Ch0DialogueBar narrationBar; // 나레이션창 스크립트 (타이핑 효과 호출을 위해)
 
+    void Awake()
+    {
+        //Instance = this;
+        //ch1ProDialogue = new List<Ch1ProDialogue>();
+        //LoadDialogueFromCSV();
+        //InitializeCharacterImages();
+        //mapManager = map.GetComponent<Ch1MapManager>();
+        //playerController = player.GetComponent<PlayerController>(); // 플레이어 컨트롤러 참조 설정
+        //player.SetActive(false);
+    }
+
     void Start()
     {
+        //player.SetActive(false);
         //currentDialogueIndex = 192; //text
         InitializeCharacterImages(); // 캐릭터 이미지 초기화
         LoadDialogueData(); // 대사 데이터 로드
@@ -43,7 +63,33 @@ public class Ch2TalkManager : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space) || Input.GetMouseButtonDown(0))
+        // 특정 대화에서 플레이어 이동 대기를 활성화
+        if (isWaitingForPlayer && mapManager != null)
+        {
+            // 플레이어가 특정 지점에 도달했는지 확인
+            if (mapManager.currentState == MapState.Cafe && mapManager.isInCafeBarZone)
+            {
+                Debug.Log("플레이어가 카페에 도착했습니다.");
+                isWaitingForPlayer = false;
+                DisableMap(); // 맵 비활성화
+                player.SetActive(false);
+                SetScene(cafe, true); // 카페 화면 활성화
+
+                currentDialogueIndex++;
+                DisplayCurrentDialogue(); // 대사 진행
+
+                // 카페 도달 후 대기 상태 해제
+                isWaitingForPlayer = false;
+            }
+        }
+
+        // 클릭 비활성화 처리
+        if (currentDialogueIndex == 14 && isWaitingForPlayer)
+        {
+            return; // 클릭 입력을 무시
+        }
+
+        if (Input.GetKeyDown(KeyCode.Space) || Input.GetMouseButtonDown(0)) //대화 진행(sapce 혹은 마우스 클릭)
         {
             NextDialogue();
         }
@@ -75,14 +121,24 @@ public class Ch2TalkManager : MonoBehaviour
             narrationText.text = currentDialogue.대사;
             dialogueText.text = currentDialogue.대사;
 
+            if (currentDialogueIndex == 14) // 특정 대화 인덱스
+            {
+                isWaitingForPlayer = true; // 플레이어 이동 대기 상태 활성화
+                EnableMap(); // 맵 활성화
+                player.SetActive(true); // 플레이어 활성화
+                Debug.Log("플레이어가 카페로 이동할 수 있습니다.");
+            }
+
             // 이름 설정
             nameObj.GetComponent<TMP_Text>().text = currentDialogue.인물;
 
             // ???를 쿠라야로 처리
             string characterKey = currentDialogue.인물 == "???" ? "쿠라야" : currentDialogue.인물;
 
+
+
             // 다이얼로그가 활성화될 조건
-            if (characterKey == "솔" || characterKey == "솔 " || characterKey == "쿠라야" || characterKey == "러스크")
+            if (characterKey == "솔" || characterKey == "솔 " || characterKey == "쿠라야" || characterKey == "러스크" || characterKey == "파이아")
             {
                 // 표정 키 생성
                 string expressionKey = !string.IsNullOrEmpty(currentDialogue.표정)
@@ -114,13 +170,29 @@ public class Ch2TalkManager : MonoBehaviour
             // 화면 변경
             UpdateSceneBasedOnDialogueIndex(currentDialogueIndex);
         }
-        else
+       
+
+    }
+    public void EnableMap()
+    {
+        if (map != null)
         {
-            narrationText.text = "대사가 끝났습니다.";
+            map.SetActive(true);
+            player.SetActive(true); // 플레이어 활성화
+            Debug.Log("맵이 활성화되었습니다.");
+        }
+    }
+    public void DisableMap()
+    {
+        if (map != null)
+        {
+            map.SetActive(false);
+            player.SetActive(false); // 플레이어 비활성화
+            Debug.Log("맵이 비활성화되었습니다.");
         }
     }
 
-    void HandleNarrationVisibility(string character)
+    void HandleNarrationVisibility(string character) 
     {
         if (character == "나레이션" || character == "열차 안내 음성")
         {
@@ -128,9 +200,9 @@ public class Ch2TalkManager : MonoBehaviour
             SetScene(narration, true);
             SetScene(dialogue, false); // 대화창 비활성화
         }
-        else if (character == "솔" || character =="???" || character == "러스크" || character == "쿠라야")
+        else if (character == "솔" || character =="???" || character == "러스크" || character == "쿠라야" || character == "파이아")
         {
-            // '솔', '???', '러스크', '쿠라야'일 경우 대화창 활성화
+            // '솔', '???', '러스크', '쿠라야', '파이아'일 경우 대화창 활성화
             SetScene(dialogue, true);
             SetScene(narration, false); // 나레이션 비활성화
         }
@@ -152,26 +224,41 @@ public class Ch2TalkManager : MonoBehaviour
         }
     }
 
-    // 화면 변경 함수
-    void UpdateSceneBasedOnDialogueIndex(int index)
+
+// 화면 변경 함수
+void UpdateSceneBasedOnDialogueIndex(int index)
     {
         // 인덱스에 따라 화면을 설정
         switch (index)
         {
-            case 8: 
+            case 0: 
+                SetPlayerActive(false); // 플레이어 비활성화
                 SetScene(backGround, true); // 검은 화면을 활성화
                 break;
-            case 10:
+            case 9: 
+                SetScene(backGround, true); // 검은 화면을 활성화
+                break;
+            case 11:
                 DeactivateAllScenes();
+                //SetPlayerActive(true); // 플레이어 활성화
                 SetScene(trainRoom, true); //객실 화면 활성화
                 break;
-            case 14:
+            case 15:
                 DeactivateAllScenes();
                 SetScene(cafe, true); //카페 화면 활성화
                 break;
-            case 23:
+            case 24:
                 DeactivateAllScenes();
                 SetScene(cafe2, true);
+                break;
+            case 27:
+                SetScene(dialogue, false); // 대화창 비활성화
+                SetScene(narration, false); // 나레이션 비활성화
+                SetScene(backGround, true); // 검은 화면을 활성화
+                break;
+            case 40:
+                SetScene(dialogue, false); // 대화창 비활성화
+                SetScene(narration, false); // 나레이션 비활성화
                 break;
             case 45:
                 DeactivateAllScenes();
@@ -274,6 +361,41 @@ public class Ch2TalkManager : MonoBehaviour
                 break; //아무 것도 활성화하지 않음
         }
     }
+
+// 플레이어 활성화/비활성화 함수
+void SetPlayerActive(bool isActive)
+    {
+        if (player != null)
+        {
+            player.SetActive(isActive);
+            if (isActive)
+            {
+                // 플레이어가 활성화되면, 일정 시간 후 PlayerController가 초기화될 수 있도록 기다리기
+                StartCoroutine(WaitForPlayerInitialization());
+            }
+        }
+        else
+        {
+            Debug.LogError("플레이어 객체가 null입니다.");
+        }
+    }
+    IEnumerator WaitForPlayerInitialization()
+    {
+        // 플레이어가 활성화된 후 잠시 대기
+        yield return new WaitForSeconds(0.5f); // 잠시 대기 시간 설정
+
+        PlayerController playerController = player.GetComponent<PlayerController>();
+        if (playerController != null)
+        {
+            // PlayerController가 초기화된 후에 처리할 작업
+            Debug.Log("PlayerController 초기화 완료.");
+        }
+        else
+        {
+            Debug.LogError("PlayerController 초기화 실패.");
+        }
+    }
+
     void HandleCharacterImages(string character)
     {
         if (characterImages.ContainsKey(character))
