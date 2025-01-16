@@ -10,7 +10,7 @@ public class AnimationFunc : MonoBehaviour
     {
         talkManager.isAnimationPlaying = false;
 
-        talkManager.currentDialogueIndex += 1;
+        //talkManager.currentDialogueIndex += 1;
         SoundManager.Instance.PlaySFX("twinkle");
         talkManager.invitationText.gameObject.SetActive(true);
     }

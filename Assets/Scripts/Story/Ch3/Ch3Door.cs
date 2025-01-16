@@ -18,7 +18,7 @@ public class Ch3Door : MonoBehaviour
         if (collision.gameObject.CompareTag("Player"))
         {
             // DoorManager에게 충돌 정보를 전달
-            Ch1DoorManager.Instance.HandleDoorCollision(doorName);
+            Ch3DoorManager.Instance.HandleDoorCollision(doorName);
         }
     }
 }
