@@ -9,6 +9,7 @@ public class MapTurorial : MonoBehaviour
 
     public GameObject mapTutorial_1;
     public GameObject mapTutorial_2;
+    public GameObject mapTutorial_3;
 
     public GameObject player;
     public PlayerController playerController;
@@ -38,6 +39,7 @@ public class MapTurorial : MonoBehaviour
     {
         mapTutorial_1.SetActive(false);
         mapTutorial_2.SetActive(false);
+        mapTutorial_3.SetActive(false);
         mapManager.SetActive(true);
         StartCoroutine(screenFader.FadeIn(map));  // 맵 활성화 (맵 완료되면 코드 수정 필요)
         StartCoroutine(screenFader.FadeIn(mapTutorial_1)); // 맵 튜토리얼1 창 활성화
@@ -56,7 +58,7 @@ public class MapTurorial : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (Input.GetKeyDown(KeyCode.Space) || Input.GetMouseButtonDown(0))
         {
             spaceBarIndex++;
             Tutorial();
@@ -81,7 +83,12 @@ public class MapTurorial : MonoBehaviour
         }
         else if (spaceBarIndex == 2)
         {
-            StartCoroutine(screenFader.FadeOut(mapTutorial_2)); //세번째 스페이스바를 누르면 맵 튜토리얼2 창 페이드아웃
+            mapTutorial_2.SetActive(false);
+            StartCoroutine(screenFader.FadeIn(mapTutorial_3)); //세번째 스페이스바를 누르면 맵 튜토리얼2 창 페이드아웃
+        }
+        else if (spaceBarIndex == 3)
+        {
+            StartCoroutine(screenFader.FadeOut(mapTutorial_3)); //세번째 스페이스바를 누르면 맵 튜토리얼2 창 페이드아웃
             playerController.StartMove(); //튜토리얼 창 꺼질때 플레이어 움직임 재개
         }
     }
