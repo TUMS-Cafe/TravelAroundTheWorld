@@ -8,6 +8,7 @@ TagManager:
   - RS
   - Bat
   - X
+  - CurrentNpc
   layers:
   - Default
   - TransparentFX
