@@ -29,8 +29,7 @@ public class Ch3TalkManager : MonoBehaviour
     public GameObject trainRoomHallway; // 객실복도 화면
     public GameObject trainRoomHallwayWolf; // 객실복도(늑대 객실 앞) 화면
     public GameObject balcony; //발코니 화면
-
-    //public Ch3NpcScript ch3NpcScript;
+    
     public bool isNpcTalkActivated=false;
     public string currentNpc = "Null";
     public GameObject Npc_Rayviyak; // 정원 npc
@@ -39,8 +38,10 @@ public class Ch3TalkManager : MonoBehaviour
     public GameObject Npc_Violet; // 바 npc
     public GameObject Npc_Coco;
     public GameObject Npc_Nicksy;
+    public GameObject Npc_Naru;
+    public GameObject Npc_Ash;
 
-    public bool isCh2HappyEnding { get; set; } = false;
+    public bool isCh2HappyEnding = false;
     public GameObject Npc_Kuraya; // 빵집 npc (ch2 해피엔딩일 때)
 
     public ScreenFader screenFader; // 페이드인/아웃 효과 스크립트
@@ -67,8 +68,6 @@ public class Ch3TalkManager : MonoBehaviour
     public int currentDialogueIndex = 0; // 현재 대사 인덱스
     private bool isActivated = false; // TalkManager가 활성화되었는지 여부
 
-    //public bool isAllNPCActivated = false; //모든 npc와 대화 완료되었는지 여부
-
     private Dictionary<string, Sprite> characterImages; // 캐릭터 이름과 이미지를 매핑하는 사전
     private Sprite characterSprite;
 
@@ -86,11 +85,15 @@ public class Ch3TalkManager : MonoBehaviour
     public string speakerKey;
     public bool bedUsed = false; // 침대를 사용했는지 여부
 
-    public bool HasTalkedToRayviyak { get; set; } = false;
-    public bool HasTalkedToViolet { get; set; } = false;
-    public bool HasTalkedToRusk { get; set; } = false;
-    public bool HasTalkedToMrHam { get; set; } = false;
-    public bool HasTalkedToKuraya { get; set; } = false;
+    public bool HasTalkedToRayviyak = false;
+    public bool HasTalkedToViolet = false;
+    public bool HasTalkedToRusk = false;
+    public bool HasTalkedToMrHam = false;
+    public bool HasTalkedToCoco = false;
+    public bool HasTalkedToNicksy = false;
+    public bool HasTalkedToNaru = false;
+    public bool HasTalkedToAsh = false;
+    public bool HasTalkedToKuraya = false;
 
     void Awake()
     {
@@ -99,6 +102,7 @@ public class Ch3TalkManager : MonoBehaviour
         LoadDialogueFromCSV(); // CSV에서 데이터를 로드하는 함수 호출
         InitializeCharacterImages();
         playerController.StopMove();
+        trainRoom.SetActive(true);
     }
 
     void Start()
@@ -170,7 +174,7 @@ public class Ch3TalkManager : MonoBehaviour
         if (isWaitingForPlayer && mapManager != null)
         {
             // 카페바에 도착하면 스토리 다시 진행
-            if (mapManager.currentState == MapState.Cafe && mapManager.isInCafeBarZone && (currentDialogueIndex == 10 || currentDialogueIndex == 98))
+            if (mapManager.currentState == MapState.Cafe && mapManager.isInCafeBarZone && (currentDialogueIndex == 10 || currentDialogueIndex == 98 || currentDialogueIndex == 157 || currentDialogueIndex == 255))
             {
                 isWaitingForPlayer = false;
                 player.SetActive(false);
@@ -178,10 +182,15 @@ public class Ch3TalkManager : MonoBehaviour
                 cafe.SetActive(true);
                 currentDialogueIndex++;
                 PrintProDialogue(currentDialogueIndex);
+
                 Npc_Rayviyak.SetActive(false);
                 Npc_MrHam.SetActive(false);
                 Npc_Rusk.SetActive(false);
                 Npc_Violet.SetActive(false);
+                Npc_Coco.SetActive(false);
+                Npc_Nicksy.SetActive(false);
+                Npc_Naru.SetActive(false);
+                Npc_Ash.SetActive(false);
                 Npc_Kuraya.SetActive(false);
             }
             /*
@@ -198,7 +207,7 @@ public class Ch3TalkManager : MonoBehaviour
             */
 
             // 카페에서 일해야 되는데 다른 곳으로 가려고 하면 다시 카페로 플레이어 강제 이동
-            if (mapManager.currentState != MapState.Cafe && (currentDialogueIndex == 10 || currentDialogueIndex == 98))
+            if (mapManager.currentState != MapState.Cafe && (currentDialogueIndex == 10 || currentDialogueIndex == 98 || currentDialogueIndex == 157 || currentDialogueIndex == 255))
             {
                 player.transform.position = new Vector3(0, 0, 0);
                 narration.SetActive(true);
@@ -342,6 +351,51 @@ public class Ch3TalkManager : MonoBehaviour
             Debug.Log("밤 랜덤 주문 1건");
             //SceneTransitionManager.Instance.HandleRandomMenuTransition("Ch3Scene", "CafeScene", 132, 1);
         }
+
+        //3일차 낮 주문 리스트
+        else if (index == 164) // 낮 주문 2건 코코,닉시
+        {
+            Debug.Log("낮 주문 2건 코코,닉시");
+            //SceneTransitionManager.Instance.HandleRandomMenuTransition("Ch3Scene", "CafeScene", 165, 2);
+        }
+        else if (index == 202) // 룸서비스 랜덤 1건
+        {
+            Debug.Log("배달 랜덤 룸서비스 주문 1건");
+            //SceneTransitionManager.Instance.HandleDialogueTransition("Ch3Scene", "CafeScene", 203, 1);
+        }
+        else if (index == 203) // 랜덤 주문 1건
+        {
+            Debug.Log("낮 랜덤 주문 1건");
+            //SceneTransitionManager.Instance.HandleRandomMenuTransition("Ch3Scene", "CafeScene", 204, 1);
+        }
+        else if (index == 204) // 룸서비스 랜덤 1건
+        {
+            Debug.Log("배달 랜덤 룸서비스 주문 1건");
+            //SceneTransitionManager.Instance.HandleDialogueTransition("Ch3Scene", "CafeScene", 205, 1);
+        }
+        else if (index == 205) // 룸서비스 랜덤 1건
+        {
+            Debug.Log("배달 랜덤 룸서비스 주문 1건");
+            //SceneTransitionManager.Instance.HandleDialogueTransition("Ch3Scene", "CafeScene", 206, 1);
+        }
+        //3일차 밤 주문 리스트
+        else if (index == 207) // 랜덤 주문 1건
+        {
+            Debug.Log("밤 랜덤 주문 1건");
+            //SceneTransitionManager.Instance.HandleRandomMenuTransition("Ch3Scene", "CafeScene", 208, 1);
+        }
+        else if (index == 212) // 밤 주문 2건 나루
+        {
+            Debug.Log("밤 주문 2건 나루");
+            //SceneTransitionManager.Instance.HandleRandomMenuTransition("Ch3Scene", "CafeScene", 213, 2);
+        }
+        else if (index == 224) // 랜덤 주문 1건
+        {
+            Debug.Log("밤 랜덤 주문 1건");
+            //SceneTransitionManager.Instance.HandleRandomMenuTransition("Ch3Scene", "CafeScene", 225, 1);
+        }
+
+        //4d
         else
         {
             // 기본 대화 진행
@@ -499,7 +553,7 @@ public class Ch3TalkManager : MonoBehaviour
         }
 
         // 일해야 할 때 카페로 강제 이동 후 이동 가능하게 전환
-        if (index == 10 || index == 98)
+        if (index == 10 || index == 98 || index == 157)
         {
             player.transform.position = new Vector3(0, 0, 0);
             mapManager.currentState = MapState.Cafe;
@@ -512,54 +566,95 @@ public class Ch3TalkManager : MonoBehaviour
             dialogue.SetActive(false);
         }
         // 카페 일 끝나고 이동 가능하게 전환 ->아직 아무랑도 대화 안했을때만 실행
-        if (!isNpcTalkActivated && !HasTalkedToRayviyak && !HasTalkedToViolet && !HasTalkedToKuraya && !HasTalkedToRusk && !HasTalkedToMrHam && currentDialogueIndex == 76)
+        if (!isNpcTalkActivated && !HasTalkedToRayviyak && !HasTalkedToViolet && !HasTalkedToKuraya && !HasTalkedToRusk && !HasTalkedToMrHam)
         {
-            player.transform.position = new Vector3(2, -3.5f, 0);
-            isWaitingForPlayer = true;
-            playerController.StartMove();
-            map.SetActive(true);
-            player.SetActive(true);
-            cafe.SetActive(false);
-            narration.SetActive(false);
-            dialogue.SetActive(false);
-            Npc_Rayviyak.SetActive(true);
-            Npc_MrHam.SetActive(true);
-            Npc_Rusk.SetActive(true);
-            Npc_Violet.SetActive(true);
-            Npc_Coco.SetActive(false);
-            Npc_Nicksy.SetActive(false);
-            if (isCh2HappyEnding)
+            //1일차 밤
+            if(currentDialogueIndex == 76)
             {
-                Npc_Kuraya.SetActive(true);
-            }
-            //대화 다 안해도 침대 상호작용 가능
-            EnableBedInteraction();
-        }
-        if (!isNpcTalkActivated && !HasTalkedToViolet && !HasTalkedToKuraya && !HasTalkedToRusk && !HasTalkedToMrHam && currentDialogueIndex == 133)
-        {
-            player.transform.position = new Vector3(2, -3.5f, 0);
-            isWaitingForPlayer = true;
-            playerController.StartMove();
-            map.SetActive(true);
-            player.SetActive(true);
-            cafe.SetActive(false);
-            narration.SetActive(false);
-            dialogue.SetActive(false);
-            Npc_Rayviyak.SetActive(false);
-            Npc_MrHam.SetActive(true);
-            Npc_Violet.SetActive(true);
-            Npc_Coco.SetActive(true);
-            Npc_Nicksy.SetActive(true);
-            if (isCh2HappyEnding)
-            {
-                Npc_Kuraya.SetActive(true);
-            }
-            if (!isCh2HappyEnding)
-            {
+                player.transform.position = new Vector3(2, -3.5f, 0);
+                isWaitingForPlayer = true;
+                playerController.StartMove();
+                map.SetActive(true);
+                player.SetActive(true);
+                cafe.SetActive(false);
+                narration.SetActive(false);
+                dialogue.SetActive(false);
+
+                Npc_Rayviyak.SetActive(true);
+                Npc_MrHam.SetActive(true);
                 Npc_Rusk.SetActive(true);
+                Npc_Violet.SetActive(true);
+                Npc_Coco.SetActive(false);
+                Npc_Nicksy.SetActive(false);
+                Npc_Naru.SetActive(false);
+                Npc_Ash.SetActive(false);
+                if (isCh2HappyEnding)
+                {
+                    Npc_Kuraya.SetActive(true);
+                }
+                //대화 다 안해도 침대 상호작용 가능
+                EnableBedInteraction();
             }
-            //대화 다 안해도 침대 상호작용 가능
-            EnableBedInteraction();
+            //2일차 밤
+            if (currentDialogueIndex == 133)
+            {
+                player.transform.position = new Vector3(2, -3.5f, 0);
+                isWaitingForPlayer = true;
+                playerController.StartMove();
+                map.SetActive(true);
+                player.SetActive(true);
+                cafe.SetActive(false);
+                narration.SetActive(false);
+                dialogue.SetActive(false);
+
+                Npc_Rayviyak.SetActive(false);
+                Npc_MrHam.SetActive(true);
+                Npc_Violet.SetActive(true);
+                Npc_Coco.SetActive(true);
+                Npc_Nicksy.SetActive(true);
+                Npc_Naru.SetActive(false);
+                Npc_Ash.SetActive(false);
+                if (isCh2HappyEnding)
+                {
+                    Npc_Kuraya.SetActive(true);
+                }
+                if (!isCh2HappyEnding)
+                {
+                    Npc_Rusk.SetActive(true);
+                }
+                //대화 다 안해도 침대 상호작용 가능
+                EnableBedInteraction();
+            }
+            //3일차 밤
+            if (currentDialogueIndex == 226)
+            {
+                player.transform.position = new Vector3(2, -3.5f, 0);
+                isWaitingForPlayer = true;
+                playerController.StartMove();
+                map.SetActive(true);
+                player.SetActive(true);
+                cafe.SetActive(false);
+                narration.SetActive(false);
+                dialogue.SetActive(false);
+
+                Npc_Rayviyak.SetActive(true);
+                Npc_MrHam.SetActive(true);
+                Npc_Violet.SetActive(true);
+                Npc_Rusk.SetActive(true);
+                Npc_Coco.SetActive(true);
+                Npc_Nicksy.SetActive(true);
+                Npc_Coco.transform.position = new Vector3(16.9f, -0.4f, 0); // Coco 위치 카운터 앞
+                Npc_Nicksy.transform.position = new Vector3(15.9f, -0.4f, 0); // Nicksy 위치 카운터 앞
+                Npc_Naru.SetActive(true);
+                Npc_Ash.SetActive(false);
+                if (isCh2HappyEnding)
+                {
+                    Npc_Kuraya.SetActive(true);
+                    Npc_Kuraya.transform.position = new Vector3(16.9f, 1.25f, 0); // Kuraya 위치 카운터
+                }
+                //대화 다 안해도 침대 상호작용 가능
+                EnableBedInteraction();
+            }
         }
         else
         {
@@ -571,6 +666,10 @@ public class Ch3TalkManager : MonoBehaviour
     {
         bedUsed = true; // 침대 상호작용 활성화
     }
+    public void DisableBedInteraction()
+    {
+        bedUsed = false; // 침대 상호작용 비활성화
+    }
 
     public void ShowNarration(string speaker, string text)
     {
@@ -581,9 +680,9 @@ public class Ch3TalkManager : MonoBehaviour
     
     public void NpcDialogue(int index, string npc)
     {
-        //1일차 밤 Npc 대화
         if (isNpcTalkActivated)
         {
+            //1일차 밤 Npc 대화
             if (mapManager.currentState == MapState.Garden && npc == "Npc_Rayviyak" && !HasTalkedToRayviyak && index >= 77 && index <= 80)
             {
                 if (index >= 77 && index <= 79)
@@ -664,11 +763,6 @@ public class Ch3TalkManager : MonoBehaviour
                     playerController.StartMove();
                 }
             }
-            else if (npc != null && npc != "Npc_Rayviyak" && npc != "Npc_Violet" && npc != "Npc_Kuraya" && npc != "Npc_Rusk" && npc != "Npc_MrHam")
-            {
-                ShowNarration("나레이션", "지금은 바빠 보여.");
-                currentDialogueIndex =76; // 인덱스 유지
-            }
 
             //2일차 밤 Npc 대화
             if (mapManager.currentState == MapState.Cafe && npc == "Npc_Violet" && !HasTalkedToViolet && index >= 134 && index <= 139)
@@ -707,6 +801,7 @@ public class Ch3TalkManager : MonoBehaviour
             {
                 if (index >= 147 && index <= 152)
                 {
+                    playerController.StopMove();
                     PrintProDialogue(index);
                 }
                 else if (index == 153)
@@ -735,24 +830,89 @@ public class Ch3TalkManager : MonoBehaviour
                     playerController.StartMove();
                 }
             }
-            else if (npc != null && npc != "Npc_Violet" && npc != "Npc_Kuraya" && npc != "Npc_Rusk" && npc != "Npc_MrHam")
+
+            //3일차 밤 Npc 대화
+            if (mapManager.currentState == MapState.Garden && npc == "Npc_Naru" && !HasTalkedToNaru && index >= 227 && index <= 232)
             {
-                ShowNarration("나레이션", "지금은 바빠 보여.");
-                currentDialogueIndex = 133; // 인덱스 유지
+                if (index >= 227 && index <= 231)
+                {
+                    PrintProDialogue(index);
+                }
+                else if (index == 232)
+                {
+                    currentDialogueIndex = 226;
+                    narration.SetActive(false);
+                    dialogue.SetActive(false);
+                    isNpcTalkActivated = false;
+                    HasTalkedToNaru = true;
+                    playerController.StartMove();
+                }
             }
-            
-            /*
-            // ch2가 해피엔딩일 경우 쿠라야를 포함한 모든 npc와 대화가 끝났다면, 침대와 상호작용할 수 있게 설정
-            if (isCh2HappyEnding && HasTalkedToRayviyak && HasTalkedToViolet && HasTalkedToKuraya && HasTalkedToRusk && HasTalkedToMrHam)
+            else if (mapManager.currentState == MapState.Cafe && npc == "Npc_Violet" && !HasTalkedToViolet && index >= 232 && index <= 233)
             {
-                EnableBedInteraction();
+                if (index == 232)
+                {
+                    PrintProDialogue(index);
+                }
+                else if (index == 233)
+                {
+                    currentDialogueIndex = 226;
+                    narration.SetActive(false);
+                    dialogue.SetActive(false);
+                    isNpcTalkActivated = false;
+                    HasTalkedToViolet = true;
+                    playerController.StartMove();
+                }
             }
-            // ch2가 배드엔딩일 경우 쿠라야 제외한 나머지 npc와 대화가 끝났다면, 침대와 상호작용할 수 있게 설정
-            if (!isCh2HappyEnding && HasTalkedToRayviyak && HasTalkedToViolet && !HasTalkedToKuraya && HasTalkedToRusk && HasTalkedToMrHam)
+            else if (isCh2HappyEnding && mapManager.currentState == MapState.Bakery && npc == "Npc_Nicksy" && !HasTalkedToNicksy && index >= 233 && index <= 242)
             {
-                EnableBedInteraction();
+                if (index >= 233 && index <= 241)
+                {
+                    PrintProDialogue(index);
+                }
+                else if (index == 242)
+                {
+                    currentDialogueIndex = 226;
+                    narration.SetActive(false);
+                    dialogue.SetActive(false);
+                    isNpcTalkActivated = false;
+                    HasTalkedToNicksy = true;
+                    playerController.StartMove();
+                }
             }
-            */
+            else if (!isCh2HappyEnding && mapManager.currentState == MapState.Bakery && npc == "Npc_Coco" && !HasTalkedToCoco && index >= 242 && index <= 251)
+            {
+                if (index >= 242 && index <= 250)
+                {
+                    playerController.StopMove();
+                    PrintProDialogue(index);
+                }
+                else if (index == 251)
+                {
+                    currentDialogueIndex = 226;
+                    narration.SetActive(false);
+                    dialogue.SetActive(false);
+                    isNpcTalkActivated = false;
+                    HasTalkedToCoco = true;
+                    playerController.StartMove();
+                }
+            }
+            else if (mapManager.currentState == MapState.MedicalRoom && npc == "Npc_MrHam" && !HasTalkedToMrHam && index >= 251 && index <= 253)
+            {
+                if (index >= 251 && index <= 252)
+                {
+                    PrintProDialogue(index);
+                }
+                else if (index == 253)
+                {
+                    currentDialogueIndex = 226;
+                    narration.SetActive(false);
+                    dialogue.SetActive(false);
+                    isNpcTalkActivated = false;
+                    HasTalkedToMrHam = true;
+                    playerController.StartMove();
+                }
+            }
         }
         else
         {
@@ -791,18 +951,6 @@ public class Ch3TalkManager : MonoBehaviour
     //대사 위치에 따라 특정 화면을 활성화 시키거나 음악을 재생하는 함수
     void CheckTalk(string location)
     {
-        cafe.SetActive(false);
-        cafe2.SetActive(false);
-        garden.SetActive(false);
-        gardenCafe.SetActive(false);
-        bakery.SetActive(false);
-        medicalRoom.SetActive(false);
-        trainRoom.SetActive(false);
-        trainRoomHallway.SetActive(false);
-        trainRoomPenguinFox.SetActive(false);
-        trainRoomHallwayWolf.SetActive(false);
-        balcony.SetActive(false);
-
         switch (location)
         {
             case locationCafe:
@@ -827,7 +975,15 @@ public class Ch3TalkManager : MonoBehaviour
                 break;
             case locationTrainRoom:
                 PlayMusic(locationTrainRoom);
-                trainRoom.SetActive(true);
+                //일해야 할 때 객실 화면 끄기
+                if (currentDialogueIndex == 10 || currentDialogueIndex == 98 || currentDialogueIndex == 157)
+                {
+                    trainRoom.SetActive(false);
+                }
+                else
+                {
+                    trainRoom.SetActive(true);
+                }
                 break;
             case locationTrainRoomHallway:
                 PlayMusic(locationTrainRoom);

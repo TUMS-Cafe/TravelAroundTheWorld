@@ -113,6 +113,38 @@ public class Ch3InteractionButton : MonoBehaviour
                     ch3TalkManager.isNpcTalkActivated = true;
                     ch3TalkManager.NpcDialogue(ch3TalkManager.currentDialogueIndex, npcName);
                 }
+
+                //3일차 밤 Npc 대화
+                if (ch3TalkManager.currentDialogueIndex == 226 && npcName == "Npc_Naru")
+                {
+                    ch3TalkManager.currentDialogueIndex = 227;
+                    ch3TalkManager.isNpcTalkActivated = true;
+                    ch3TalkManager.NpcDialogue(ch3TalkManager.currentDialogueIndex, npcName);
+                }
+                if (ch3TalkManager.currentDialogueIndex == 226 && npcName == "Npc_Violet")
+                {
+                    ch3TalkManager.currentDialogueIndex = 232;
+                    ch3TalkManager.isNpcTalkActivated = true;
+                    ch3TalkManager.NpcDialogue(ch3TalkManager.currentDialogueIndex, npcName);
+                }
+                if (ch3TalkManager.isCh2HappyEnding && ch3TalkManager.currentDialogueIndex == 226 && npcName == "Npc_Nicksy")
+                {
+                    ch3TalkManager.currentDialogueIndex = 233;
+                    ch3TalkManager.isNpcTalkActivated = true;
+                    ch3TalkManager.NpcDialogue(ch3TalkManager.currentDialogueIndex, npcName);
+                }
+                if (!ch3TalkManager.isCh2HappyEnding && ch3TalkManager.currentDialogueIndex == 226 && npcName == "Npc_Coco")
+                {
+                    ch3TalkManager.currentDialogueIndex = 242;
+                    ch3TalkManager.isNpcTalkActivated = true;
+                    ch3TalkManager.NpcDialogue(ch3TalkManager.currentDialogueIndex, npcName);
+                }
+                if (ch3TalkManager.currentDialogueIndex == 226 && npcName == "Npc_MrHam")
+                {
+                    ch3TalkManager.currentDialogueIndex = 251;
+                    ch3TalkManager.isNpcTalkActivated = true;
+                    ch3TalkManager.NpcDialogue(ch3TalkManager.currentDialogueIndex, npcName);
+                }
             }
             else
             {

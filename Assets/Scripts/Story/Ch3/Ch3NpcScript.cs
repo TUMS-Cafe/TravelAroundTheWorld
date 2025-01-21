@@ -64,18 +64,13 @@ public class Ch3NpcScript : MonoBehaviour
                 currentNpc = "Null";
             }
         }
-
         // 2일차 밤 Npc 대화
-        if (isPlayerInRange && talkManager.currentDialogueIndex == 133)
+        else if (isPlayerInRange && talkManager.currentDialogueIndex == 133)
         {
             if (gameObject.name == "Npc_Violet" && !talkManager.HasTalkedToViolet)
             {
                 dialogueButton.SetActive(true);
                 currentNpc = "Npc_Violet";
-            }
-            if (gameObject.name == "Npc_Coco" || gameObject.name == "Npc_Nicksy")
-            {
-                dialogueButton.SetActive(false);
             }
             else if (talkManager.isCh2HappyEnding && gameObject.name == "Npc_Kuraya" && !talkManager.HasTalkedToKuraya)
             {
@@ -92,7 +87,49 @@ public class Ch3NpcScript : MonoBehaviour
                 dialogueButton.SetActive(true);
                 currentNpc = "Npc_MrHam";
             }
+            else if (gameObject.name == "Npc_Coco" || gameObject.name == "Npc_Nicksy")
+            {
+                dialogueButton.SetActive(false);
+            }
             else if (gameObject.name != "Npc_Violet" && gameObject.name != "Npc_Kuraya" && gameObject.name != "Npc_Rusk" && gameObject.name != "Npc_MrHam")
+            {
+                dialogueButton.SetActive(false);
+                currentNpc = "Null";
+            }
+        }
+        // 3일차 밤 Npc 대화
+        else if (isPlayerInRange && talkManager.currentDialogueIndex == 226)
+        {
+            if (gameObject.name == "Npc_Naru" && !talkManager.HasTalkedToNaru)
+            {
+                dialogueButton.SetActive(true);
+                currentNpc = "Npc_Naru";
+            }
+            else if (gameObject.name == "Npc_Violet" && !talkManager.HasTalkedToViolet)
+            {
+                dialogueButton.SetActive(true);
+                currentNpc = "Npc_Violet";
+            }
+            else if (talkManager.isCh2HappyEnding && gameObject.name == "Npc_Nicksy" && !talkManager.HasTalkedToNicksy)
+            {
+                dialogueButton.SetActive(true);
+                currentNpc = "Npc_Nicksy";
+            }
+            else if (!talkManager.isCh2HappyEnding && gameObject.name == "Npc_Coco" && !talkManager.HasTalkedToCoco)
+            {
+                dialogueButton.SetActive(true);
+                currentNpc = "Npc_Coco";
+            }
+            else if (gameObject.name == "Npc_MrHam" && !talkManager.HasTalkedToMrHam)
+            {
+                dialogueButton.SetActive(true);
+                currentNpc = "Npc_MrHam";
+            }
+            else if (gameObject.name == "Npc_Rayviyak" || gameObject.name == "Npc_Rusk" || gameObject.name == "Npc_Kuraya")
+            {
+                dialogueButton.SetActive(false);
+            }
+            else if (gameObject.name != "Npc_Rayviyak" && gameObject.name != "Npc_Naru" && gameObject.name != "Npc_Violet" && gameObject.name != "Npc_Kuraya" && gameObject.name != "Npc_Rusk" && gameObject.name != "Npc_Coco" && gameObject.name != "Npc_Nicksy" && gameObject.name != "Npc_MrHam")
             {
                 dialogueButton.SetActive(false);
                 currentNpc = "Null";
