@@ -65,6 +65,18 @@ public class Ch3BedButton : MonoBehaviour
             talkManager.currentDialogueIndex = 253;
             talkManager.PrintProDialogue(talkManager.currentDialogueIndex);
         }
+        //4일차 밤->5일차 아침
+        if (talkManager.currentDialogueIndex == 356)
+        {
+            talkManager.currentDialogueIndex = 391;
+            talkManager.PrintProDialogue(talkManager.currentDialogueIndex);
+        }
+        //5일차 밤->6일차 아침
+        if (talkManager.currentDialogueIndex == 418)
+        {
+            talkManager.currentDialogueIndex = 453;
+            talkManager.PrintProDialogue(talkManager.currentDialogueIndex);
+        }
 
         player.GetComponent<PlayerController>().StartMove();
     }
