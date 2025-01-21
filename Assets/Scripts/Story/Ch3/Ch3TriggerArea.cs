@@ -7,7 +7,7 @@ public class Ch3TriggerArea : MonoBehaviour
     public GameObject interactionButton; // 상호작용 버튼
     public string locationName; // npc가 있는 장소
     public Transform playerTransform; // 플레이어의 Transform
-    public float interactionDistance = 0.3f; // 상호작용 거리
+    public float interactionDistance = 5f; // 상호작용 거리
     public bool talkActived = false; // 대화 활성화 상태
     public Ch3TalkManager ch3TalkManager; // TalkManager 인스턴스
 
