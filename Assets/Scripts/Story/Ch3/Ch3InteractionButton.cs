@@ -75,9 +75,9 @@ public class Ch3InteractionButton : MonoBehaviour
                     ch3TalkManager.isNpcTalkActivated = true;
                     ch3TalkManager.NpcDialogue(ch3TalkManager.currentDialogueIndex, npcName);
                 }
-                if (ch3TalkManager.currentDialogueIndex == 76 && npcName == "Npc_Rusk")
+                if (!ch3TalkManager.isCh2HappyEnding && ch3TalkManager.currentDialogueIndex == 76 && npcName == "Npc_Rusk")
                 {
-                    ch3TalkManager.currentDialogueIndex = 83;
+                    ch3TalkManager.currentDialogueIndex = 88;
                     ch3TalkManager.isNpcTalkActivated = true;
                     ch3TalkManager.NpcDialogue(ch3TalkManager.currentDialogueIndex, npcName);
                 }

@@ -48,7 +48,7 @@ public class Ch3NpcScript : MonoBehaviour
                 dialogueButton.SetActive(true);
                 currentNpc = "Npc_Kuraya";
             }
-            else if (gameObject.name == "Npc_Rusk" && !talkManager.HasTalkedToRusk)
+            else if (!talkManager.isCh2HappyEnding && gameObject.name == "Npc_Rusk" && !talkManager.HasTalkedToRusk)
             {
                 dialogueButton.SetActive(true);
                 currentNpc = "Npc_Rusk";

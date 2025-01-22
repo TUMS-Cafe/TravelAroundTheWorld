@@ -569,6 +569,12 @@ public class Ch3TalkManager : MonoBehaviour
             ["바이올렛"] = Resources.Load<Sprite>("NpcImage/Violet"),
             ["러스크"] = Resources.Load<Sprite>("NpcImage/Rusk"),
             ["Mr.Ham"] = Resources.Load<Sprite>("NpcImage/MrHam"),
+            ["파이아"] = Resources.Load<Sprite>("NpcImage/Fire"),
+            ["코코"] = Resources.Load<Sprite>("NpcImage/Coco"),
+            ["닉시"] = Resources.Load<Sprite>("NpcImage/Nicksy"),
+            ["나루"] = Resources.Load<Sprite>("NpcImage/Naru"),
+            ["쿠라야"] = Resources.Load<Sprite>("NpcImage/Kuraya"),
+            //["애쉬"] = Resources.Load<Sprite>("NpcImage/Ash"),
 
             // 솔 표정 이미지
             ["솔_일반"] = Resources.Load<Sprite>("PlayerImage/Sol"),
@@ -597,6 +603,42 @@ public class Ch3TalkManager : MonoBehaviour
             ["Mr.Ham_화남"] = Resources.Load<Sprite>("NpcImage/MrHam_화남"),
             ["Mr.Ham_아쉬움"] = Resources.Load<Sprite>("NpcImage/MrHam_아쉬움"),
 
+            // 파이아 표정 이미지
+            ["파이아_일반"] = Resources.Load<Sprite>("NpcImage/Fire"),
+            ["파이아_웃음"] = Resources.Load<Sprite>("NpcImage/Fire_웃음"),
+
+            // 코코 표정 이미지
+            ["코코_일반"] = Resources.Load<Sprite>("NpcImage/Coco"),
+            ["코코_웃음"] = Resources.Load<Sprite>("NpcImage/Coco_웃음"),
+            ["코코_놀람"] = Resources.Load<Sprite>("NpcImage/Coco_웃음"),
+            ["코코_호기심"] = Resources.Load<Sprite>("NpcImage/Coco_웃음"),
+            ["코코_화남"] = Resources.Load<Sprite>("NpcImage/Coco_화남"),
+            ["코코_찡그림"] = Resources.Load<Sprite>("NpcImage/Coco_화남"),
+            ["코코_지침"] = Resources.Load<Sprite>("NpcImage/Coco_지침"),
+
+            // 닉시 표정 이미지
+            ["닉시_일반"] = Resources.Load<Sprite>("NpcImage/Nicksy"),
+            ["닉시_웃음"] = Resources.Load<Sprite>("NpcImage/Nicksy_웃음"),
+            ["닉시_놀람"] = Resources.Load<Sprite>("NpcImage/Nicksy_웃음"),
+            ["닉시_화남"] = Resources.Load<Sprite>("NpcImage/Nicksy_화남"),
+            ["닉시_지침"] = Resources.Load<Sprite>("NpcImage/Nicksy_지침"),
+
+            // 나루 표정 이미지
+            ["나루_일반"] = Resources.Load<Sprite>("NpcImage/Naru"),
+            ["나루_웃음"] = Resources.Load<Sprite>("NpcImage/Naru_웃음"),
+            ["나루_화남"] = Resources.Load<Sprite>("NpcImage/Naru_화남"),
+            ["나루_당황"] = Resources.Load<Sprite>("NpcImage/Naru_당황"),
+
+            // 쿠라야 표정 이미지
+            ["쿠라야_일반"] = Resources.Load<Sprite>("NpcImage/Kuraya"),
+            ["쿠라야_놀람"] = Resources.Load<Sprite>("NpcImage/Kuraya"),
+            ["쿠라야_웃음"] = Resources.Load<Sprite>("NpcImage/Kuraya_웃음"),
+            ["쿠라야_부끄러움"] = Resources.Load<Sprite>("NpcImage/Kuraya_웃음"),
+            ["쿠라야_화남"] = Resources.Load<Sprite>("NpcImage/Kuraya_화남"),
+            ["쿠라야_찡그림"] = Resources.Load<Sprite>("NpcImage/Kuraya_화남"),
+
+            // 애쉬 표정 이미지
+
             // 기본 NPC 이미지
             ["Default"] = Resources.Load<Sprite>("NpcImage/Default")
         };
@@ -619,8 +661,7 @@ public class Ch3TalkManager : MonoBehaviour
         //인물이 ??인 경우 이미지 처리
         if (currentDialogue.speaker == unknownSpeaker)
         {
-            Debug.Log(currentDialogue.day);
-            speakerKey = "코코";
+            speakerKey = currentDialogue.note;
         }
         else
         {
@@ -765,14 +806,13 @@ public class Ch3TalkManager : MonoBehaviour
                 Npc_Rusk.SetActive(true);
                 Npc_Coco.SetActive(true);
                 Npc_Nicksy.SetActive(true);
-                Npc_Coco.transform.position = new Vector3(16.9f, -0.4f, 0); // Coco 위치 카운터 앞
-                Npc_Nicksy.transform.position = new Vector3(15.9f, -0.4f, 0); // Nicksy 위치 카운터 앞
+                Npc_Coco.transform.position = new Vector3(16.9f, -0.55f, 0); // Coco 위치 카운터 앞
+                Npc_Nicksy.transform.position = new Vector3(16.1f, -0.5f, 0); // Nicksy 위치 카운터 앞
                 Npc_Naru.SetActive(true);
                 Npc_Ash.SetActive(false);
                 if (isCh2HappyEnding)
                 {
                     Npc_Kuraya.SetActive(true);
-                    Npc_Kuraya.transform.position = new Vector3(16.9f, 1.25f, 0); // Kuraya 위치 카운터
                 }
                 //대화 다 안해도 침대 상호작용 가능
                 EnableBedInteraction();
@@ -795,14 +835,13 @@ public class Ch3TalkManager : MonoBehaviour
                 Npc_Rusk.SetActive(true);
                 Npc_Coco.SetActive(true);
                 Npc_Nicksy.SetActive(true);
-                Npc_Coco.transform.position = new Vector3(-3, 0.02f, 0); // Coco 위치 무대 앞
-                Npc_Nicksy.transform.position = new Vector3(-3.8f, 0.02f, 0); // Nicksy 위치 무대 앞
+                Npc_Coco.transform.position = new Vector3(-3, 0.45f, 0); // Coco 위치 무대 앞
+                Npc_Nicksy.transform.position = new Vector3(-3.7f, 0.5f, 0); // Nicksy 위치 무대 앞
                 Npc_Naru.SetActive(false);
                 Npc_Ash.SetActive(true);
                 if (isCh2HappyEnding)
                 {
                     Npc_Kuraya.SetActive(true);
-                    Npc_Kuraya.transform.position = new Vector3(16.9f, 1.25f, 0); // Kuraya 위치 카운터
                 }
                 if (!isCh2HappyEnding)
                 {
@@ -835,7 +874,7 @@ public class Ch3TalkManager : MonoBehaviour
                 if (isCh2HappyEnding)
                 {
                     Npc_Kuraya.SetActive(true);
-                    Npc_Kuraya.transform.position = new Vector3(11.5f, 1.9f, 0); // Kuraya 위치 화로 앞
+                    Npc_Kuraya.transform.position = new Vector3(11.5f, 1.75f, 0); // Kuraya 위치 화로 앞
                 }
                 if (!isCh2HappyEnding)
                 {
@@ -904,13 +943,13 @@ public class Ch3TalkManager : MonoBehaviour
                     playerController.StartMove();
                 }
             }
-            else if (isCh2HappyEnding && mapManager.currentState == MapState.Bakery && npc == "Npc_Kuraya" && !HasTalkedToKuraya && index >= 82 && index <= 83)
+            else if (isCh2HappyEnding && mapManager.currentState == MapState.Bakery && npc == "Npc_Kuraya" && !HasTalkedToKuraya && index >= 82 && index <= 88)
             {
-                if (index == 82)
+                if (index >= 82 && index <= 87)
                 {
                     PrintProDialogue(index);
                 }
-                else if (index == 83)
+                else if (index == 88)
                 {
                     currentDialogueIndex = 76;
                     narration.SetActive(false);
@@ -920,9 +959,9 @@ public class Ch3TalkManager : MonoBehaviour
                     playerController.StartMove();
                 }
             }
-            else if (mapManager.currentState == MapState.Bakery && npc == "Npc_Rusk" && !HasTalkedToRusk && index >= 83 && index <= 90)
+            else if (!isCh2HappyEnding && mapManager.currentState == MapState.Bakery && npc == "Npc_Rusk" && !HasTalkedToRusk && index >= 88 && index <= 90)
             {
-                if (index >= 83 && index <= 89)
+                if (index >= 88 && index <= 89)
                 {
                     PrintProDialogue(index);
                 }
