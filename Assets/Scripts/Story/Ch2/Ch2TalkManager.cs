@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using System.Collections;
+using UnityEngine.SceneManagement;
 
 public class Ch2TalkManager : MonoBehaviour
 {
@@ -10,7 +11,7 @@ public class Ch2TalkManager : MonoBehaviour
     public TMP_Text narrationText; // 나레이션 대사를 표시할 UI Text 컴포넌트
     public TMP_Text dialogueText; // 다이얼로그 대사를 표시할 UI Text 컴포넌트
     private List<Dialogue> dialogues; // 대사 리스트
-    private int currentDialogueIndex = 0; // 현재 대사 인덱스
+    public int currentDialogueIndex = 0; // 현재 대사 인덱스
     public GameObject narration;
     public GameObject dialogue;
 
@@ -30,10 +31,13 @@ public class Ch2TalkManager : MonoBehaviour
 
     public GameObject backGround; //검은 배경
     public GameObject cafe; // 카페 화면
-    public GameObject cafe2; //카페 3인칭 화면
+    public GameObject cafe2; //카페 3인칭 화면(낮)
+    public GameObject cafe3; //카페 3인칭 화면(밤)
     public GameObject trainRoom; // 객실 화면
     public GameObject trainRoomHallway; // 객실 복도 화면
     public GameObject bakery; //빵집 화면 
+    public GameObject medicalRoom; // 의무실 화면
+    public GameObject garden; //정원 화면
 
     public bool isWaitingForPlayer = false; // 플레이어가 특정 위치에 도달할 때까지 기다리는 상태인지 여부
     public Ch2MapManager mapManager; // 맵 매니저 참조
@@ -138,7 +142,7 @@ public class Ch2TalkManager : MonoBehaviour
 
 
             // 다이얼로그가 활성화될 조건
-            if (characterKey == "솔" || characterKey == "솔 " || characterKey == "쿠라야" || characterKey == "러스크" || characterKey == "파이아")
+            if (characterKey == "솔" || characterKey == "솔 " || characterKey == "쿠라야" || characterKey == "러스크" || characterKey == "파이아" ||characterKey == "바이올렛" || characterKey == "레이비야크" || characterKey == "Mr.Ham" || characterKey == "나루")
             {
                 // 표정 키 생성
                 string expressionKey = !string.IsNullOrEmpty(currentDialogue.표정)
@@ -169,6 +173,9 @@ public class Ch2TalkManager : MonoBehaviour
 
             // 화면 변경
             UpdateSceneBasedOnDialogueIndex(currentDialogueIndex);
+
+            // 
+            HandleDialogueProgression(currentDialogueIndex);
         }
        
 
@@ -200,7 +207,7 @@ public class Ch2TalkManager : MonoBehaviour
             SetScene(narration, true);
             SetScene(dialogue, false); // 대화창 비활성화
         }
-        else if (character == "솔" || character =="???" || character == "러스크" || character == "쿠라야" || character == "파이아")
+        else if (character == "솔" || character =="???" || character == "러스크" || character == "쿠라야" || character == "파이아" || character == "바이올렛" || character == "레이비야크" || character == "Mr.Ham" || character == "나루")
         {
             // '솔', '???', '러스크', '쿠라야', '파이아'일 경우 대화창 활성화
             SetScene(dialogue, true);
@@ -251,119 +258,202 @@ void UpdateSceneBasedOnDialogueIndex(int index)
                 DeactivateAllScenes();
                 SetScene(cafe2, true);
                 break;
+            case 26:
+                DeactivateAllScenes();
+                SetScene(cafe, true);
+                break;
             case 27:
+                DeactivateAllScenes();
                 SetScene(dialogue, false); // 대화창 비활성화
                 SetScene(narration, false); // 나레이션 비활성화
                 SetScene(backGround, true); // 검은 화면을 활성화
                 break;
-            case 40:
+            case 46:
                 SetScene(dialogue, false); // 대화창 비활성화
                 SetScene(narration, false); // 나레이션 비활성화
                 break;
-            case 45:
+            case 56:
                 DeactivateAllScenes();
-                SetScene(backGround, true);
+                SetScene(cafe3, true);
+                player.GetComponent<PlayerController>().enabled = false; // 플레이어 이동 비활성화
+                //player.GetComponent<PlayerController>().enabled = true; // 다시 이동 가능하게 설정
                 break;
-            case 46:
+            case 59:
+                DeactivateAllScenes();
+                SetScene(garden, true);
+                break;
+            case 63:
+                DeactivateAllScenes();
+                SetScene(cafe3, true);
+                break;
+            case 66:
+                DeactivateAllScenes();
+                SetScene(bakery, true);
+                break;
+            case 70:
+                DeactivateAllScenes();
+                SetScene(medicalRoom, true);
+                SetScene(dialogue, false); // 대화창 비활성화
+                SetScene(narration, false); // 나레이션 비활성화
+                break;
+            case 71:
                 DeactivateAllScenes();
                 SetScene(trainRoom, true);
                 break;
-            case 49:
+            case 75:
                 DeactivateAllScenes();
-                
                 SetScene(cafe, true);
-                break;
-            case 79:
-                DeactivateAllScenes();
-                SetScene(backGround, true);
-                break;
-            case 80:
-                DeactivateAllScenes();
-                SetScene(trainRoom, true);
-                break;
-            case 85:
-                DeactivateAllScenes();
-                SetScene(cafe2, true);
-                break;
-            case 98:
-                DeactivateAllScenes();
-                SetScene(backGround, true);
-                break;
-            case 99:
-                DeactivateAllScenes();
-                SetScene(cafe2, true);
                 break;
             case 102:
                 DeactivateAllScenes();
+                SetScene(garden, true);
+                break;
+            case 104:
+                DeactivateAllScenes();
+                SetScene(cafe3, true);
+                break;
+            case 107:
+                DeactivateAllScenes();
                 SetScene(bakery, true);
                 break;
-            case 157:
+            case 111:
                 DeactivateAllScenes();
-                SetScene(trainRoom, true);
+                SetScene(medicalRoom, true);
                 break;
-            case 161:
-                DeactivateAllScenes();
-                SetScene(cafe2, true);
-                break;
-            case 172:
-                DeactivateAllScenes();
-                SetScene(trainRoom, true);
-                break;
-            case 194: //5일차 낮
-                DeactivateAllScenes();
-                SetScene(trainRoom, true);
-                break;
-            case 196:
-                DeactivateAllScenes();
-                SetScene(cafe2, true);
-                break;
-            case 215:
+            case 118:
                 DeactivateAllScenes();
                 SetScene(backGround, true);
                 break;
-            case 217:
-                DeactivateAllScenes();
-                SetScene(cafe2, true);
-                break;
-            case 234:
-                DeactivateAllScenes();
-                SetScene(bakery, true);
-                break;
-            case 269:
+            case 119:
                 DeactivateAllScenes();
                 SetScene(trainRoom, true);
                 break;
-            case 271:
+            case 124:
                 DeactivateAllScenes();
                 SetScene(cafe, true);
                 break;
-            case 293:
+            case 133:
                 DeactivateAllScenes();
-                SetScene(trainRoom, true);
+                SetScene(backGround, true);
                 break;
-            case 295:
+            case 134:
                 DeactivateAllScenes();
-                SetScene(cafe2, true);
+                SetScene(cafe, true);
                 break;
-            case 304:
+            case 136:
+                DeactivateAllScenes();
+                SetScene(backGround, true);
+                break;
+            case 140:
+                DeactivateAllScenes();
+                SetScene(bakery, true);
+                player.transform.position = new Vector2(0, 0); // 플레이어 위치 이동
+                break;
+            case 189:
+                DeactivateAllScenes();
+                SetScene(garden, true);
+                break;
+            case 191:
+                DeactivateAllScenes();
+                SetScene(cafe3, true);
+                break;
+            case 195:
                 DeactivateAllScenes();
                 SetScene(bakery, true);
                 break;
-            case 382: //8일차 낮
+            case 196:
+                DeactivateAllScenes();
+                SetScene(medicalRoom, true);
+                break;
+            case 203:
+                DeactivateAllScenes();
+                SetScene(backGround, true);
+                break;
+            case 204:
                 DeactivateAllScenes();
                 SetScene(trainRoom, true);
                 break;
-            case 384: 
+            case 207:
                 DeactivateAllScenes();
-                SetScene(cafe2, true);
+                SetScene(cafe, true);
+                break;
+            case 223: //연료실
+                //DeactivateAllScenes();
+                //SetScene(medicalRoom, true);
+                break;
+            case 241:
+                DeactivateAllScenes();
+                SetScene(trainRoomHallway, true);
+                break;
+            case 243:
+                DeactivateAllScenes();
+                SetScene(backGround, true);
+                break;
+            case 245:
+                DeactivateAllScenes();
+                SetScene(trainRoom, true);
+                break;
+            case 246:
+                DeactivateAllScenes();
+                SetScene(cafe, true);
+                break;
+            case 253:
+                DeactivateAllScenes();
+                SetScene(cafe, true);
+                break;
+            case 292:
+                DeactivateAllScenes();
+                SetScene(backGround, true);
+                break;
+            case 297:
+                DeactivateAllScenes();
+                SetScene(cafe, true);
+                break;
+            case 367:
+                DeactivateAllScenes();
+                SetScene(garden, true);
+                break;
+            case 370:
+                DeactivateAllScenes();
+                SetScene(cafe3, true);
+                break;
+            case 374:
+                DeactivateAllScenes();
+                SetScene(bakery, true);
+                break;
+            case 377:
+                DeactivateAllScenes();
+                SetScene(medicalRoom, true);
+                break;
+            case 380:
+                DeactivateAllScenes();
+                SetScene(backGround, true);
+                break;
+            case 381:
+                DeactivateAllScenes();
+                SetScene(trainRoom, true);
+                break;
+            case 382:
+                DeactivateAllScenes();
+                SetScene(cafe, true);
                 break;
             default:
                 break; //아무 것도 활성화하지 않음
         }
+    
     }
 
-// 플레이어 활성화/비활성화 함수
-void SetPlayerActive(bool isActive)
+    private void HandleDialogueProgression(int index)
+    {
+        if (index == 46) // 예: 특정 인덱스에서 카페 씬으로 전환
+        {
+            Debug.Log("카페 씬으로 전환");
+            SceneTransitionManager.Instance.HandleDialogueTransition("Ch2Scene", "CafeScene", 15, 1);
+        }
+    }
+
+    // 플레이어 활성화/비활성화 함수
+    void SetPlayerActive(bool isActive)
     {
         if (player != null)
         {
@@ -468,7 +558,10 @@ void SetPlayerActive(bool isActive)
         SetScene(trainRoom, false);
         SetScene(trainRoomHallway, false);
         SetScene(cafe2, false);
+        SetScene(cafe3, false);
         SetScene(bakery, false);
+        SetScene(garden, false);
+        SetScene(medicalRoom, false);
     }
 
     // 이미지 가져오는 코드
@@ -485,38 +578,56 @@ void SetPlayerActive(bool isActive)
 
             // 솔 표정 이미지
             ["솔_일반"] = Resources.Load<Sprite>("PlayerImage/Sol"),
+            ["솔_nan"] = Resources.Load<Sprite>("PlayerImage/Sol"),
+            ["솔 _nan"] = Resources.Load<Sprite>("PlayerImage/Sol"),
             ["솔_놀람"] = Resources.Load<Sprite>("PlayerImage/놀람"),
+            ["솔 _놀람"] = Resources.Load<Sprite>("PlayerImage/놀람"),
             ["솔_슬픔"] = Resources.Load<Sprite>("PlayerImage/눈물"),
+            ["솔 _슬픔"] = Resources.Load<Sprite>("PlayerImage/눈물"),
             ["솔_당황"] = Resources.Load<Sprite>("PlayerImage/당황"),
+            ["솔 _당황"] = Resources.Load<Sprite>("PlayerImage/당황"),
             ["솔_웃음"] = Resources.Load<Sprite>("PlayerImage/웃음"),
+            ["솔 _웃음"] = Resources.Load<Sprite>("PlayerImage/웃음"),
             ["솔_화남"] = Resources.Load<Sprite>("PlayerImage/화남"),
             ["솔_찡그림"] = Resources.Load<Sprite>("PlayerImage/찡그림"),
 
             // 레이비야크 표정 이미지
             ["레이비야크_일반"] = Resources.Load<Sprite>("NpcImage/Leviac"),
+            ["레이비야크_nan"] = Resources.Load<Sprite>("NpcImage/Leviac"),
             ["레이비야크_웃음"] = Resources.Load<Sprite>("NpcImage/Leviac_웃음"),
+            ["레이비야크_당황"] = Resources.Load<Sprite>("NpcImage/Leviac_당황"),
+            ["레이비야크_화남"] = Resources.Load<Sprite>("NpcImage/Leviac_화남"),
 
             // 쿠라야 표정 이미지
             ["쿠라야_일반"] = Resources.Load<Sprite>("NpcImage/Kuraya"),
+            ["쿠라야_nan"] = Resources.Load<Sprite>("NpcImage/Kuraya"),
             ["쿠라야_웃음"] = Resources.Load<Sprite>("NpcImage/Kuraya_웃음"),
             ["쿠라야_화남"] = Resources.Load<Sprite>("NpcImage/Kuraya_화남"),
+            ["쿠라야_슬픔"] = Resources.Load<Sprite>("NpcImage/Kuraya_슬픔"),
 
             // 바이올렛 표정 이미지
             ["바이올렛_일반"] = Resources.Load<Sprite>("NpcImage/Violet"),
             ["바이올렛_웃음"] = Resources.Load<Sprite>("NpcImage/Violet_웃음"),
             ["바이올렛_윙크"] = Resources.Load<Sprite>("NpcImage/Violet_윙크"),
+            ["바이올렛_당황"] = Resources.Load<Sprite>("NpcImage/Violet_당황"),
+            ["바이올렛_슬픔"] = Resources.Load<Sprite>("NpcImage/Violet_슬픔"),
+            ["바이올렛_놀람"] = Resources.Load<Sprite>("NpcImage/Violet_놀람"),
 
             // 러스크 표정 이미지
             ["러스크_일반"] = Resources.Load<Sprite>("NpcImage/Rusk"),
+            ["러스크_nan"] = Resources.Load<Sprite>("NpcImage/Rusk"),
             ["러스크_웃음"] = Resources.Load<Sprite>("NpcImage/Rusk_웃음"),
             ["러스크_화남"] = Resources.Load<Sprite>("NpcImage/Rusk_화남"),
             ["러스크_당황"] = Resources.Load<Sprite>("NpcImage/Rusk_당황"),
 
             // Mr. Ham 표정 이미지
-            ["Mr. Ham_일반"] = Resources.Load<Sprite>("NpcImage/MrHam"),
-            ["Mr. Ham_웃음"] = Resources.Load<Sprite>("NpcImage/MrHam_웃음"),
-            ["Mr. Ham_화남"] = Resources.Load<Sprite>("NpcImage/MrHam_화남"),
-            ["Mr. Ham_아쉬움"] = Resources.Load<Sprite>("NpcImage/MrHam_아쉬움"),
+            ["Mr.Ham_일반"] = Resources.Load<Sprite>("NpcImage/MrHam"),
+            ["Mr.Ham_nan"] = Resources.Load<Sprite>("NpcImage/MrHam"),
+            ["Mr.Ham_웃음"] = Resources.Load<Sprite>("NpcImage/MrHam_웃음"),
+            ["Mr.Ham_화남"] = Resources.Load<Sprite>("NpcImage/MrHam_화남"),
+            ["Mr.Ham_아쉬움"] = Resources.Load<Sprite>("NpcImage/MrHam_아쉬움"),
+            ["Mr.Ham_놀람"] = Resources.Load<Sprite>("NpcImage/MrHam_놀람"),
+            ["Mr.Ham_당황"] = Resources.Load<Sprite>("NpcImage/MrHam_당황"),
 
             // 루카스 표정 이미지
             ["루카스_일반"] = Resources.Load<Sprite>("NpcImage/Lucas"),
@@ -534,6 +645,7 @@ void SetPlayerActive(bool isActive)
 
             // 파이아 표정 이미지
             ["파이아_일반"] = Resources.Load<Sprite>("NpcImage/Fire"),
+            ["파이아_nan"] = Resources.Load<Sprite>("NpcImage/Fire"),
             ["파이아_웃음"] = Resources.Load<Sprite>("NpcImage/Fire_웃음"),
 
             // 기본 NPC 이미지
