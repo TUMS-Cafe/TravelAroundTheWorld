@@ -14,11 +14,18 @@ public class Ch2TalkManager : MonoBehaviour
     public int currentDialogueIndex = 0; // 현재 대사 인덱스
     public GameObject narration;
     public GameObject dialogue;
+    public bool playerMoved = false;
+    public bool isInputDisabled = false; // 입력 차단 여부
+    public bool DoNotDisplayDialogue = false; //다이얼로그 출력 여부
 
     public string currentMusic = ""; // 현재 재생 중인 음악의 이름을 저장
 
     public GameObject player; // 플레이어 캐릭터
     public GameObject map; // 맵
+
+    public GameObject currentNPC; // 현재 대화할 NPC
+    public GameObject Npc_Rayviyak; //NPC 레이비야크
+    public GameObject Npc_Violet; //NPC 바이올렛
 
     public GameObject imageObj; // 초상화 이미지
     public GameObject nameObj; // 이름
@@ -40,6 +47,8 @@ public class Ch2TalkManager : MonoBehaviour
     public GameObject garden; //정원 화면
 
     public bool isWaitingForPlayer = false; // 플레이어가 특정 위치에 도달할 때까지 기다리는 상태인지 여부
+    public bool isWaitingForNPC = false; // NPC 기다리고 있는지 여부
+
     public Ch2MapManager mapManager; // 맵 매니저 참조
 
     public Ch0DialogueBar dialogueBar; // 대화창 스크립트 (타이핑 효과 호출을 위해)
@@ -59,14 +68,27 @@ public class Ch2TalkManager : MonoBehaviour
     void Start()
     {
         //player.SetActive(false);
-        //currentDialogueIndex = 192; //text
+
+        dialogueBar = dialogue.GetComponentInChildren<Ch0DialogueBar>();
+        narrationBar = narration.GetComponentInChildren<Ch0DialogueBar>();
+
         InitializeCharacterImages(); // 캐릭터 이미지 초기화
         LoadDialogueData(); // 대사 데이터 로드
-        DisplayCurrentDialogue(); // 현재 대사 표시
+
+        if (!isWaitingForNPC )
+        {
+            DisplayCurrentDialogue();
+        }
     }
 
     void Update()
     {
+
+        // 입력이 비활성화된 경우 스페이스바와 클릭을 무시
+        if (isInputDisabled) return;
+
+
+
         // 특정 대화에서 플레이어 이동 대기를 활성화
         if (isWaitingForPlayer && mapManager != null)
         {
@@ -87,10 +109,19 @@ public class Ch2TalkManager : MonoBehaviour
             }
         }
 
-        // 클릭 비활성화 처리
-        if (currentDialogueIndex == 14 && isWaitingForPlayer)
+        //NPC와 상호작용했을 때 자동으로 다음 대사 진행
+        if (isWaitingForNPC && currentNPC != null)
+
         {
-            return; // 클릭 입력을 무시
+            // 플레이어가 NPC 근처에서 상호작용할 경우 진행
+            if (Vector2.Distance(player.transform.position, currentNPC.transform.position) < 1.5f)
+            {
+                Debug.Log($"플레이어가 {currentNPC.name}과 가까워짐 → 대화 진행");
+
+                isWaitingForNPC = false; // 대기 상태 해제
+                currentDialogueIndex++; // 다음 대사로 진행
+                DisplayCurrentDialogue(); // 새로운 대사 표시
+            }
         }
 
         if (Input.GetKeyDown(KeyCode.Space) || Input.GetMouseButtonDown(0)) //대화 진행(sapce 혹은 마우스 클릭)
@@ -113,7 +144,8 @@ public class Ch2TalkManager : MonoBehaviour
         }
     }
 
-    void DisplayCurrentDialogue()
+    //현재 대사를 UI에 표시
+    public void DisplayCurrentDialogue() 
     {
         if (dialogues != null && currentDialogueIndex < dialogues.Count)
         {
@@ -121,11 +153,16 @@ public class Ch2TalkManager : MonoBehaviour
 
             var currentDialogue = dialogues[currentDialogueIndex];
 
+            if (string.IsNullOrEmpty(currentDialogue.대사))
+            {
+                Debug.LogWarning($"❌ 대사가 null이거나 비어 있음. (index: {currentDialogueIndex})");
+                return; // 바로 함수 종료
+            }
             // 대사 표시
             narrationText.text = currentDialogue.대사;
             dialogueText.text = currentDialogue.대사;
 
-            if (currentDialogueIndex == 14) // 특정 대화 인덱스
+            if (currentDialogueIndex == 14 || currentDialogueIndex == 74 || currentDialogueIndex == 123 || currentDialogueIndex == 206 || currentDialogueIndex == 245) // 특정 대화 인덱스
             {
                 isWaitingForPlayer = true; // 플레이어 이동 대기 상태 활성화
                 EnableMap(); // 맵 활성화
@@ -163,12 +200,16 @@ public class Ch2TalkManager : MonoBehaviour
                 // 다이얼로그 활성화
                 SetScene(dialogue, true);
                 SetScene(narration, false); // 나레이션 비활성화
+                dialogueBar.SetDialogue(currentDialogue.인물, currentDialogue.대사); // 타이핑 효과 적용
+
             }
             else
             {
                 // 나레이션 활성화
                 SetScene(narration, true);
                 SetScene(dialogue, false); // 다이얼로그 비활성화
+                narrationBar.SetDialogue("나레이션", currentDialogue.대사); // 타이핑 효과 적용
+
             }
 
             // 화면 변경
@@ -221,19 +262,35 @@ public class Ch2TalkManager : MonoBehaviour
         }
     }
 
-    void NextDialogue()
+    //다음 대사로 이동
+    public void NextDialogue()
     {
+
+        if (dialogueBar.IsTyping()) // 만약 타이핑 중이면
+        {
+            dialogueBar.CompleteTypingEffect(); // 타이핑 즉시 완료
+            return;
+        }
+
+        if (narrationBar.IsTyping()) // 나레이션 타이핑 중이면
+        {
+            narrationBar.CompleteTypingEffect();
+            return;
+        }
+        
         if (currentDialogueIndex < dialogues.Count - 1)
         {
             currentDialogueIndex++;
-            Debug.Log($"다음 대사: {dialogues[currentDialogueIndex].대사}");
-            DisplayCurrentDialogue();
+            if (!DoNotDisplayDialogue) DisplayCurrentDialogue();
+        }
+        else
+        {
         }
     }
 
 
-// 화면 변경 함수
-void UpdateSceneBasedOnDialogueIndex(int index)
+    // 화면 변경 함수
+    void UpdateSceneBasedOnDialogueIndex(int index)
     {
         // 인덱스에 따라 화면을 설정
         switch (index)
@@ -252,6 +309,7 @@ void UpdateSceneBasedOnDialogueIndex(int index)
                 break;
             case 15:
                 DeactivateAllScenes();
+                player.transform.position = new Vector2(0, 0); // 플레이어 위치 이동
                 SetScene(cafe, true); //카페 화면 활성화
                 break;
             case 24:
@@ -279,22 +337,69 @@ void UpdateSceneBasedOnDialogueIndex(int index)
                 //player.GetComponent<PlayerController>().enabled = true; // 다시 이동 가능하게 설정
                 break;
             case 59:
-                DeactivateAllScenes();
-                SetScene(garden, true);
+                isInputDisabled = true; // 스페이스바, 클릭 입력 차단
+                currentNPC = Npc_Rayviyak; // 현재 대화할 NPC를 레이비야크로 설정
+                isWaitingForNPC = true; // 플레이어가 직접 다가가야 대화 가능
+                //SetScene(dialogue, false); // 대화창 비활성화
+                //SetScene(narration, false); // 나레이션 비활성화
+
+                DeactivateAllScenes();  // 다른 씬 비활성화
+                SetScene(map, true);    // 맵 활성화
+                
+                if (!playerMoved)
+                {
+                    player.transform.position = new Vector2(-15, 0);
+                    playerMoved = true; // 위치를 한 번만 초기화하도록 설정
+                }
+                Npc_Rayviyak.SetActive(true); // 레이비야크 활성화]
+
+                break;
+            case 60:
+                break;
+            case 62:
+
+                if (player != null && player.GetComponent<PlayerController>() != null)
+                {
+                    player.GetComponent<PlayerController>().enabled = true;
+                }
+                if (player != null && player.GetComponent<Rigidbody2D>() != null)
+                {
+                    player.GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.FreezeRotation;
+                }
+
+                currentNPC = null; // 대화 종료 후 NPC 초기화
+                isWaitingForNPC = false; // 다시 상호작용 가능
                 break;
             case 63:
                 DeactivateAllScenes();
                 SetScene(cafe3, true);
+                /*
+                // 플레이어 이동 다시 가능하게 설정
+                if (!player.GetComponent<PlayerController>().enabled)
+                {
+                    player.GetComponent<PlayerController>().enabled = true; // 다시 이동 가능
+                }
+                if (player.GetComponent<Rigidbody2D>() != null)
+                {
+                    player.GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.FreezeRotation;
+                }*/
+
+                player.transform.position = new Vector2(0, 0); // 플레이어 위치 초기화
+                currentNPC = Npc_Violet; // 현재 대화할 NPC를 바이올렛으로 설정
+                isWaitingForNPC = true;
                 break;
             case 66:
                 DeactivateAllScenes();
                 SetScene(bakery, true);
+                SetScene(map, false);    // 맵 활성화
                 break;
+
             case 70:
                 DeactivateAllScenes();
                 SetScene(medicalRoom, true);
-                SetScene(dialogue, false); // 대화창 비활성화
-                SetScene(narration, false); // 나레이션 비활성화
+                //SetScene(dialogue, false); // 대화창 비활성화
+                //SetScene(narration, false); // 나레이션 비활성화
+
                 break;
             case 71:
                 DeactivateAllScenes();
@@ -303,6 +408,7 @@ void UpdateSceneBasedOnDialogueIndex(int index)
             case 75:
                 DeactivateAllScenes();
                 SetScene(cafe, true);
+                player.transform.position = new Vector2(0, 0); // 플레이어 위치 이동
                 break;
             case 102:
                 DeactivateAllScenes();
@@ -442,7 +548,6 @@ void UpdateSceneBasedOnDialogueIndex(int index)
         }
     
     }
-
     private void HandleDialogueProgression(int index)
     {
         if (index == 46) // 예: 특정 인덱스에서 카페 씬으로 전환
@@ -539,6 +644,16 @@ void UpdateSceneBasedOnDialogueIndex(int index)
         else
         {
             Debug.LogWarning("이미지가 NULL입니다.");
+        }
+    }
+
+    void OnTriggerEnter2D(Collider2D other)
+    {
+        Debug.Log($"[디버그] {other.gameObject.name}과 충돌 감지됨! 현재 NPC: {currentNPC?.name}");
+
+        if (isWaitingForNPC && other.gameObject == currentNPC)
+        {
+            Debug.Log($"[디버그] 플레이어가 {currentNPC.name}과 접촉 → 대화 시작");
         }
     }
 
