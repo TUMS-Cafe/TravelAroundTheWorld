@@ -56,6 +56,8 @@ public class Ch1TalkManager : MonoBehaviour
 
     public GameObject destPointObject;
 
+    public GameObject roomService;
+
     // 문자열 상수 선언
     private const string narrationSpeaker = "나레이션";
     private const string letterSpeaker = "편지지";
@@ -200,7 +202,7 @@ public class Ch1TalkManager : MonoBehaviour
         if (isWaitingForPlayer && mapManager != null)
         {
             // 카페바에 도착하면 스토리 다시 진행
-            if (mapManager.currentState == MapState.Cafe && mapManager.isInCafeBarZone && (currentDialogueIndex == 5 || currentDialogueIndex == 73 || currentDialogueIndex == 146 || currentDialogueIndex == 274 || currentDialogueIndex == 364 || currentDialogueIndex == 409 || currentDialogueIndex == 456 || currentDialogueIndex == 518))
+            if (mapManager.currentState == MapState.Cafe && mapManager.isInCafeBarZone && (currentDialogueIndex == 6 || currentDialogueIndex == 73 || currentDialogueIndex == 146 || currentDialogueIndex == 274 || currentDialogueIndex == 364 || currentDialogueIndex == 409 || currentDialogueIndex == 456 || currentDialogueIndex == 518))
             {
                 destPointObject.SetActive(false);
                 isWaitingForPlayer = false;
@@ -244,7 +246,7 @@ public class Ch1TalkManager : MonoBehaviour
             }
 
             // 카페에서 일해야 되는데 다른 곳으로 가려고 하면 다시 카페로 플레이어 강제 이동
-            if (mapManager.currentState != MapState.Cafe && (currentDialogueIndex == 5 || currentDialogueIndex == 73 || currentDialogueIndex == 146 || currentDialogueIndex == 274 || currentDialogueIndex == 364 || currentDialogueIndex == 409 || currentDialogueIndex == 456))
+            if (mapManager.currentState != MapState.Cafe && (currentDialogueIndex == 6 || currentDialogueIndex == 73 || currentDialogueIndex == 146 || currentDialogueIndex == 274 || currentDialogueIndex == 364 || currentDialogueIndex == 409 || currentDialogueIndex == 456))
             {
                 player.transform.position = new Vector3(0, 0, 0);
                 narration.SetActive(true);
@@ -256,6 +258,30 @@ public class Ch1TalkManager : MonoBehaviour
 
     private void HandleDialogueProgression(int index)
     {
+        PrintCh1ProDialogue(index);
+        if(ch1ProDialogue[index].line == "음료제작")
+        {
+            narration.SetActive(false);
+            roomService.SetActive(true);
+            isWaitingForPlayer = true;
+
+            //NewRoomService.Instance.ShowRoomService(RandomDrinkSelector.Instance.GetRandomDrink(1), "");
+
+            // SceneTransitionManager.Instance.HandleRandomMenuTransition("ch1Scene", "CafeScene", index + 1, 1);
+        }
+        //Debug.Log(ch1ProDialogue[index].location);
+
+
+        return;
+        if (ch1ProDialogue[index].location == "카페")
+        {
+            Debug.Log("자고 일어나서 카페가기");
+            Debug.Log(ch1ProDialogue[index - 1].location);
+        }
+        if (ch1ProDialogue[index].line == "음료제작")
+        {
+            Debug.Log("음료제작");
+        }
         if (index == 7) // 룸서비스 랜덤 3건
         {
             Debug.Log("배달 랜덤 룸서비스 주문 3건");
@@ -438,7 +464,7 @@ public class Ch1TalkManager : MonoBehaviour
     // csv 읽어오기
     void LoadDialogueFromCSV()
     {
-        List<Dictionary<string, object>> data_Dialog = Ch0CSVReader.Read("Travel Around The World - CH1");
+        List<Dictionary<string, object>> data_Dialog = Ch0CSVReader.Read("NewCH1");
 
         foreach (var row in data_Dialog)
         {
@@ -604,7 +630,7 @@ public class Ch1TalkManager : MonoBehaviour
         }
 
         // 플레이어 이미지 처리
-        playerImageObj.SetActive(currentDialogueIndex <= 5);
+        playerImageObj.SetActive(currentDialogueIndex <= 6);
 
         // 편지 띄우기
         if (currentDialogue.speaker == letterSpeaker)
@@ -635,7 +661,7 @@ public class Ch1TalkManager : MonoBehaviour
             dialogueBar.SetDialogue(currentDialogue.speaker, currentDialogue.line); // 타이핑 효과 적용
         }
 
-        if (index == 5 || index == 73 || index == 146 || index == 274 || index == 364 || index == 409 || index == 456 || index == 518) // 카페로 강제 이동 후 이동 가능하게 전환
+        if (index == 6 || index == 73 || index == 146 || index == 274 || index == 364 || index == 409 || index == 456 || index == 518) // 카페로 강제 이동 후 이동 가능하게 전환
         {
             player.transform.position = new Vector3(0, 0, 0);
             mapManager.currentState = MapState.Cafe;
@@ -647,7 +673,7 @@ public class Ch1TalkManager : MonoBehaviour
             narration.SetActive(false);
             dialogue.SetActive(false);
         }
-        else if (index == 29 || index == 111 || index == 200 || index == 334 || index == 404 || index == 445) // 카페 일 끝나고 이동 가능하게 전환
+        else if (/*index == 29 || */index == 111 || index == 200 || index == 334 || index == 404 || index == 445) // 카페 일 끝나고 이동 가능하게 전환
         {
             player.transform.position = new Vector3(2, -3.5f, 0);
             isWaitingForPlayer = true;
