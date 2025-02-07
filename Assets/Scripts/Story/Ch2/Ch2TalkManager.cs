@@ -102,8 +102,6 @@ public class Ch2TalkManager : MonoBehaviour
         // 입력이 비활성화된 경우 스페이스바와 클릭을 무시
         if (isInputDisabled) return;
 
-
-
         // 특정 대화에서 플레이어 이동 대기를 활성화
         if (isWaitingForPlayer && mapManager != null)
         {
@@ -135,6 +133,8 @@ public class Ch2TalkManager : MonoBehaviour
         if (isWaitingForNPC && currentNPC != null)
         {
             Debug.Log($"[대화 시작] {currentNPC.name}와 대화 진행");
+
+            SetScene(dialogue, true);
 
             isWaitingForNPC = false; // 대화 상태 해제
             DisplayCurrentDialogue(); // 대사 출력
@@ -619,6 +619,9 @@ public class Ch2TalkManager : MonoBehaviour
     //NPC 상호작용
     void InteractWithNPC(GameObject npc, Vector2 playerPosition, GameObject sceneToActivate, GameObject sceneToDeactivate = null)
     {
+
+        if (isInputDisabled==false) SetScene(dialogue, false);
+
         isInputDisabled = true; // 스페이스바, 클릭 입력 차단
         isWaitingForNPC = true; // 플레이어가 직접 다가가야 대화 가능
         currentNPC = npc; // 현재 대화할 NPC 설정
@@ -756,9 +759,14 @@ public class Ch2TalkManager : MonoBehaviour
     {
         Debug.Log($"[디버그] {other.gameObject.name}과 충돌 감지됨! 현재 NPC: {currentNPC?.name}");
 
+        DisplayCurrentDialogue();
+        SetScene(dialogue, true); 
         if (isWaitingForNPC && other.gameObject == currentNPC)
         {
             Debug.Log($"[디버그] 플레이어가 {currentNPC.name}과 접촉 → 대화 시작");
+
+            DisplayCurrentDialogue();
+            SetScene(dialogue, true);
         }
     }
 
