@@ -17,6 +17,13 @@ public class Ch2TalkManager : MonoBehaviour
     public bool playerMoved = false;
     public bool isInputDisabled = false; // 입력 차단 여부
     public bool DoNotDisplayDialogue = false; //다이얼로그 출력 여부
+    private int overrideDialogueIndex = -1; // 특정 대사 인덱스를 강제로 출력
+
+    public GameObject choiceUI; // 선택지 UI 패널
+    public Button choiceButton1; // 첫 번째 선택 버튼 
+    public Button choiceButton2; // 두 번째 선택 버튼 
+    public TMP_Text choiceText1; // 첫 번째 선택지 텍스트
+    public TMP_Text choiceText2; // 두 번째 선택지 텍스트
 
     public string currentMusic = ""; // 현재 재생 중인 음악의 이름을 저장
 
@@ -26,6 +33,8 @@ public class Ch2TalkManager : MonoBehaviour
     public GameObject currentNPC; // 현재 대화할 NPC
     public GameObject Npc_Rayviyak; //NPC 레이비야크
     public GameObject Npc_Violet; //NPC 바이올렛
+    public GameObject Npc_Rusk; //NPC 러스크
+    public GameObject Npc_MrHam; //NPC 러스크
 
     public GameObject imageObj; // 초상화 이미지
     public GameObject nameObj; // 이름
@@ -34,7 +43,6 @@ public class Ch2TalkManager : MonoBehaviour
     private Dictionary<string, Sprite> characterImages; // 캐릭터 이미지 딕셔너리
     private Dictionary<string, Sprite> characterBigImages; // 캐릭터 큰 이미지 딕셔너리
 
-    public GameObject Npc_Rusk; // 빵집 npc
 
     public GameObject backGround; //검은 배경
     public GameObject cafe; // 카페 화면
@@ -79,6 +87,13 @@ public class Ch2TalkManager : MonoBehaviour
         {
             DisplayCurrentDialogue();
         }
+
+        // 선택 버튼을 누르면 해당 대사로 이동
+        //choiceButton1.onClick.AddListener(() => SelectChoice(342)); // case 340 선택 → case 342
+        //choiceButton2.onClick.AddListener(() => SelectChoice(359)); // case 341 선택 → case 359
+
+        // 기본적으로 선택지 UI 비활성화
+        choiceUI.SetActive(false);
     }
 
     void Update()
@@ -109,21 +124,22 @@ public class Ch2TalkManager : MonoBehaviour
             }
         }
 
-        //NPC와 상호작용했을 때 자동으로 다음 대사 진행
-        if (isWaitingForNPC && currentNPC != null)
-
+        if (Input.GetKeyDown(KeyCode.Space) || Input.GetMouseButtonDown(0)) //대화 진행(sapce 혹은 마우스 클릭)
         {
-            // 플레이어가 NPC 근처에서 상호작용할 경우 진행
-            if (Vector2.Distance(player.transform.position, currentNPC.transform.position) < 1.5f)
-            {
-                Debug.Log($"플레이어가 {currentNPC.name}과 가까워짐 → 대화 진행");
-
-                isWaitingForNPC = false; // 대기 상태 해제
-                currentDialogueIndex++; // 다음 대사로 진행
-                DisplayCurrentDialogue(); // 새로운 대사 표시
-            }
+            NextDialogue();
         }
+    }
 
+    public void StartDialogueWithNPC()
+    {
+        if (isWaitingForNPC && currentNPC != null)
+        {
+            Debug.Log($"[대화 시작] {currentNPC.name}와 대화 진행");
+
+            isWaitingForNPC = false; // 대화 상태 해제
+            DisplayCurrentDialogue(); // 대사 출력
+        }
+        isInputDisabled = false;
         if (Input.GetKeyDown(KeyCode.Space) || Input.GetMouseButtonDown(0)) //대화 진행(sapce 혹은 마우스 클릭)
         {
             NextDialogue();
@@ -143,14 +159,11 @@ public class Ch2TalkManager : MonoBehaviour
             Debug.LogError("JSON 파일이 연결되지 않았습니다.");
         }
     }
-
     //현재 대사를 UI에 표시
     public void DisplayCurrentDialogue() 
     {
         if (dialogues != null && currentDialogueIndex < dialogues.Count)
         {
-            Debug.Log($"현재 대사 인덱스: {currentDialogueIndex}, 대사: {dialogues[currentDialogueIndex].대사}");
-
             var currentDialogue = dialogues[currentDialogueIndex];
 
             if (string.IsNullOrEmpty(currentDialogue.대사))
@@ -287,7 +300,36 @@ public class Ch2TalkManager : MonoBehaviour
         {
         }
     }
+    void ShowChoice(string option1, string option2, int nextIndex1, int nextIndex2)
+    {
+        isInputDisabled = true; // 선택할 때까지 입력 차단
+        choiceUI.SetActive(true); // 선택지 UI 활성화
 
+        // 선택지 텍스트 설정
+        choiceText1.text = option1;
+        choiceText2.text = option2;
+
+        //기존 텍스트 비활성화
+        dialogueText.gameObject.SetActive(false);
+
+        // 버튼 이벤트 설정
+        choiceButton1.onClick.RemoveAllListeners();
+        choiceButton2.onClick.RemoveAllListeners();
+
+        choiceButton1.onClick.AddListener(() => SelectChoice(nextIndex1));
+        choiceButton2.onClick.AddListener(() => SelectChoice(nextIndex2));
+    }
+    void SelectChoice(int nextDialogueIndex)
+    {
+        choiceUI.SetActive(false); // 선택지 UI 숨기기
+        isInputDisabled = false; // 입력 다시 활성화
+        currentDialogueIndex = nextDialogueIndex; // 선택한 대사로 이동
+
+        //  나레이션 텍스트 다시 활성화
+        dialogueText.gameObject.SetActive(true);
+
+        DisplayCurrentDialogue(); // 다음 대사 출력
+    }
 
     // 화면 변경 함수
     void UpdateSceneBasedOnDialogueIndex(int index)
@@ -307,9 +349,13 @@ public class Ch2TalkManager : MonoBehaviour
                 //SetPlayerActive(true); // 플레이어 활성화
                 SetScene(trainRoom, true); //객실 화면 활성화
                 break;
+            case 14:
+                DeactivateAllScenes();
+                SetScene(trainRoom, false); //객실 화면 비활성화
+                player.transform.position = new Vector2(0, 0); // 플레이어 위치 이동
+                break;
             case 15:
                 DeactivateAllScenes();
-                player.transform.position = new Vector2(0, 0); // 플레이어 위치 이동
                 SetScene(cafe, true); //카페 화면 활성화
                 break;
             case 24:
@@ -337,73 +383,44 @@ public class Ch2TalkManager : MonoBehaviour
                 //player.GetComponent<PlayerController>().enabled = true; // 다시 이동 가능하게 설정
                 break;
             case 59:
-                isInputDisabled = true; // 스페이스바, 클릭 입력 차단
-                currentNPC = Npc_Rayviyak; // 현재 대화할 NPC를 레이비야크로 설정
-                isWaitingForNPC = true; // 플레이어가 직접 다가가야 대화 가능
-                //SetScene(dialogue, false); // 대화창 비활성화
-                //SetScene(narration, false); // 나레이션 비활성화
-
-                DeactivateAllScenes();  // 다른 씬 비활성화
-                SetScene(map, true);    // 맵 활성화
-                
-                if (!playerMoved)
-                {
-                    player.transform.position = new Vector2(-15, 0);
-                    playerMoved = true; // 위치를 한 번만 초기화하도록 설정
-                }
-                Npc_Rayviyak.SetActive(true); // 레이비야크 활성화]
-
-                break;
-            case 60:
+                //레이비야크와 상호작용
+                InteractWithNPC(Npc_Rayviyak, new Vector2(-15, 0), map);
                 break;
             case 62:
-
-                if (player != null && player.GetComponent<PlayerController>() != null)
-                {
-                    player.GetComponent<PlayerController>().enabled = true;
-                }
-                if (player != null && player.GetComponent<Rigidbody2D>() != null)
-                {
-                    player.GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.FreezeRotation;
-                }
-
-                currentNPC = null; // 대화 종료 후 NPC 초기화
-                isWaitingForNPC = false; // 다시 상호작용 가능
+                ResetNpcInteraction(); //NPC 상호작용 끝내기
                 break;
             case 63:
-                DeactivateAllScenes();
-                SetScene(cafe3, true);
-                /*
-                // 플레이어 이동 다시 가능하게 설정
-                if (!player.GetComponent<PlayerController>().enabled)
-                {
-                    player.GetComponent<PlayerController>().enabled = true; // 다시 이동 가능
-                }
-                if (player.GetComponent<Rigidbody2D>() != null)
-                {
-                    player.GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.FreezeRotation;
-                }*/
-
-                player.transform.position = new Vector2(0, 0); // 플레이어 위치 초기화
-                currentNPC = Npc_Violet; // 현재 대화할 NPC를 바이올렛으로 설정
-                isWaitingForNPC = true;
+                //바이올렛과 상호작용
+                InteractWithNPC(Npc_Violet, new Vector2(0, 0), cafe3, map);
+                // 레이비야크 비활성화
+                Npc_Rayviyak.SetActive(false);
+                break;
+            case 65:
+                ResetNpcInteraction();
                 break;
             case 66:
-                DeactivateAllScenes();
-                SetScene(bakery, true);
-                SetScene(map, false);    // 맵 활성화
+                //러스크와 상호작용
+                InteractWithNPC(Npc_Rusk, new Vector2(-1, 0), bakery, map);
+                // 바이올렛 비활성화
+                Npc_Violet.SetActive(false);
                 break;
-
+            case 69:
+                ResetNpcInteraction();
+                break;
             case 70:
                 DeactivateAllScenes();
                 SetScene(medicalRoom, true);
-                //SetScene(dialogue, false); // 대화창 비활성화
-                //SetScene(narration, false); // 나레이션 비활성화
+                Npc_Rusk.SetActive(false); // 러스크 비활성화
+                SetScene(dialogue, false); // 대화창 비활성화
+                SetScene(narration, false); // 나레이션 비활성화
 
                 break;
             case 71:
                 DeactivateAllScenes();
                 SetScene(trainRoom, true);
+                break;
+            case 74:
+                SetScene(trainRoom, false); //객실 화면 비활성화
                 break;
             case 75:
                 DeactivateAllScenes();
@@ -411,24 +428,45 @@ public class Ch2TalkManager : MonoBehaviour
                 player.transform.position = new Vector2(0, 0); // 플레이어 위치 이동
                 break;
             case 102:
-                DeactivateAllScenes();
-                SetScene(garden, true);
+                //레이비야크와 상호작용
+                InteractWithNPC(Npc_Rayviyak, new Vector2(-15, 0), map);
+                break;
+            case 103:
+                ResetNpcInteraction(); //NPC 상호작용 끝내기
                 break;
             case 104:
-                DeactivateAllScenes();
-                SetScene(cafe3, true);
+                //바이올렛과 상호작용
+                InteractWithNPC(Npc_Violet, new Vector2(0, 0), cafe3, map);
+                // 레이비야크 비활성화
+                Npc_Rayviyak.SetActive(false);
+                break;
+            case 106:
+                ResetNpcInteraction(); //NPC 상호작용 끝내기
                 break;
             case 107:
-                DeactivateAllScenes();
-                SetScene(bakery, true);
+                //러스크와 상호작용
+                InteractWithNPC(Npc_Rusk, new Vector2(-1, 0), bakery, map);
+                // 바이올렛 비활성화
+                Npc_Violet.SetActive(false);
+                break;
+            case 110:
+                ResetNpcInteraction(); //NPC 상호작용 끝내기
                 break;
             case 111:
-                DeactivateAllScenes();
-                SetScene(medicalRoom, true);
+                //mrHam과 상호작용
+                InteractWithNPC(Npc_MrHam, new Vector2(0, 0), medicalRoom, map);
+                // 러스크 비활성화
+                Npc_Rusk.SetActive(false);
+                break;
+            case 117:
+                ResetNpcInteraction(); //NPC 상호작용 끝내기
+                // MrHam 비활성화
+                Npc_MrHam.SetActive(false);
                 break;
             case 118:
                 DeactivateAllScenes();
                 SetScene(backGround, true);
+                ResetNpcInteraction(); //NPC 상호작용 끝내기
                 break;
             case 119:
                 DeactivateAllScenes();
@@ -456,20 +494,37 @@ public class Ch2TalkManager : MonoBehaviour
                 player.transform.position = new Vector2(0, 0); // 플레이어 위치 이동
                 break;
             case 189:
-                DeactivateAllScenes();
-                SetScene(garden, true);
+                //레이비야크와 상호작용
+                InteractWithNPC(Npc_Rayviyak, new Vector2(-15, 0), map);
+                break;
+            case 190:
+                ResetNpcInteraction(); //NPC 상호작용 끝내기
                 break;
             case 191:
-                DeactivateAllScenes();
-                SetScene(cafe3, true);
+                //바이올렛과 상호작용
+                InteractWithNPC(Npc_Violet, new Vector2(0, 0), cafe3, map);
+                // 레이비야크 비활성화
+                Npc_Rayviyak.SetActive(false);
+                break;
+            case 192:
+                ResetNpcInteraction(); //NPC 상호작용 끝내기
                 break;
             case 195:
-                DeactivateAllScenes();
-                SetScene(bakery, true);
+                //러스크와 상호작용
+                InteractWithNPC(Npc_Rusk, new Vector2(-1, 0), bakery, map);
+                // 바이올렛 비활성화
+                Npc_Violet.SetActive(false);
                 break;
             case 196:
-                DeactivateAllScenes();
-                SetScene(medicalRoom, true);
+                //mrHam과 상호작용
+                InteractWithNPC(Npc_MrHam, new Vector2(0, 0), medicalRoom, map);
+                // 러스크 비활성화
+                Npc_Rusk.SetActive(false);
+                break;
+            case 202:
+                ResetNpcInteraction(); //NPC 상호작용 끝내기
+                // MrHam 비활성화
+                Npc_MrHam.SetActive(false);
                 break;
             case 203:
                 DeactivateAllScenes();
@@ -515,6 +570,11 @@ public class Ch2TalkManager : MonoBehaviour
                 DeactivateAllScenes();
                 SetScene(cafe, true);
                 break;
+            case 340:
+                // 340과 341의 대사 함께 출력
+                //narrationText.gameObject.SetActive(false);
+                ShowChoice("네, 도와주세요.", "...아뇨, 제 힘으로 해결해 볼게요.",342,359); // 선택지 UI 표시
+                break;
             case 367:
                 DeactivateAllScenes();
                 SetScene(garden, true);
@@ -543,11 +603,56 @@ public class Ch2TalkManager : MonoBehaviour
                 DeactivateAllScenes();
                 SetScene(cafe, true);
                 break;
+            case 408:
+                ShowChoice("기차에 어떻게 타게 된 건지 자세히 묻는다. ", "부모님에 대해서 자세히 묻는다. ", 410, 605);
+                break ;
+            case 713:
+                ShowChoice("네, 알려드릴게요.", "...그럴 순 없어요.", 715, 717);
+                break;
+            case 716:
+                break;
             default:
                 break; //아무 것도 활성화하지 않음
         }
     
     }
+    //NPC 상호작용
+    void InteractWithNPC(GameObject npc, Vector2 playerPosition, GameObject sceneToActivate, GameObject sceneToDeactivate = null)
+    {
+        isInputDisabled = true; // 스페이스바, 클릭 입력 차단
+        isWaitingForNPC = true; // 플레이어가 직접 다가가야 대화 가능
+        currentNPC = npc; // 현재 대화할 NPC 설정
+        npc.SetActive(true); // NPC 활성화
+
+        if (!playerMoved)
+        {
+            player.transform.position = playerPosition;
+            playerMoved = true; // 위치를 한 번만 초기화하도록 설정
+        }
+
+        DeactivateAllScenes(); // 다른 씬 비활성화
+        SetScene(sceneToActivate, true); // 활성화할 씬 설정
+
+        if (sceneToDeactivate != null) // 비활성화할 씬이 지정되었을 경우
+        {
+            SetScene(sceneToDeactivate, false);
+        }
+    }
+    //NPC 상호작용 끝내기
+    void ResetNpcInteraction() {
+        if (player != null && player.GetComponent<PlayerController>() != null)
+        {
+            player.GetComponent<PlayerController>().enabled = true;
+        }
+        if (player != null && player.GetComponent<Rigidbody2D>() != null)
+        {
+            player.GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.FreezeRotation;
+        }
+        currentNPC = null; // 대화 종료 후 NPC 초기화
+        isWaitingForNPC = false; // 다시 상호작용 가능
+        playerMoved = false;
+    }
+
     private void HandleDialogueProgression(int index)
     {
         if (index == 46) // 예: 특정 인덱스에서 카페 씬으로 전환
@@ -658,7 +763,7 @@ public class Ch2TalkManager : MonoBehaviour
     }
 
     // 화면을 활성화하거나 비활성화
-    void SetScene(GameObject scene, bool isActive)
+    public void SetScene(GameObject scene, bool isActive)
     {
         if (scene != null)
         {
@@ -690,6 +795,7 @@ public class Ch2TalkManager : MonoBehaviour
             ["바이올렛"] = Resources.Load<Sprite>("NpcImage/Violet"),
             ["러스크"] = Resources.Load<Sprite>("NpcImage/Rusk"),
             ["Mr. Ham"] = Resources.Load<Sprite>("NpcImage/MrHam"),
+            ["Naru"] = Resources.Load<Sprite>("NpcImage/Naru"),
 
             // 솔 표정 이미지
             ["솔_일반"] = Resources.Load<Sprite>("PlayerImage/Sol"),
@@ -762,6 +868,12 @@ public class Ch2TalkManager : MonoBehaviour
             ["파이아_일반"] = Resources.Load<Sprite>("NpcImage/Fire"),
             ["파이아_nan"] = Resources.Load<Sprite>("NpcImage/Fire"),
             ["파이아_웃음"] = Resources.Load<Sprite>("NpcImage/Fire_웃음"),
+
+            //나루 표정 이미지
+            ["나루_일반"] = Resources.Load<Sprite>("NpcImage/Naru"),
+            ["나루_nan"] = Resources.Load<Sprite>("NpcImage/Naru"),
+            ["나루_웃음"] = Resources.Load<Sprite>("NpcImage/Naru_웃음"),
+            ["나루_놀람"] = Resources.Load<Sprite>("NpcImage/Naru_놀람"),
 
             // 기본 NPC 이미지
             ["Default"] = Resources.Load<Sprite>("NpcImage/Default")

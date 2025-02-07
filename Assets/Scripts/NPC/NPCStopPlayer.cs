@@ -37,14 +37,12 @@ public class NPCStopPlayer : MonoBehaviour
                 rb.velocity = Vector2.zero; // 즉시 정지
                 rb.constraints = RigidbodyConstraints2D.FreezePosition; // 이동 완전 차단
             }
-            talkManager.isInputDisabled = false;
 
-            //Ch2TalkManager의 isInputDisabled 해제
-            if (talkManager != null)
-            {
-                talkManager.isInputDisabled = false;
-                Debug.Log("[디버그] 플레이어가 NPC와 접촉 → isInputDisabled = false");
-            }
+
+            // 대화 시작 신호를 보냄 (직접 실행 X)
+            talkManager.StartDialogueWithNPC();
+
+
         }
     }
 
