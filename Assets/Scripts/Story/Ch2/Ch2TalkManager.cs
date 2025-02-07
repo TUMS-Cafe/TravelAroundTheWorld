@@ -45,6 +45,8 @@ public class Ch2TalkManager : MonoBehaviour
 
 
     public GameObject backGround; //검은 배경
+    public GameObject sea; // 바다 배경
+    public GameObject volcano; // 화산 배경
     public GameObject cafe; // 카페 화면
     public GameObject cafe2; //카페 3인칭 화면(낮)
     public GameObject cafe3; //카페 3인칭 화면(밤)
@@ -88,10 +90,6 @@ public class Ch2TalkManager : MonoBehaviour
             DisplayCurrentDialogue();
         }
 
-        // 선택 버튼을 누르면 해당 대사로 이동
-        //choiceButton1.onClick.AddListener(() => SelectChoice(342)); // case 340 선택 → case 342
-        //choiceButton2.onClick.AddListener(() => SelectChoice(359)); // case 341 선택 → case 359
-
         // 기본적으로 선택지 UI 비활성화
         choiceUI.SetActive(false);
     }
@@ -100,7 +98,7 @@ public class Ch2TalkManager : MonoBehaviour
     {
 
         // 입력이 비활성화된 경우 스페이스바와 클릭을 무시
-        if (isInputDisabled) return;
+        if (isInputDisabled ) return;
 
         // 특정 대화에서 플레이어 이동 대기를 활성화
         if (isWaitingForPlayer && mapManager != null)
@@ -120,6 +118,7 @@ public class Ch2TalkManager : MonoBehaviour
                 // 카페 도달 후 대기 상태 해제
                 isWaitingForPlayer = false;
             }
+            else return;
         }
 
         if (Input.GetKeyDown(KeyCode.Space) || Input.GetMouseButtonDown(0)) //대화 진행(sapce 혹은 마우스 클릭)
@@ -339,46 +338,48 @@ public class Ch2TalkManager : MonoBehaviour
         {
             case 0: 
                 SetPlayerActive(false); // 플레이어 비활성화
-                SetScene(backGround, true); // 검은 화면을 활성화
+                ChangeScene(backGround);
                 break;
-            case 9: 
+            case 1:
+                SetScene(sea, true); // 바다 배경 활성화
+                SetScene(volcano, true); // 화산 배경 활성화
+                StartCoroutine(FadeTransition()); // 페이드 전환 실행
+                isInputDisabled = true; // 입력 차단
+                StartCoroutine(EnableInputAfterDelay(5f)); // 5초 후 입력 다시 활성화
+                break;
+            case 9:
+                SetScene(sea, false); // 바다 배경 비활성화
+                SetScene(volcano, false); // 화산 배경 비활성화
                 SetScene(backGround, true); // 검은 화면을 활성화
                 break;
             case 11:
-                DeactivateAllScenes();
-                //SetPlayerActive(true); // 플레이어 활성화
-                SetScene(trainRoom, true); //객실 화면 활성화
+                ChangeScene(trainRoom, true);
                 break;
             case 14:
-                DeactivateAllScenes();
-                SetScene(trainRoom, false); //객실 화면 비활성화
+                EnableMap();
                 player.transform.position = new Vector2(0, 0); // 플레이어 위치 이동
                 break;
-            case 15:
-                DeactivateAllScenes();
-                SetScene(cafe, true); //카페 화면 활성화
+
+             //cafe 화면으로 전환
+            case 15: case 26: case 124: case 207: case 253: case 297:
+                ChangeScene(cafe);
                 break;
-            case 24:
-                DeactivateAllScenes();
-                SetScene(cafe2, true);
-                break;
-            case 26:
-                DeactivateAllScenes();
-                SetScene(cafe, true);
+
+            case 24: case 28:
+                ChangeScene(cafe2);
+                Camera.main.transform.position = new Vector3(0, 0, Camera.main.transform.position.z); //카메라 위치 이동
                 break;
             case 27:
-                DeactivateAllScenes();
+                ChangeScene(backGround);
                 SetScene(dialogue, false); // 대화창 비활성화
                 SetScene(narration, false); // 나레이션 비활성화
-                SetScene(backGround, true); // 검은 화면을 활성화
                 break;
             case 46:
                 SetScene(dialogue, false); // 대화창 비활성화
                 SetScene(narration, false); // 나레이션 비활성화
                 break;
             case 56:
-                DeactivateAllScenes();
-                SetScene(cafe3, true);
+                ChangeScene(cafe3);
                 player.GetComponent<PlayerController>().enabled = false; // 플레이어 이동 비활성화
                 //player.GetComponent<PlayerController>().enabled = true; // 다시 이동 가능하게 설정
                 break;
@@ -408,23 +409,20 @@ public class Ch2TalkManager : MonoBehaviour
                 ResetNpcInteraction();
                 break;
             case 70:
-                DeactivateAllScenes();
-                SetScene(medicalRoom, true);
+                ChangeScene(medicalRoom);
                 Npc_Rusk.SetActive(false); // 러스크 비활성화
                 SetScene(dialogue, false); // 대화창 비활성화
                 SetScene(narration, false); // 나레이션 비활성화
 
                 break;
             case 71:
-                DeactivateAllScenes();
-                SetScene(trainRoom, true);
+                ChangeScene(trainRoom);
                 break;
             case 74:
                 SetScene(trainRoom, false); //객실 화면 비활성화
                 break;
             case 75:
-                DeactivateAllScenes();
-                SetScene(cafe, true);
+                ChangeScene(cafe);
                 player.transform.position = new Vector2(0, 0); // 플레이어 위치 이동
                 break;
             case 102:
@@ -464,21 +462,14 @@ public class Ch2TalkManager : MonoBehaviour
                 Npc_MrHam.SetActive(false);
                 break;
             case 118:
-                DeactivateAllScenes();
-                SetScene(backGround, true);
+                ChangeScene(backGround);
                 ResetNpcInteraction(); //NPC 상호작용 끝내기
                 break;
             case 119:
-                DeactivateAllScenes();
-                SetScene(trainRoom, true);
-                break;
-            case 124:
-                DeactivateAllScenes();
-                SetScene(cafe, true);
+                ChangeScene(trainRoom);
                 break;
             case 133:
-                DeactivateAllScenes();
-                SetScene(backGround, true);
+                ChangeScene(backGround);
                 break;
             case 134:
                 DeactivateAllScenes();
@@ -534,10 +525,6 @@ public class Ch2TalkManager : MonoBehaviour
                 DeactivateAllScenes();
                 SetScene(trainRoom, true);
                 break;
-            case 207:
-                DeactivateAllScenes();
-                SetScene(cafe, true);
-                break;
             case 223: //연료실
                 //DeactivateAllScenes();
                 //SetScene(medicalRoom, true);
@@ -558,17 +545,9 @@ public class Ch2TalkManager : MonoBehaviour
                 DeactivateAllScenes();
                 SetScene(cafe, true);
                 break;
-            case 253:
-                DeactivateAllScenes();
-                SetScene(cafe, true);
-                break;
             case 292:
                 DeactivateAllScenes();
                 SetScene(backGround, true);
-                break;
-            case 297:
-                DeactivateAllScenes();
-                SetScene(cafe, true);
                 break;
             case 340:
                 // 340과 341의 대사 함께 출력
@@ -641,6 +620,43 @@ public class Ch2TalkManager : MonoBehaviour
             SetScene(sceneToDeactivate, false);
         }
     }
+
+    IEnumerator EnableInputAfterDelay(float delay)
+    {
+        yield return new WaitForSeconds(delay); // delay(초)만큼 대기
+        isInputDisabled = false; // 입력 다시 활성화
+        Debug.Log("5초가 지나 입력이 다시 활성화됨.");
+    }
+
+    IEnumerator FadeTransition()
+    {
+        float duration = 5.0f; // 페이드 지속 시간
+        float time = 0f;
+
+        SpriteRenderer seaRenderer = sea.GetComponent<SpriteRenderer>();
+        SpriteRenderer volcanoRenderer = volcano.GetComponent<SpriteRenderer>();
+
+        // 초기 상태 설정 (바다는 보이고, 화산은 투명)
+        seaRenderer.color = new Color(1, 1, 1, 1);
+        volcanoRenderer.color = new Color(1, 1, 1, 0);
+        volcano.SetActive(true); // 화산 활성화
+
+        while (time < duration)
+        {
+            time += Time.deltaTime;
+            float alpha = 1 - (time / duration);
+
+            // 바다는 점점 투명해지고, 화산은 점점 선명해짐
+            seaRenderer.color = new Color(1, 1, 1, alpha);
+            volcanoRenderer.color = new Color(1, 1, 1, 1 - alpha);
+
+            yield return null;
+        }
+
+        // 전환 완료 후 바다 비활성화
+        sea.SetActive(false);
+    }
+
     //NPC 상호작용 끝내기
     void ResetNpcInteraction() {
         if (player != null && player.GetComponent<PlayerController>() != null)
@@ -664,6 +680,14 @@ public class Ch2TalkManager : MonoBehaviour
             SceneTransitionManager.Instance.HandleDialogueTransition("Ch2Scene", "CafeScene", 15, 1);
         }
     }
+    void ChangeScene(GameObject scene, bool enablePlayer = false)
+    {
+        DeactivateAllScenes(); // 모든 씬 비활성화
+        SetScene(scene, true); // 특정 씬 활성화
+
+        if (enablePlayer) player.SetActive(true); // 플레이어 활성화 옵션
+    }
+
 
     // 플레이어 활성화/비활성화 함수
     void SetPlayerActive(bool isActive)
