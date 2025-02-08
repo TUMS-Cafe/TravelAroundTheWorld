@@ -179,6 +179,8 @@ MonoBehaviour:
   isWaitingForPlayer: 0
   isTransition: 0
   speakerKey: 
+  isNpcTalkActivated: 0
+  npcEndIndex: 0
 --- !u!1 &71731770 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 8859767317848302922, guid: 79d8fae37ea638345adffa0062d95829, type: 3}
@@ -380,8 +382,12 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 11400000, guid: b3921606c6b4b3847840fd57267d6d52, type: 2}
     - target: {fileID: 2004638573586753001, guid: 2d3a0eb88cedf774797d2e77e7991b13, type: 3}
+      propertyPath: m_sharedMaterial
+      value: 
+      objectReference: {fileID: -6232656244177144099, guid: b3921606c6b4b3847840fd57267d6d52, type: 2}
+    - target: {fileID: 2004638573586753001, guid: 2d3a0eb88cedf774797d2e77e7991b13, type: 3}
       propertyPath: m_hasFontAssetChanged
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4581547585666358798, guid: 2d3a0eb88cedf774797d2e77e7991b13, type: 3}
       propertyPath: m_Camera
@@ -396,8 +402,12 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 11400000, guid: b3921606c6b4b3847840fd57267d6d52, type: 2}
     - target: {fileID: 5860374810649201683, guid: 2d3a0eb88cedf774797d2e77e7991b13, type: 3}
+      propertyPath: m_sharedMaterial
+      value: 
+      objectReference: {fileID: -6232656244177144099, guid: b3921606c6b4b3847840fd57267d6d52, type: 2}
+    - target: {fileID: 5860374810649201683, guid: 2d3a0eb88cedf774797d2e77e7991b13, type: 3}
       propertyPath: m_hasFontAssetChanged
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7328105883837717402, guid: 2d3a0eb88cedf774797d2e77e7991b13, type: 3}
       propertyPath: m_Pivot.x
@@ -1415,8 +1425,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -240.00006, y: 207.51001}
-  m_SizeDelta: {x: -1240, y: 565.01}
+  m_AnchoredPosition: {x: -240.00006, y: 252.637}
+  m_SizeDelta: {x: -1240, y: 647.06}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1486565719
 MonoBehaviour:
@@ -1791,7 +1801,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   dialogueButton: {fileID: 1111318269392346672}
-  talkManager: {fileID: 0}
+  talkManager: {fileID: 48156033}
   player: {fileID: 1372797961}
   interactionRange: 2
 --- !u!1 &1959825618 stripped
@@ -3755,7 +3765,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   dialogueButton: {fileID: 921656603}
-  talkManager: {fileID: 0}
+  talkManager: {fileID: 48156033}
   player: {fileID: 1372797961}
   interactionRange: 2
 --- !u!1001 &4782325231923664224
@@ -4042,11 +4052,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1582135930761370900, guid: 665d3ebf6e6379346af1ae63f5f1616e, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 1080
+      value: 1920
       objectReference: {fileID: 0}
     - target: {fileID: 1582135930761370900, guid: 665d3ebf6e6379346af1ae63f5f1616e, type: 3}
       propertyPath: m_SizeDelta.y
-      value: 1080
+      value: 1919.99
+      objectReference: {fileID: 0}
+    - target: {fileID: 1582135930761370900, guid: 665d3ebf6e6379346af1ae63f5f1616e, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1582135930761370900, guid: 665d3ebf6e6379346af1ae63f5f1616e, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2991639997537959061, guid: 665d3ebf6e6379346af1ae63f5f1616e, type: 3}
       propertyPath: m_Name
@@ -4284,6 +4302,10 @@ PrefabInstance:
     - target: {fileID: 3624012901261912875, guid: bc7308721df04924b82130373fd4581b, type: 3}
       propertyPath: m_Name
       value: Narration
+      objectReference: {fileID: 0}
+    - target: {fileID: 3624012901261912875, guid: bc7308721df04924b82130373fd4581b, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4080732554658693112, guid: bc7308721df04924b82130373fd4581b, type: 3}
       propertyPath: m_LocalScale.x
