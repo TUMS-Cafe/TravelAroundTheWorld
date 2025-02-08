@@ -206,9 +206,14 @@ public class PlayerManager : MonoBehaviour
         currentData.money -= money;
     }
 
-    public void SetEndings(int chapter, bool result)
+    public void SetHappyEnding(int chapter)
     {
-        currentData.chapterEndings[chapter] = result;
+        currentData.chapterEndings[chapter] = true;
+    }
+
+    public bool GetEnding(int chapter)
+    {
+        return currentData.chapterEndings[chapter];
     }
 
     public int CountEndings()
