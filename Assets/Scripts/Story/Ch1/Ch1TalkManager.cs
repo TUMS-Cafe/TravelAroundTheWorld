@@ -297,11 +297,9 @@ public class Ch1TalkManager : MonoBehaviour
         else if (index == 28)
         {
             Debug.Log("일반 주문 확인");
-            
-            string test = RandomDrinkSelector.Instance.GetRandomDrink(1);
-            Debug.Log(test);
+
             List<CafeOrder> orders = new List<CafeOrder>();
-            orders.Add(new CafeOrder("IceAmericano"));
+            orders.Add(new CafeOrder(RandomDrinkSelector.Instance.GetRandomDrink(1)));
             SceneTransitionManager.Instance.HandleDialogueTransition("ch1Scene", "CafeScene", index+1, orders);
         }
         else
