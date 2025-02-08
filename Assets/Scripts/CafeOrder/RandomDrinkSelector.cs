@@ -33,8 +33,8 @@ public class RandomDrinkSelector : MonoBehaviour
         drinkNamesByChapter = new Dictionary<int, List<string>>
         {
             { 1, new List<string> { "Espresso", "HotAmericano", "IceAmericano"} },
-            { 2, new List<string> { "Affogato", "HotCaramelLatte", "IceCaramelLatte", "HotCinnamonLatte", "IceCinnamonLatte", "HotVanillaLatte", "IceVanillaLatte" } },
-            { 3, new List<string> { "StrawberryJuice", "MangoJuice", "BlueberryJuice", "StrawberryLatte", "MangoLatte", "BlueberryLatte", "MintLatte", "SweetPotatoLatte" } }
+            { 2, new List<string> { "HotAmericano" } },
+            { 3, new List<string> { "IceAmericano" } }
         };
         /*
         {

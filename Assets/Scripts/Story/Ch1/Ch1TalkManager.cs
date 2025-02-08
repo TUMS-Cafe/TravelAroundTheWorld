@@ -287,14 +287,14 @@ public class Ch1TalkManager : MonoBehaviour
 
     private void HandleDialogueProgression(int index)
     {
-        if (ch1ProDialogue[index-1].line == "룸서비스 주문 음료 제작 " || index == 34 )
+        if (ch1ProDialogue[index-1].line == "룸서비스 주문 음료 제작 " || index == 30 )
         {
             narration.SetActive(false);
             dialogue.SetActive(false);
             roomService.SetActive(true);
             isWaitingForPlayer = true;
         }
-        else if (index == 32)
+        else if (index == 28)
         {
             Debug.Log("일반 주문 확인");
             
