@@ -150,13 +150,6 @@ public class Ch1TalkManager : MonoBehaviour
             return;
         }
 
-        // 인덱스가 462인 경우 499로 이동
-        if (currentDialogueIndex == 462)
-        {
-            currentDialogueIndex = 499;
-            PrintCh1ProDialogue(currentDialogueIndex);
-        }
-
         if (isActivated && (Input.GetKeyDown(KeyCode.Space) || Input.GetMouseButtonDown(0)) && !isWaitingForPlayer)
         {
             if (isQuestActive)
@@ -294,7 +287,28 @@ public class Ch1TalkManager : MonoBehaviour
 
     private void HandleDialogueProgression(int index)
     {
-        PrintCh1ProDialogue(index);
+        if (ch1ProDialogue[index-1].line == "룸서비스 주문 음료 제작 " || index == 34 )
+        {
+            narration.SetActive(false);
+            dialogue.SetActive(false);
+            roomService.SetActive(true);
+            isWaitingForPlayer = true;
+        }
+        else if (index == 32)
+        {
+            Debug.Log("일반 주문 확인");
+            
+            string test = RandomDrinkSelector.Instance.GetRandomDrink(1);
+            Debug.Log(test);
+            List<CafeOrder> orders = new List<CafeOrder>();
+            orders.Add(new CafeOrder("IceAmericano"));
+            SceneTransitionManager.Instance.HandleDialogueTransition("ch1Scene", "CafeScene", index+1, orders);
+        }
+        else
+        {
+            PrintCh1ProDialogue(index);
+        }
+        
         return;
         //if(ch1ProDialogue[index].line == "음료제작")
         {
@@ -615,10 +629,13 @@ public class Ch1TalkManager : MonoBehaviour
 
     public void PrintCh1ProDialogue(int index)
     {
-        if (index == 533)
+        if (index == 652)
         {
+            Debug.Log("test");
             // Transition to 'Ch2Scene'
-            SceneManager.LoadScene("Ch2Scene");
+            //SceneManager.LoadScene("Ch3Scene");
+
+            StartCoroutine(FadeOutAndLoadScene(cafe, "Ch3Scene"));
             return; // Exit the method to prevent further processing
         }
 
@@ -717,8 +734,8 @@ public class Ch1TalkManager : MonoBehaviour
             mapManager.currentState = MapState.Cafe;
             isWaitingForPlayer = true;
             player.SetActive(true);
-            map.SetActive(true);
             playerController.StartMove();
+            map.SetActive(true);
             trainRoom.SetActive(false);
             narration.SetActive(false);
             dialogue.SetActive(false);
@@ -1026,7 +1043,6 @@ public class Ch1TalkManager : MonoBehaviour
     {
         currentDialogueIndex = startIndex;
         npcEndIndex = endIndex;
-        //Debug.Log("talkManager로 잘 넘어와");
         if(isNpcTalkActivated)
         {
             playerController.StopMove();
@@ -1193,4 +1209,15 @@ public class Ch1TalkManager : MonoBehaviour
         DeactivateTalk(); // FadeOut이 완료된 후 대화 비활성화
         isFadingOut = false; // 페이드아웃 종료
     }
+    private IEnumerator FadeOutAndLoadScene(GameObject obj, string sceneName)
+    {
+        isFadingOut = true; // 페이드아웃 시작
+        yield return StartCoroutine(screenFader.FadeOut(obj)); // FadeOut이 완료될 때까지 기다립니다.
+        narration.SetActive(false);
+        dialogue.SetActive(false);
+        DeactivateTalk(); // FadeOut이 완료된 후 대화 비활성화
+        isFadingOut = false; // 페이드아웃 종료
+        SceneManagerEx.Instance.SceanLoadQueue(sceneName); // 씬 로드
+    }
+
 }

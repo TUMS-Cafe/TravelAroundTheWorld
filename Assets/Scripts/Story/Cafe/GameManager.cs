@@ -50,8 +50,6 @@ public class GameManager : MonoBehaviour
 
     void Update()
     {
-        Debug.Log("Day = " + Day);
-        Debug.Log("buy Milk = " + buyMilk);
         if (Input.GetMouseButtonDown(0))
         {
             Vector2 clickPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);

@@ -6,6 +6,7 @@ public class RandomDrinkSelector : MonoBehaviour
 {
     public static RandomDrinkSelector Instance { get; private set; }
     private Dictionary<int, List<string>> drinkNamesByChapter;
+    private Dictionary<string, string> drinkNameMap;
 
     private void Awake()
     {
@@ -22,6 +23,7 @@ public class RandomDrinkSelector : MonoBehaviour
         }
 
         InitializeDrinkData();
+        InitializeDrinkNameMap();
     }
 
 
@@ -30,10 +32,23 @@ public class RandomDrinkSelector : MonoBehaviour
         // 챕터별 음료 이름 초기화
         drinkNamesByChapter = new Dictionary<int, List<string>>
         {
+            { 1, new List<string> { "Espresso", "HotAmericano", "IceAmericano"} },
+            { 2, new List<string> { "Affogato", "HotCaramelLatte", "IceCaramelLatte", "HotCinnamonLatte", "IceCinnamonLatte", "HotVanillaLatte", "IceVanillaLatte" } },
+            { 3, new List<string> { "StrawberryJuice", "MangoJuice", "BlueberryJuice", "StrawberryLatte", "MangoLatte", "BlueberryLatte", "MintLatte", "SweetPotatoLatte" } }
+        };
+        /*
+        {
+            { 1, new List<string> { "Espresso", "HotAmericano", "IceAmericano", "HotLatte", "IceLatte", "HibiscusTea", "RooibosTea", "GreenTea", "ChamomileTea"} },
+            { 2, new List<string> { "Affogato", "HotCaramelLatte", "IceCaramelLatte", "HotCinnamonLatte", "IceCinnamonLatte", "HotVanillaLatte", "IceVanillaLatte" } },
+            { 3, new List<string> { "StrawberryJuice", "MangoJuice", "BlueberryJuice", "StrawberryLatte", "MangoLatte", "BlueberryLatte", "MintLatte", "SweetPotatoLatte" } }
+        };
+        /*
+        {
             { 1, new List<string> { "아메리카노", "에스프레소","아이스 아메리카노", "라떼", "아이스 라떼", "히비스커스 티","루이보스 티", "녹차","캐모마일 티" } },
             { 2, new List<string> { "아포가토", "카라멜 라떼","아이스 카라멜 라떼","시나몬 라떼","아이스 시나몬 라떼","바닐라 라떼","아이스 바닐라 라떼" } },
             { 3, new List<string> { "딸기 라떼", "딸기 주스", "블루베리 주스","블루베리 라떼","망고 주스","망고 라떼","민트 라떼","고구마 라떼" } }
         };
+        */
     }
 
     public string GetRandomDrink(int chapter)
@@ -92,4 +107,58 @@ public class RandomDrinkSelector : MonoBehaviour
         }
         return drinks[drinks.Count - 1]; // 확률이 오차로 인해 초과되지 않을 경우 마지막 음료 반환
     }
+    private void InitializeDrinkNameMap()
+    {
+        // 영어 <-> 한글 변환 매핑
+        drinkNameMap = new Dictionary<string, string>
+        {
+            { "Espresso", "에스프레소" },
+            { "HotAmericano", "아메리카노" },
+            { "IceAmericano", "아이스 아메리카노" },
+
+            { "HotLatte", "라떼" },
+            { "IceLatte", "아이스 라떼" },
+
+            { "HibiscusTea", "히비스커스 티" },
+            { "RooibosTea", "루이보스 티" },
+            { "GreenTea", "녹차" },
+            { "ChamomileTea", "캐모마일 티" },
+
+            { "Affogato", "아포가토" },
+            { "HotCaramelLatte", "카라멜 라떼" },
+            { "IceCaramelLatte", "아이스 카라멜 라떼" },
+            { "HotCinnamonLatte", "시나몬 라떼" },
+            { "IceCinnamonLatte", "아이스 시나몬 라떼" },
+            { "HotVanillaLatte", "바닐라 라떼" },
+            { "IceVanillaLatte", "아이스 바닐라 라떼" },
+
+            { "StrawberryJuice", "딸기 주스" },
+            { "MangoJuice", "망고 주스" },
+            { "BlueberryJuice", "블루베리 주스" },
+
+            { "StrawberryLatte", "딸기 라떼" },
+            { "MangoLatte", "망고 라떼" },
+            { "BlueberryLatte", "블루베리 라떼" },
+
+            { "MintLatte", "민트 라떼" },
+            { "SweetPotatoLatte", "고구마 라떼" }
+        };
+    }
+
+
+    public string ChangeDrinkName(string englishName)
+    {
+        return drinkNameMap.ContainsKey(englishName) ? drinkNameMap[englishName] : englishName;
+    }
+
+    public string ChangeDrinkNameToEnglish(string koreanName)
+    {
+        foreach (var pair in drinkNameMap)
+        {
+            if (pair.Value == koreanName)
+                return pair.Key;
+        }
+        return koreanName; // 매칭되는 값이 없으면 원래 값 반환
+    }
+
 }
