@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using System.Linq;
 
 public class PlayerManager : MonoBehaviour
 {
@@ -205,6 +206,20 @@ public class PlayerManager : MonoBehaviour
         currentData.money -= money;
     }
 
+    public void SetHappyEnding(int chapter)
+    {
+        currentData.chapterEndings[chapter] = true;
+    }
+
+    public bool GetEnding(int chapter)
+    {
+        return currentData.chapterEndings[chapter];
+    }
+
+    public int CountEndings()
+    {
+        return currentData.chapterEndings.Count(e => e);
+    }
     
     private void InitializePlayerData()
     {
@@ -223,6 +238,7 @@ public class PlayerManager : MonoBehaviour
         currentData.completedSubQuestIds = new List<string>();
         currentData.unlockedIllustrationIds = new List<int>();
         currentData.unlockedEndingIds = new List<int>();
+        currentData.chapterEndings = new List<bool> { false, false, false, false };
     }
 
     //씬 전환 후 자동저장(카페 작업 후 자동저장)
