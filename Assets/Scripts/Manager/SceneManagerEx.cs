@@ -113,7 +113,6 @@ public class SceneManagerEx : MonoBehaviour
             float progress = (loadingTime) / 1.5f;
             loadingSceneController.UpdateProgress(progress);
 
-            Debug.Log($"LoadingTime is {loadingTime} sec");
 
             if (loadingTime > 1.5)//(asyncOperation.progress > 10)
             {
