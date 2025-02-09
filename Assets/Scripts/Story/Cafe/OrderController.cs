@@ -5,8 +5,8 @@ using UnityEngine;
 public class OrderController : MonoBehaviour
 {
     //날짜, 우유 구매 여부를 PlayerManager에서 받아옴.
-    private int Day = PlayerManager.Instance.GetDay();
-    private bool buyMilk = PlayerManager.Instance.IsBoughtCafeItem("우유");
+    //private int currentChapter = PlayerManager.Instance.GetDay();
+    private int currentChapter = 1;
 
     //왼쪽 위 만들어야 할 주문을 띄워주기 위한 prefab
     public GameObject orderEspressoPrefab;
@@ -33,10 +33,15 @@ public class OrderController : MonoBehaviour
     private int randomNum = SceneTransitionManager.Instance.GetRandomMenuNum();
     private int deliveryNum = SceneTransitionManager.Instance.GetDeliveryNum();
 
+    //addzzz
+    private List<string> currentOrders = new List<string>();
+    public GameObject orderPrefab;
+
+    //addzzz
     void OnEnable()
     {
-        Debug.Log("Day = " + Day);
-        Debug.Log("randomNum = " + randomNum);
+        //Debug.Log("Day = " + Day);
+        //Debug.Log("randomNum = " + randomNum);
         deliveryOrder = deliveryData.deliveryOrder;
         //랜덤 주문을 하는 경우, randomNum을 이용하여 주문 생성
         if (randomNum > 0)
@@ -49,9 +54,9 @@ public class OrderController : MonoBehaviour
         {
             DisplayOrder();
         }
+        
 
     }
-
     //날짜가 5일 이전이면 상점 구매 전이므로 에스프레소, 아메리카노 중에 주문 생성.
     //상점 구매 이후에는 우유 구매 여부(우유 구매X면 티백 구매함)에 따라 주문 생성)
     public void GenerateOrder(int randomNum)
@@ -59,9 +64,9 @@ public class OrderController : MonoBehaviour
         List<string> availableKeys = new List<string>();
 
         // 조건에 따라 사용할 주문 목록 선택
-        if (Day < 5)
+        /*if (currentChapter < 5)
         {
-            availableKeys.AddRange(new string[] { "preEspresso", "preHotAmericano", "preIceAmericano" });
+            availableKeys.AddRange(new string[] { "preEspresso", "preHotAmericano", "preIceAmericano, " });
         }
         else if (buyMilk)
         {
@@ -70,7 +75,15 @@ public class OrderController : MonoBehaviour
         else if (!buyMilk)
         {
             availableKeys.AddRange(new string[] { "postEspresso", "postHotAmericano", "postIceAmericano", "GreenTea", "RooibosTea", "ChamomileTea", "HibiscusTea" });
-        }
+        }*/
+        if (currentChapter >= 0)
+            availableKeys.AddRange(new string[] { "preEspresso", "preHotAmericano", "preIceAmericano,"});
+        if (currentChapter >= 1)
+            availableKeys.AddRange(new string[] { "HotLatte", "IceLatte", "HibiscusTea", "RooibosTea", "GreenTea", "ChamomileTea", "LunaTea" });
+        if (currentChapter >= 2)
+            availableKeys.AddRange(new string[] { "Affogato", "HotCaramelLatte", "IceCaramelLatte", "HotCinnamonLatte", "IceCinnamonLatte", "HotVanillaLatte", "IceVanillaLatte" });
+        if (currentChapter >= 3)
+            availableKeys.AddRange(new string[] { "StrawberryJuice", "MangoJuice", "BlueberryJuice", "StrawberryLatte", "MangoLatte", "BlueberryLatte", "MintLatte", "SweetPotatoLatte" });
 
         // 랜덤으로 주문 생성
         for (int i = 0; i < randomNum; i++)
@@ -125,7 +138,9 @@ public class OrderController : MonoBehaviour
             }
         }
     }
-
+    List<CafeOrder> orders = new List<CafeOrder>();
+   
+   //addzzz 
     public void DisplayOrder()
     {
         string order = null;

@@ -2884,21 +2884,21 @@ MonoBehaviour:
   orderListParent: {fileID: 220372535}
   deliveryData: {fileID: 386252750}
   deliveryOrder: 
-  IceCup: {fileID: 0}
-  IceCupWithIce: {fileID: 0}
-  IceCupWithWater: {fileID: 0}
-  IceCupWithWaterIce: {fileID: 0}
-  IceCupWithShot: {fileID: 0}
-  IceCupWithMilk: {fileID: 0}
-  IceCupWithMilkIce: {fileID: 0}
-  HotCup: {fileID: 0}
-  HotCupWithWater: {fileID: 0}
-  HotCupWithShot: {fileID: 0}
-  HotCupWithMilk: {fileID: 0}
-  HotCupWithGreen: {fileID: 0}
-  HotCupWithHibiscus: {fileID: 0}
-  HotCupWithChamomile: {fileID: 0}
-  HotCupWithRooibos: {fileID: 0}
+  IceCup: {fileID: 21300000, guid: db72b627157b5364ea8f36382bdc62c8, type: 3}
+  IceCupWithIce: {fileID: 21300000, guid: 5bfc293273e09f34aa99cd3a7dbe69e1, type: 3}
+  IceCupWithWater: {fileID: 21300000, guid: 5329178f51ef0084180ed8b549c36819, type: 3}
+  IceCupWithWaterIce: {fileID: 21300000, guid: d350cf802f9cdc646891670e46e1f8f7, type: 3}
+  IceCupWithShot: {fileID: 21300000, guid: 058632af836a39e4583a1bc957ac11e7, type: 3}
+  IceCupWithMilk: {fileID: 21300000, guid: dcc92e3e91c355348a9c1bc7fbf6f912, type: 3}
+  IceCupWithMilkIce: {fileID: 21300000, guid: dec3379075f98c54d8fe84f0296c79a3, type: 3}
+  HotCup: {fileID: 21300000, guid: 678e42b821b7a62439a45f8b3a9bbe9c, type: 3}
+  HotCupWithWater: {fileID: 21300000, guid: 74167f474ca0807469592c922ef3c4dc, type: 3}
+  HotCupWithShot: {fileID: 21300000, guid: f6b8d40dc593c0d478784b92252c2ca5, type: 3}
+  HotCupWithMilk: {fileID: 21300000, guid: 5fb3afd3e1550ff4a9f794516fb8d23a, type: 3}
+  HotCupWithGreen: {fileID: 21300000, guid: b7be85370b2ba0e49ab35de60aaaeac0, type: 3}
+  HotCupWithHibiscus: {fileID: 21300000, guid: 4caa31a89a89cfb4389fc5cfea6bbea9, type: 3}
+  HotCupWithChamomile: {fileID: 21300000, guid: e4117f9cdab3ab146a6d0d4a18597d6c, type: 3}
+  HotCupWithRooibos: {fileID: 21300000, guid: 2306b2552b6645f4b81e60b69abcdb48, type: 3}
 --- !u!1 &611514468
 GameObject:
   m_ObjectHideFlags: 0
@@ -6405,6 +6405,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1960370859}
   - component: {fileID: 1960370858}
+  - component: {fileID: 1960370860}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -6448,6 +6449,18 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1960370860
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1960370857}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 93de31c40b6d36045b39248f55057762, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1968746746
 GameObject:
   m_ObjectHideFlags: 0
@@ -6519,6 +6532,7 @@ MonoBehaviour:
   offset: {x: -1.35, y: 0, z: 0}
   deliveryData: {fileID: 386252750}
   deliveryOrder: 
+  orderPrefab: {fileID: 0}
 --- !u!224 &1999451406 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 8694616222402024318, guid: d5a475d7b7042cd4b8faf0efd1a00282, type: 3}

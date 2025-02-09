@@ -33,8 +33,8 @@ public class CafeMakeController : MonoBehaviour
     public DeliveryData deliveryData;
     public string deliveryOrder;
 
-    private int randomNum = SceneTransitionManager.Instance.GetRandomMenuNum();
-    private int deliveryNum = SceneTransitionManager.Instance.GetDeliveryNum();
+    //private int randomNum = SceneTransitionManager.Instance.GetRandomMenuNum();
+    //private int deliveryNum = SceneTransitionManager.Instance.GetDeliveryNum();
 
     private SpriteRenderer iceCupSpriteRenderer;
     private SpriteRenderer hotCupSpriteRenderer;
@@ -56,8 +56,14 @@ public class CafeMakeController : MonoBehaviour
     public Sprite HotCupWithChamomile;
     public Sprite HotCupWithRooibos;
 
+    //addzzz 임시 챕터, 해금 식재료 리스트
+    private int currentChapter = 1; 
+    private List<string> unlockedIngredients = new List<string>();
+
     void Start()
     {
+        UnlockIngredients();
+
         iceCupSpriteRenderer = makeIceCup.GetComponent<SpriteRenderer>();
         hotCupSpriteRenderer = makeHotCup.GetComponent<SpriteRenderer>();
 
@@ -79,13 +85,32 @@ public class CafeMakeController : MonoBehaviour
         HotCupWithRooibos = Resources.Load<Sprite>("CafeMaking/HotCup+Rooibos");
     }
 
+    //addzzz
+    public void UnlockIngredients()
+    {
+        if (currentChapter >= 0)
+            unlockedIngredients.AddRange(new string[] { "Water", "Shot", "Ice" });
+        if (currentChapter >= 1)
+            unlockedIngredients.AddRange(new string[] { "Milk", "HibiscusLeaf", "RooibosLeaf", "GreenTeaLeaf", "ChamomileLeaf", "LunaLeaf" });
+        if (currentChapter >= 2)
+            unlockedIngredients.AddRange(new string[] { "IceCream", "CaramelSyrup", "VanillaSyrup", "Cinnamon" });
+        if (currentChapter >= 3)
+            unlockedIngredients.AddRange(new string[] { "Strawberry", "Mango", "Blueberry", "Mint", "SweetPotato" });
+    }
+
+    public bool CanUseIngredient(string ingredient)
+    {
+        return unlockedIngredients.Contains(ingredient);
+    }
+
     void OnEnable()
     {
-        deliveryOrder = deliveryData.deliveryOrder;
+        /*deliveryOrder = deliveryData.deliveryOrder;
         Debug.Log("deliveryNum = " + deliveryNum);
         Debug.Log("delivery menu = " + deliveryData.deliveryOrder);
-
+*/
     }
+    
 
     public void HandleMakeArea(GameObject ingredient)
     {
@@ -241,7 +266,7 @@ public class CafeMakeController : MonoBehaviour
     }
     public void CheckOrder()
     {
-        if (randomNum > 0)
+        /*if (randomNum > 0)
         {
             ProcessOrder(Espresso, "Espresso", 50, false);
             ProcessOrder(HotAmericano, "HotAmericano", 150, false);
@@ -266,7 +291,7 @@ public class CafeMakeController : MonoBehaviour
             ProcessOrder(ChamomileTea, "ChamomileTea", 120, true);
         }
         else
-        {
+        {*/
             ProcessDirectOrder(Espresso, "Espresso", 50);
             ProcessDirectOrder(HotAmericano, "HotAmericano", 150);
             ProcessDirectOrder(IceAmericano, "IceAmericano", 150);
@@ -276,7 +301,7 @@ public class CafeMakeController : MonoBehaviour
             ProcessDirectOrder(HibiscusTea, "HibiscusTea", 150);
             ProcessDirectOrder(RooibosTea, "RooibosTea", 160);
             ProcessDirectOrder(ChamomileTea, "ChamomileTea", 120);
-        }
+        //}
 
         SceneTransitionManager.Instance.UpdateCafeOrders(updatedOrders);
     }
@@ -338,10 +363,10 @@ public class CafeMakeController : MonoBehaviour
         currentIngredients.Clear();
         newNum++;
         Debug.Log("주문 제작 완료 수 = "+ newNum);
-        if (randomNum > 0)
+        /*if (randomNum > 0)
         {
             SceneTransitionManager.Instance.UpdateRandomMenuDelivery(newNum);
-
+        */
             if (orderListParent.childCount == 5)
             {
                 for (int i = 0; i < orderListParent.childCount; i++)
@@ -358,9 +383,9 @@ public class CafeMakeController : MonoBehaviour
                     }
                 }
             }
-        }
+        /*}
         else
-            SceneTransitionManager.Instance.UpdateCafeDelivery(newNum);
+            SceneTransitionManager.Instance.UpdateCafeDelivery(newNum);*/
     }
 
     public void BackToDelivery()
