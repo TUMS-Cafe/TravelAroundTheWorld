@@ -24,6 +24,8 @@ public class Ch2TalkManager : MonoBehaviour
     public Button choiceButton2; // 두 번째 선택 버튼 
     public TMP_Text choiceText1; // 첫 번째 선택지 텍스트
     public TMP_Text choiceText2; // 두 번째 선택지 텍스트
+    public GameObject memo; //메모
+    public TMP_Text memoText; //메모 텍스트 
 
     public string currentMusic = ""; // 현재 재생 중인 음악의 이름을 저장
 
@@ -64,21 +66,8 @@ public class Ch2TalkManager : MonoBehaviour
     public Ch0DialogueBar dialogueBar; // 대화창 스크립트 (타이핑 효과 호출을 위해)
     public Ch0DialogueBar narrationBar; // 나레이션창 스크립트 (타이핑 효과 호출을 위해)
 
-    void Awake()
-    {
-        //Instance = this;
-        //ch1ProDialogue = new List<Ch1ProDialogue>();
-        //LoadDialogueFromCSV();
-        //InitializeCharacterImages();
-        //mapManager = map.GetComponent<Ch1MapManager>();
-        //playerController = player.GetComponent<PlayerController>(); // 플레이어 컨트롤러 참조 설정
-        //player.SetActive(false);
-    }
-
     void Start()
     {
-        //player.SetActive(false);
-
         dialogueBar = dialogue.GetComponentInChildren<Ch0DialogueBar>();
         narrationBar = narration.GetComponentInChildren<Ch0DialogueBar>();
 
@@ -174,7 +163,7 @@ public class Ch2TalkManager : MonoBehaviour
             narrationText.text = currentDialogue.대사;
             dialogueText.text = currentDialogue.대사;
 
-            if (currentDialogueIndex == 14 || currentDialogueIndex == 74 || currentDialogueIndex == 123 || currentDialogueIndex == 206 || currentDialogueIndex == 245) // 특정 대화 인덱스
+            if (currentDialogueIndex == 14 || currentDialogueIndex == 74 || currentDialogueIndex == 123 || currentDialogueIndex == 206 || currentDialogueIndex == 245 || currentDialogueIndex == 381 || currentDialogueIndex == 475 || currentDialogueIndex == 687 || currentDialogueIndex == 735) // 특정 대화 인덱스
             {
                 isWaitingForPlayer = true; // 플레이어 이동 대기 상태 활성화
                 EnableMap(); // 맵 활성화
@@ -337,8 +326,9 @@ public class Ch2TalkManager : MonoBehaviour
         switch (index)
         {
             case 0: 
+                //1일차 아침
                 SetPlayerActive(false); // 플레이어 비활성화
-                ChangeScene(backGround);
+                ChangeScene(backGround, "DEFAULT");
                 break;
             case 1:
                 SetScene(sea, true); // 바다 배경 활성화
@@ -352,17 +342,24 @@ public class Ch2TalkManager : MonoBehaviour
                 SetScene(volcano, false); // 화산 배경 비활성화
                 SetScene(backGround, true); // 검은 화면을 활성화
                 break;
+
+                //시계 알람 소리
+            case 10:
+                PlaySoundEffect("clock alarm"); 
+                break;
             case 11:
-                ChangeScene(trainRoom, true);
+                ChangeScene(trainRoom);
+                player.SetActive(true); 
                 break;
             case 14:
+                //카페 외 다른 곳으로 이동시
+                DeactivateAllScenes();
                 EnableMap();
                 player.transform.position = new Vector2(0, 0); // 플레이어 위치 이동
                 break;
-
-             //cafe 화면으로 전환
-            case 15: case 26: case 124: case 207: case 253: case 297:
-                ChangeScene(cafe);
+            case 15: case 26: case 124: case 207:
+                //cafe 화면으로 전환
+                ChangeScene(cafe, "cafe");
                 break;
 
             case 24: case 28:
@@ -379,6 +376,7 @@ public class Ch2TalkManager : MonoBehaviour
                 SetScene(narration, false); // 나레이션 비활성화
                 break;
             case 56:
+                //1일차 밤
                 ChangeScene(cafe3);
                 player.GetComponent<PlayerController>().enabled = false; // 플레이어 이동 비활성화
                 //player.GetComponent<PlayerController>().enabled = true; // 다시 이동 가능하게 설정
@@ -401,7 +399,7 @@ public class Ch2TalkManager : MonoBehaviour
                 break;
             case 66:
                 //러스크와 상호작용
-                InteractWithNPC(Npc_Rusk, new Vector2(-1, 0), bakery, map);
+                InteractWithNPC(Npc_Rusk, new Vector2(2, 0), bakery, map);
                 // 바이올렛 비활성화
                 Npc_Violet.SetActive(false);
                 break;
@@ -409,21 +407,25 @@ public class Ch2TalkManager : MonoBehaviour
                 ResetNpcInteraction();
                 break;
             case 70:
-                ChangeScene(medicalRoom);
+                ChangeScene(medicalRoom, "medicalRoom");
                 Npc_Rusk.SetActive(false); // 러스크 비활성화
                 SetScene(dialogue, false); // 대화창 비활성화
                 SetScene(narration, false); // 나레이션 비활성화
-
                 break;
             case 71:
+                //2일차 아침
                 ChangeScene(trainRoom);
                 break;
             case 74:
                 SetScene(trainRoom, false); //객실 화면 비활성화
                 break;
             case 75:
+                //2일차 낮
                 ChangeScene(cafe);
                 player.transform.position = new Vector2(0, 0); // 플레이어 위치 이동
+                break;
+            case 101:
+                ChangeScene(backGround);
                 break;
             case 102:
                 //레이비야크와 상호작용
@@ -443,7 +445,7 @@ public class Ch2TalkManager : MonoBehaviour
                 break;
             case 107:
                 //러스크와 상호작용
-                InteractWithNPC(Npc_Rusk, new Vector2(-1, 0), bakery, map);
+                InteractWithNPC(Npc_Rusk, new Vector2(2, 0), bakery, map);
                 // 바이올렛 비활성화
                 Npc_Violet.SetActive(false);
                 break;
@@ -458,15 +460,23 @@ public class Ch2TalkManager : MonoBehaviour
                 break;
             case 117:
                 ResetNpcInteraction(); //NPC 상호작용 끝내기
-                // MrHam 비활성화
-                Npc_MrHam.SetActive(false);
                 break;
             case 118:
+                //3일차 아침
                 ChangeScene(backGround);
+                player.SetActive(false);
+                
+                Npc_MrHam.SetActive(false); // MrHam 비활성화
                 ResetNpcInteraction(); //NPC 상호작용 끝내기
                 break;
             case 119:
                 ChangeScene(trainRoom);
+                break;
+            case 123:
+                //카페 외 다른 곳으로 이동시
+                DeactivateAllScenes();
+                EnableMap();
+                player.transform.position = new Vector2(0, 0); // 플레이어 위치 이동
                 break;
             case 133:
                 ChangeScene(backGround);
@@ -480,9 +490,8 @@ public class Ch2TalkManager : MonoBehaviour
                 SetScene(backGround, true);
                 break;
             case 140:
-                DeactivateAllScenes();
-                SetScene(bakery, true);
-                player.transform.position = new Vector2(0, 0); // 플레이어 위치 이동
+                ChangeScene(bakery, "bakery");
+                player.transform.position = new Vector2(1, 0); // 플레이어 위치 이동
                 break;
             case 189:
                 //레이비야크와 상호작용
@@ -502,7 +511,7 @@ public class Ch2TalkManager : MonoBehaviour
                 break;
             case 195:
                 //러스크와 상호작용
-                InteractWithNPC(Npc_Rusk, new Vector2(-1, 0), bakery, map);
+                InteractWithNPC(Npc_Rusk, new Vector2(2, 0), bakery, map);
                 // 바이올렛 비활성화
                 Npc_Violet.SetActive(false);
                 break;
@@ -514,10 +523,12 @@ public class Ch2TalkManager : MonoBehaviour
                 break;
             case 202:
                 ResetNpcInteraction(); //NPC 상호작용 끝내기
-                // MrHam 비활성화
-                Npc_MrHam.SetActive(false);
                 break;
             case 203:
+                // MrHam 비활성화
+                Npc_MrHam.SetActive(false);
+
+                //4일차 아침
                 DeactivateAllScenes();
                 SetScene(backGround, true);
                 break;
@@ -525,71 +536,237 @@ public class Ch2TalkManager : MonoBehaviour
                 DeactivateAllScenes();
                 SetScene(trainRoom, true);
                 break;
-            case 223: //연료실
-                //DeactivateAllScenes();
-                //SetScene(medicalRoom, true);
+            case 206:
+                //카페 외 다른 곳으로 이동시
+                DeactivateAllScenes();
+                EnableMap();
+                player.transform.position = new Vector2(0, 0); // 플레이어 위치 이동
+                break;
+            case 214:
+                //4일차 밤
+                ChangeScene(cafe3);
+                break;
+            case 223:
+                ChangeScene(backGround);
+                break;
+            case 234: 
+                //메모 활성화
+                memo.SetActive(true);
+                //메모 텍스트
+                memoText.GetComponent<TMP_Text>().text = dialogues[currentDialogueIndex].대사;
+
+                SetScene(dialogue, false); // 대화창 비활성화
+                SetScene(narration, false); // 나레이션 비활성화
+                break;
+            case 235:
+            case 236:
+            case 237:
+            case 238:
+            case 239:
+            case 240:
+                // 메모 텍스트 설정
+                memoText.GetComponent<TMP_Text>().text = dialogues[currentDialogueIndex].대사;
+
+                SetScene(dialogue, false); // 대화창 비활성화
+                SetScene(narration, false); // 나레이션 비활성화
                 break;
             case 241:
-                DeactivateAllScenes();
-                SetScene(trainRoomHallway, true);
-                break;
-            case 243:
-                DeactivateAllScenes();
-                SetScene(backGround, true);
+                memo.SetActive(false);
+                ChangeScene(backGround);
                 break;
             case 245:
+                //카페 외 다른 곳으로 이동시
                 DeactivateAllScenes();
-                SetScene(trainRoom, true);
+                EnableMap();
+                player.transform.position = new Vector2(0, 0); // 플레이어 위치 이동
                 break;
             case 246:
-                DeactivateAllScenes();
-                SetScene(cafe, true);
+                //5일차 낮
+                ChangeScene(cafe);
                 break;
+            case 253:
+                ChangeScene(cafe3); break;
             case 292:
                 DeactivateAllScenes();
-                SetScene(backGround, true);
-                break;
+                SetScene(backGround, true); break;
+            case 297:
+                ChangeScene(cafe3); break;
+            //case 324:
+                //초대장 반짝임
             case 340:
                 // 340과 341의 대사 함께 출력
                 //narrationText.gameObject.SetActive(false);
                 ShowChoice("네, 도와주세요.", "...아뇨, 제 힘으로 해결해 볼게요.",342,359); // 선택지 UI 표시
                 break;
             case 367:
-                DeactivateAllScenes();
-                SetScene(garden, true);
+                //레이비야크와 상호작용
+                InteractWithNPC(Npc_Rayviyak, new Vector2(-15, 0), map);
+                break;
+            case 369:
+                ResetNpcInteraction(); //NPC 상호작용 끝내기
                 break;
             case 370:
-                DeactivateAllScenes();
-                SetScene(cafe3, true);
+                //바이올렛과 상호작용
+                InteractWithNPC(Npc_Violet, new Vector2(0, 0), cafe3, map);
+                // 레이비야크 비활성화
+                Npc_Rayviyak.SetActive(false);
+                break;
+            case 373:
+                ResetNpcInteraction(); //NPC 상호작용 끝내기
                 break;
             case 374:
-                DeactivateAllScenes();
-                SetScene(bakery, true);
+                //러스크와 상호작용
+                InteractWithNPC(Npc_Rusk, new Vector2(2, 0), bakery, map);
+                // 바이올렛 비활성화
+                Npc_Violet.SetActive(false);
+                break;
+            case 376:
+                ResetNpcInteraction(); //NPC 상호작용 끝내기
                 break;
             case 377:
-                DeactivateAllScenes();
-                SetScene(medicalRoom, true);
+                //mrHam과 상호작용
+                InteractWithNPC(Npc_MrHam, new Vector2(0, 0), medicalRoom, map);
+                // 러스크 비활성화
+                Npc_Rusk.SetActive(false);
+                break;
+            case 379:
+                ResetNpcInteraction(); //NPC 상호작용 끝내기
                 break;
             case 380:
-                DeactivateAllScenes();
-                SetScene(backGround, true);
+                //6일차 아침
+                ChangeScene(backGround);
+                Npc_MrHam.SetActive(false);
                 break;
             case 381:
-                DeactivateAllScenes();
-                SetScene(trainRoom, true);
+                ChangeScene(trainRoom);
                 break;
             case 382:
+                //6일차 낮
                 DeactivateAllScenes();
                 SetScene(cafe, true);
                 break;
+            case 389:
+                //6일차 밤
+                ChangeScene(cafe3); break;
             case 408:
                 ShowChoice("기차에 어떻게 타게 된 건지 자세히 묻는다. ", "부모님에 대해서 자세히 묻는다. ", 410, 605);
                 break ;
+            case 442:
+                ChangeScene(bakery); break;
+            case 472:
+                ChangeScene(trainRoom); break;
+            case 473:
+                ChangeScene(backGround); break;
+            case 475:
+                //카페 외 다른 곳으로 이동시
+                DeactivateAllScenes();
+                EnableMap();
+                player.transform.position = new Vector2(0, 0); // 플레이어 위치 이동
+                break;
+            case 476: 
+                ChangeScene(cafe); break;
+            case 490:
+                ChangeScene(backGround); break;
+            case 491:
+                ChangeScene(bakery); break;
+            case 581:
+                ChangeScene(backGround); break;
+            case 582:
+                ChangeScene(cafe2); break;
+            case 605:
+                ChangeScene(cafe2); break;
+            case 674:
+                //레이비야크와 상호작용
+                InteractWithNPC(Npc_Rayviyak, new Vector2(-15, 0), map);
+                break;
+            case 676:
+                ResetNpcInteraction(); //NPC 상호작용 끝내기
+                break;
+            case 677:
+                //바이올렛과 상호작용
+                InteractWithNPC(Npc_Violet, new Vector2(0, 0), cafe3, map);
+                // 레이비야크 비활성화
+                Npc_Rayviyak.SetActive(false);
+                break;
+            case 681:
+                ResetNpcInteraction();
+                break;
+            case 682:
+                //러스크와 상호작용
+                InteractWithNPC(Npc_Rusk, new Vector2(2, 0), bakery, map);
+                // 바이올렛 비활성화
+                Npc_Violet.SetActive(false);
+                break;
+            case 683:
+                //mrHam과 상호작용
+                InteractWithNPC(Npc_MrHam, new Vector2(0, 0), medicalRoom, map);
+                // 러스크 비활성화
+                Npc_Rusk.SetActive(false);
+                break;
+            case 685:
+                ResetNpcInteraction(); //NPC 상호작용 끝내기
+                break;
+            case 686:
+                //배드엔딩 7일차
+                Npc_MrHam.SetActive(false); //mrHam 비활성화
+                ChangeScene(backGround); break;
+            case 687:
+                //카페 외 다른 곳으로 이동시
+                DeactivateAllScenes();
+                EnableMap();
+                player.transform.position = new Vector2(0, 0); // 플레이어 위치 이동
+                break;
+            case 688:
+                ChangeScene(cafe2); break;
             case 713:
                 ShowChoice("네, 알려드릴게요.", "...그럴 순 없어요.", 715, 717);
                 break;
-            case 716:
+            case 727:
+                //레이비야크와 상호작용
+                InteractWithNPC(Npc_Rayviyak, new Vector2(-15, 0), map);
                 break;
+            case 729:
+                ResetNpcInteraction(); //NPC 상호작용 끝내기
+                break;
+            case 730:
+                //바이올렛과 상호작용
+                InteractWithNPC(Npc_Violet, new Vector2(0, 0), cafe3, map);
+                // 레이비야크 비활성화
+                Npc_Rayviyak.SetActive(false);
+                break;
+            case 731:
+                // 바이올렛 비활성화
+                Npc_Violet.SetActive(false);
+                ChangeScene(bakery); break;
+            case 732:
+                //mrHam과 상호작용
+                InteractWithNPC(Npc_MrHam, new Vector2(0, 0), medicalRoom, map);
+                // 러스크 비활성화
+                Npc_Rusk.SetActive(false);
+                break;
+            case 733:
+                ResetNpcInteraction(); //NPC 상호작용 끝내기
+                break;
+            case 734:
+                //배드엔딩 8일차
+                Npc_MrHam.SetActive(false); //mrHam 비활성화
+                ChangeScene(backGround); break;
+            case 735:
+                //카페 외 다른 곳으로 이동시
+                DeactivateAllScenes();
+                EnableMap();
+                player.transform.position = new Vector2(0, 0); // 플레이어 위치 이동
+                break;
+            case 736:
+                ChangeScene(cafe); break;
+            case 740:
+                ChangeScene(bakery); break;
+            case 775:
+                ChangeScene(backGround); break;
+            case 777:
+                ChangeScene(bakery); break;
+            case 786:
+                ChangeScene(backGround); break;
             default:
                 break; //아무 것도 활성화하지 않음
         }
@@ -680,12 +857,16 @@ public class Ch2TalkManager : MonoBehaviour
             SceneTransitionManager.Instance.HandleDialogueTransition("Ch2Scene", "CafeScene", 15, 1);
         }
     }
-    void ChangeScene(GameObject scene, bool enablePlayer = false)
+    void ChangeScene(GameObject scene, string musicKey = null, bool enablePlayer = false)
     {
         DeactivateAllScenes(); // 모든 씬 비활성화
         SetScene(scene, true); // 특정 씬 활성화
 
-        if (enablePlayer) player.SetActive(true); // 플레이어 활성화 옵션
+        if (enablePlayer)
+            player.SetActive(true); // 플레이어 활성화 옵션
+
+        if (!string.IsNullOrEmpty(musicKey))
+            PlayMusic(musicKey); // 음악 변경
     }
 
 
@@ -924,5 +1105,52 @@ public class Ch2TalkManager : MonoBehaviour
             ["파이아"] = Resources.Load<Sprite>("NpcImage/Fire_full"),
             ["Default"] = Resources.Load<Sprite>("NpcImage/Default")
         };
+    }
+    public void PlaySoundEffect(string soundKey)
+    {
+        AudioClip clip = Resources.Load<AudioClip>($"Sounds/{soundKey}");
+
+        if (clip != null)
+        {
+            SoundManager.Instance.PlaySFX(soundKey); // 올바른 AudioClip 전달
+        }
+        else
+        {
+            Debug.LogError($"[PlaySoundEffect] 효과음 파일을 찾을 수 없음: Sounds/{soundKey}");
+        }
+
+    }
+    public void PlayMusic(string location = null)
+    {
+        string newMusic = ""; // 재생할 음악 이름
+
+        switch (location)
+        {
+            case "cafe":
+                newMusic = "CAFE";
+                break;
+            case "bakery":
+                newMusic = "BAKERY";
+                break;
+            case "medicalRoom":
+                newMusic = "amedicaloffice_001";
+                break;
+            case "trainRoom":
+                newMusic = "a room";
+                break;
+            case "garden":
+                newMusic = "GARDEN";
+                break;
+            default:
+                newMusic = "DEFAULT";
+                break;
+        }
+
+        SoundManager.Instance.PlayMusic(newMusic, loop: true);
+        if (currentMusic != newMusic)
+        {
+            SoundManager.Instance.PlayMusic(newMusic, loop: true);
+            currentMusic = newMusic;
+        }
     }
 }
