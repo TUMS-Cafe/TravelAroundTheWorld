@@ -38,4 +38,6 @@ public class PlayerData
     public List<int> unlockedEndingIds;
     //챕터 별 엔딩 여부
     public List<bool> chapterEndings;
+    //Ch3 미니게임 플레이 여부
+    public bool ch3MiniGamePlyaed;
 }

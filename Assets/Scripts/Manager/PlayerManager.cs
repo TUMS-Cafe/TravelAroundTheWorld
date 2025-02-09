@@ -220,6 +220,16 @@ public class PlayerManager : MonoBehaviour
     {
         return currentData.chapterEndings.Count(e => e);
     }
+
+    public void SetCh3MiniGamePlayed()
+    {
+        currentData.ch3MiniGamePlyaed = true;
+    }
+
+    public bool IsCh3MiniGamePlayed()
+    {
+        return currentData.ch3MiniGamePlyaed;
+    }
     
     private void InitializePlayerData()
     {
@@ -239,6 +249,7 @@ public class PlayerManager : MonoBehaviour
         currentData.unlockedIllustrationIds = new List<int>();
         currentData.unlockedEndingIds = new List<int>();
         currentData.chapterEndings = new List<bool> { false, false, false, false };
+        currentData.ch3MiniGamePlyaed = false;
     }
 
     //씬 전환 후 자동저장(카페 작업 후 자동저장)
