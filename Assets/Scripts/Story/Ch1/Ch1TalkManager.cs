@@ -287,6 +287,8 @@ public class Ch1TalkManager : MonoBehaviour
 
     private void HandleDialogueProgression(int index)
     {
+        PrintCh1ProDialogue(index);
+        return;
         if (ch1ProDialogue[index-1].line == "룸서비스 주문 음료 제작 " || index == 30 )
         {
             narration.SetActive(false);
@@ -629,10 +631,6 @@ public class Ch1TalkManager : MonoBehaviour
     {
         if (index == 652)
         {
-            Debug.Log("test");
-            // Transition to 'Ch2Scene'
-            //SceneManager.LoadScene("Ch3Scene");
-
             StartCoroutine(FadeOutAndLoadScene(cafe, "Ch3Scene"));
             return; // Exit the method to prevent further processing
         }
@@ -844,7 +842,7 @@ public class Ch1TalkManager : MonoBehaviour
             narration.SetActive(false);
             dialogue.SetActive(false);
             Npc_Violet.SetActive(true);
-        }*/
+        }
         else if (index == 216 || index == 450) // 치타샵 ui 활성화
         {
             // Shop UI를 표시
@@ -871,7 +869,7 @@ public class Ch1TalkManager : MonoBehaviour
             Npc_Rusk.SetActive(true);
             Npc_Violet.SetActive(true);
         }
-        /*else if (index == 257) // 빵집 npc와 대화 후 객실 자동 이동 및 맵상태 변경
+        else if (index == 257) // 빵집 npc와 대화 후 객실 자동 이동 및 맵상태 변경
         {
             player.transform.position = new Vector3(-44.5f, 9f, 0f);
             mapManager.currentState = MapState.TrainRoom3;
@@ -1039,41 +1037,39 @@ public class Ch1TalkManager : MonoBehaviour
 
     public void StartDialogueSequence(int startIndex, int endIndex)
     {
+        Debug.Log(startIndex);
         currentDialogueIndex = startIndex;
         npcEndIndex = endIndex;
         if(isNpcTalkActivated)
         {
+            Debug.Log("NPC와 대화중");
             playerController.StopMove();
             PrintCh1ProDialogue(currentDialogueIndex);
-            if(currentDialogueIndex == endIndex)
+            if (currentDialogueIndex == endIndex)
             {
+                Debug.Log("NPC 마지막 인덱스 도착");
                 isNpcTalkActivated = false;
                 playerController.StartMove();
                 narration.SetActive(false);
                 dialogue.SetActive(false);
+
+                if (currentDialogueIndex >= 90 && currentDialogueIndex <= 110)
+                    currentDialogueIndex = 69;
+                else if (currentDialogueIndex >= 170 && currentDialogueIndex <= 190)
+                    currentDialogueIndex = 169;
+                else if (currentDialogueIndex >= 230 && currentDialogueIndex <= 250)
+                    currentDialogueIndex = 226;
+                else if (currentDialogueIndex >= 300 && currentDialogueIndex <= 320)
+                    currentDialogueIndex = 302;
+                else if (currentDialogueIndex >= 360 && currentDialogueIndex <= 380)
+                    currentDialogueIndex = 363;
             }
         }
         else
         {
             return;
         }
-        
-        
         return;
-        if (currentDialogueIndex >= startIndex && currentDialogueIndex < endIndex) 
-        {
-            
-        }
-        {
-            narration.SetActive(false);
-            dialogue.SetActive(false);
-            playerController.StartMove();
-        }
-        //currentDialogueIndex = 76;
-        
-        //isNpcTalkActivated = false;
-        //HasTalkedToRayviyak = true;
-
     }
 
     public void EnableBedInteraction()
@@ -1096,6 +1092,10 @@ public class Ch1TalkManager : MonoBehaviour
 
     public void CheckTalk(string location)
     {
+        if (isNpcTalkActivated)
+        {
+            return;
+        }
         letter.SetActive(false);
         cafe.SetActive(false);
         trainRoom.SetActive(false);

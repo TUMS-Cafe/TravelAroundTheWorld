@@ -514,7 +514,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   dialogueButton: {fileID: 1677687963}
-  talkManager: {fileID: 0}
+  talkManager: {fileID: 48156033}
   player: {fileID: 1372797961}
   interactionRange: 2
 --- !u!1 &370653972 stripped
@@ -535,7 +535,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   dialogueButton: {fileID: 1604173484}
-  talkManager: {fileID: 0}
+  talkManager: {fileID: 48156033}
   player: {fileID: 1372797961}
   interactionRange: 2
 --- !u!1 &406368607 stripped
@@ -1640,7 +1640,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8577494832536326323, guid: 91702850d53a4a744b3c3cafa9180f38, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 7455873232877147270, guid: 91702850d53a4a744b3c3cafa9180f38, type: 3}
@@ -2091,7 +2091,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8411330139462047332, guid: 388878d108656bd4bbc46dd0e43e4eb8, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -2120,6 +2120,10 @@ PrefabInstance:
     - target: {fileID: 5934517695576946740, guid: 65cffa0052c25854797071e9852c3dd6, type: 3}
       propertyPath: m_Name
       value: JazzBar
+      objectReference: {fileID: 0}
+    - target: {fileID: 5934517695576946740, guid: 65cffa0052c25854797071e9852c3dd6, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6291465316294350746, guid: 65cffa0052c25854797071e9852c3dd6, type: 3}
       propertyPath: m_Camera
@@ -2786,6 +2790,10 @@ PrefabInstance:
       propertyPath: m_Camera
       value: 
       objectReference: {fileID: 896899288}
+    - target: {fileID: 8097111732060124205, guid: c0676e2da02cef349aa7a85fb7372bd4, type: 3}
+      propertyPath: m_SortingOrder
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8479183085966623723, guid: c0676e2da02cef349aa7a85fb7372bd4, type: 3}
       propertyPath: m_UiScaleMode
       value: 1
@@ -3857,10 +3865,18 @@ PrefabInstance:
       propertyPath: m_Name
       value: Garden
       objectReference: {fileID: 0}
+    - target: {fileID: 6865646702247986019, guid: d63c816f09320b3499f2710585e1e3f6, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7228047978648842598, guid: d63c816f09320b3499f2710585e1e3f6, type: 3}
       propertyPath: m_Camera
       value: 
       objectReference: {fileID: 896899288}
+    - target: {fileID: 7228047978648842598, guid: d63c816f09320b3499f2710585e1e3f6, type: 3}
+      propertyPath: m_SortingOrder
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7423483143283116319, guid: d63c816f09320b3499f2710585e1e3f6, type: 3}
       propertyPath: m_UiScaleMode
       value: 1
@@ -3998,6 +4014,10 @@ PrefabInstance:
       propertyPath: m_Camera
       value: 
       objectReference: {fileID: 896899288}
+    - target: {fileID: 4371531628385196456, guid: 1474c33ccd8962a47969f87985875e0e, type: 3}
+      propertyPath: m_SortingOrder
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4497881810128277217, guid: 1474c33ccd8962a47969f87985875e0e, type: 3}
       propertyPath: m_Name
       value: Balcony
@@ -4561,6 +4581,10 @@ PrefabInstance:
       propertyPath: m_Camera
       value: 
       objectReference: {fileID: 896899288}
+    - target: {fileID: 5728650874760944077, guid: 8102d134ccb7f954ebf9702d2b2113bf, type: 3}
+      propertyPath: m_SortingOrder
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -4888,6 +4912,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Bakery
       objectReference: {fileID: 0}
+    - target: {fileID: 2220353383709029146, guid: 7cdf8251cb6c48e4887b8d3952735551, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3732191175452649517, guid: 7cdf8251cb6c48e4887b8d3952735551, type: 3}
       propertyPath: m_UiScaleMode
       value: 1
@@ -4904,6 +4932,10 @@ PrefabInstance:
       propertyPath: m_Camera
       value: 
       objectReference: {fileID: 896899288}
+    - target: {fileID: 6646198124446660997, guid: 7cdf8251cb6c48e4887b8d3952735551, type: 3}
+      propertyPath: m_SortingOrder
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
