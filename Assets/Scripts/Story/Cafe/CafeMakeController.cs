@@ -111,7 +111,7 @@ public class CafeMakeController : MonoBehaviour
                 SoundManager.Instance.PlaySFX("cupsetdown");
             }
             else if (ingredient.name == "GreenTeaLeaf" || ingredient.name == "HibiscusLeaf" ||
-                ingredient.name == "RooibosLeaf"|| ingredient.name == "ChamomilLeaf")
+                ingredient.name == "RooibosLeaf"|| ingredient.name == "ChamomileLeaf")
             {
                 SoundManager.Instance.PlaySFX("tea stir");
             }

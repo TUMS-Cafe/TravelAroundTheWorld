@@ -4168,7 +4168,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1292058375
 Transform:
   m_ObjectHideFlags: 0
@@ -6432,6 +6432,7 @@ MonoBehaviour:
   RecipeBook: {fileID: 343777029}
   Milk: {fileID: 440113884}
   TeaInventory: {fileID: 168229481}
+  orderController: {fileID: 1968746748}
 --- !u!4 &1960370859
 Transform:
   m_ObjectHideFlags: 0
@@ -6463,7 +6464,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1968746747
 Transform:
   m_ObjectHideFlags: 0

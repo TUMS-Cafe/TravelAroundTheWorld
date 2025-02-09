@@ -70,6 +70,16 @@ public class SceneTransitionManager : MonoBehaviour
         StartCoroutine(HandleSceneTransition(fromScene, toScene, returnIdx, orders));
     }
 
+    //랜덤 없이, 한 음료만 주문하고 카페 씬으로 이동 addzzz
+    public void HandleDialogueTransition2(int returnIdx, CafeOrder order)
+    {
+        returnDialogueIndex = returnIdx;
+        toCafeOrders = new List<CafeOrder> { order };
+        cafeOrders = new List<CafeOrder>();
+
+        StartCoroutine(HandleSceneTransition("Ch1Scene", "CafeScene", returnIdx, toCafeOrders));
+    }
+
     //직접 와서 주문받는 형식 
     IEnumerator HandleSceneTransition(string fromScene, string toScene, int returnIdx, List<CafeOrder> orders)
     {
