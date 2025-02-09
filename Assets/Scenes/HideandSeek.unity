@@ -128,6 +128,63 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 7947843619326509838, guid: 2d3a0eb88cedf774797d2e77e7991b13, type: 3}
   m_PrefabInstance: {fileID: 238623211}
   m_PrefabAsset: {fileID: 0}
+--- !u!1001 &92402052
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 3341245149458593434, guid: e3b6a6092c49e4aab9297581883585fc, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3341245149458593434, guid: e3b6a6092c49e4aab9297581883585fc, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3341245149458593434, guid: e3b6a6092c49e4aab9297581883585fc, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3341245149458593434, guid: e3b6a6092c49e4aab9297581883585fc, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3341245149458593434, guid: e3b6a6092c49e4aab9297581883585fc, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3341245149458593434, guid: e3b6a6092c49e4aab9297581883585fc, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3341245149458593434, guid: e3b6a6092c49e4aab9297581883585fc, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3341245149458593434, guid: e3b6a6092c49e4aab9297581883585fc, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3341245149458593434, guid: e3b6a6092c49e4aab9297581883585fc, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3341245149458593434, guid: e3b6a6092c49e4aab9297581883585fc, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6664102430098341053, guid: e3b6a6092c49e4aab9297581883585fc, type: 3}
+      propertyPath: m_Name
+      value: PlayerManager
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: e3b6a6092c49e4aab9297581883585fc, type: 3}
 --- !u!1001 &209091757
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -144,6 +201,18 @@ PrefabInstance:
       propertyPath: gameManager
       value: 
       objectReference: {fileID: 1909879517}
+    - target: {fileID: 1498079486520742864, guid: 7f80d33fb5641694da3a2be2ce8628eb, type: 3}
+      propertyPath: playerInput
+      value: 
+      objectReference: {fileID: 1372797970}
+    - target: {fileID: 1498079486520742864, guid: 7f80d33fb5641694da3a2be2ce8628eb, type: 3}
+      propertyPath: dialogueData
+      value: 
+      objectReference: {fileID: 11400000, guid: f75ca861fcf239442aaf0190ef193864, type: 2}
+    - target: {fileID: 1498079486520742864, guid: 7f80d33fb5641694da3a2be2ce8628eb, type: 3}
+      propertyPath: dialogueText
+      value: 
+      objectReference: {fileID: 582763345}
     - target: {fileID: 1498079486520742864, guid: 7f80d33fb5641694da3a2be2ce8628eb, type: 3}
       propertyPath: dialogueButton
       value: 
@@ -562,6 +631,17 @@ PrefabInstance:
       addedObject: {fileID: 2143193177}
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2d3a0eb88cedf774797d2e77e7991b13, type: 3}
+--- !u!114 &582763345 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5860374810649201683, guid: 2d3a0eb88cedf774797d2e77e7991b13, type: 3}
+  m_PrefabInstance: {fileID: 488603511}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &814108821
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -831,52 +911,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1178840608}
   m_CullTransparentMesh: 1
---- !u!1 &1193152711
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1193152713}
-  - component: {fileID: 1193152712}
-  m_Layer: 0
-  m_Name: StateManager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &1193152712
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1193152711}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b91ad4ddce3f10d4a8c0b475fcc2d955, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  isMiniGamePlayed: 0
-  isAllNpcFound: 0
---- !u!4 &1193152713
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1193152711}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 887.7008, y: 908.4992, z: -12.174601}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1250384171
 GameObject:
   m_ObjectHideFlags: 0
@@ -1178,6 +1212,17 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 3074967453415653480, guid: 21b7ee334206240d5af0319da9194c27, type: 3}
   m_PrefabInstance: {fileID: 1372797960}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1372797970 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 806544771307717692, guid: 21b7ee334206240d5af0319da9194c27, type: 3}
+  m_PrefabInstance: {fileID: 1372797960}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 406368607}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 62899f850307741f2a39c98a8b639597, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1486565717
 GameObject:
   m_ObjectHideFlags: 0
@@ -1615,8 +1660,6 @@ MonoBehaviour:
   - {fileID: 209091758}
   - {fileID: 1925177070}
   previousSceneName: Ch3Scene
-  miniGameCompleted: 0
-  allNpcsFound: 0
 --- !u!4 &1909879518
 Transform:
   m_ObjectHideFlags: 0
@@ -1632,6 +1675,17 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1915583780 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5860374810649201683, guid: 2d3a0eb88cedf774797d2e77e7991b13, type: 3}
+  m_PrefabInstance: {fileID: 238623211}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1925177069
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1656,6 +1710,18 @@ PrefabInstance:
       propertyPath: gameManager
       value: 
       objectReference: {fileID: 1909879517}
+    - target: {fileID: 1498079486520742864, guid: 0abf5a6c29c295041a71ff179ec0ccb2, type: 3}
+      propertyPath: playerInput
+      value: 
+      objectReference: {fileID: 1372797970}
+    - target: {fileID: 1498079486520742864, guid: 0abf5a6c29c295041a71ff179ec0ccb2, type: 3}
+      propertyPath: dialogueData
+      value: 
+      objectReference: {fileID: 11400000, guid: d065008774c04dc4398dc0f25f2dc1c5, type: 2}
+    - target: {fileID: 1498079486520742864, guid: 0abf5a6c29c295041a71ff179ec0ccb2, type: 3}
+      propertyPath: dialogueText
+      value: 
+      objectReference: {fileID: 1915583780}
     - target: {fileID: 1498079486520742864, guid: 0abf5a6c29c295041a71ff179ec0ccb2, type: 3}
       propertyPath: dialogueButton
       value: 
@@ -2393,9 +2459,9 @@ SceneRoots:
   - {fileID: 2023426215}
   - {fileID: 3283675960900281677}
   - {fileID: 940592786117495477}
+  - {fileID: 92402052}
   - {fileID: 3442301356567829745}
   - {fileID: 209091757}
   - {fileID: 1925177069}
   - {fileID: 2045718866}
   - {fileID: 1909879518}
-  - {fileID: 1193152713}

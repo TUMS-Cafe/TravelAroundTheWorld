@@ -15,10 +15,6 @@ public class HideandSeek : MonoBehaviour
     private int npcsFound;
     private bool gameActive = false;
 
-    // 플레이어 데이터 전달용 변수
-    public bool miniGameCompleted = false; // 미니게임 진행 여부
-    public bool allNpcsFound = false; // NPC 모두 찾았는지 여부
-
     private void Start()
     {
         remainingTime = gameDuration;
@@ -42,13 +38,14 @@ public class HideandSeek : MonoBehaviour
     private void EndGame(bool success)
     {
         gameActive = false;
-        miniGameCompleted = true;
-        allNpcsFound = success;
 
-        if (StateManager.Instance != null)
+        if (PlayerManager.Instance != null)
         {
-            StateManager.Instance.isMiniGamePlayed = true;
-            StateManager.Instance.isAllNpcFound = success;
+            PlayerManager.Instance.SetCh3MiniGamePlayed();
+        }
+        else
+        {
+            Debug.LogWarning("PlayerManager.Instance is null. Make sure PlayerManager is properly initialized.");
         }
 
         if (success)

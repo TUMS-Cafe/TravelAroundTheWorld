@@ -1,7 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.InputSystem;
 
 public class NPCInteract : MonoBehaviour
 {
@@ -14,6 +16,16 @@ public class NPCInteract : MonoBehaviour
     private bool isFound = false;
 
     public HideandSeek gameManager;
+
+    [Header("Dialogue Settings")]
+    public TextMeshProUGUI dialogueText;
+    public DialogueData dialogueData;
+
+    [Header("Player Reference")]
+    public PlayerInput playerInput;
+
+    private int currentDialogueIndex = 0;
+    private bool isTyping = false;
 
     private void Start()
     {
@@ -28,7 +40,7 @@ public class NPCInteract : MonoBehaviour
 
         if (dialogueButton != null)
         {
-            dialogueButton.onClick.AddListener(EndDialogue);
+            dialogueButton.onClick.AddListener(OnDialogueButtonClick);
         }
     }
 
@@ -49,26 +61,71 @@ public class NPCInteract : MonoBehaviour
         {
             interactionButton.SetActive(false);
         }
-
-        if (isTalking && Input.GetKeyDown(KeyCode.Space))
-        {
-            EndDialogue();
-        }
     }
 
     private void StartDialogue()
     {
-        if (isFound) return;
+        if (isFound || dialogueData == null || dialogueData.dialogues.Count == 0) return;
 
         isTalking = true;
         interactionButton.SetActive(false);
         dialogueUI.SetActive(true);
+
+        if (playerInput != null)
+        {
+            playerInput.DeactivateInput();
+        }
+
+        currentDialogueIndex = 0;
+        StartCoroutine(TypeDialogue());
+    }
+
+    private IEnumerator TypeDialogue()
+    {
+        isTyping = true;
+        dialogueText.text = "";
+
+        foreach (char letter in dialogueData.dialogues[currentDialogueIndex])
+        {
+            dialogueText.text += letter;
+            yield return new WaitForSeconds(dialogueData.typingSpeed);
+        }
+
+        isTyping = false;
+    }
+
+    private void OnDialogueButtonClick()
+    {
+        if (isTyping)
+        {
+            StopAllCoroutines();
+            dialogueText.text = dialogueData.dialogues[currentDialogueIndex];
+            isTyping = false;
+        }
+        else
+        {
+            currentDialogueIndex++;
+
+            if (currentDialogueIndex < dialogueData.dialogues.Count)
+            {
+                StartCoroutine(TypeDialogue());
+            }
+            else
+            {
+                EndDialogue();
+            }
+        }
     }
 
     public void EndDialogue()
     {
         isTalking = false;
         dialogueUI.SetActive(false);
+
+        if (playerInput != null)
+        {
+            playerInput.ActivateInput();
+        }
 
         if (!isFound)
         {
