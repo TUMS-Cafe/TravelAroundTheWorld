@@ -4,6 +4,8 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using System;
+using System.Reflection;
 
 public class Ch1TalkManager : MonoBehaviour
 {
@@ -56,6 +58,8 @@ public class Ch1TalkManager : MonoBehaviour
 
     public GameObject destPointObject;
 
+    public GameObject roomService;
+
     // 문자열 상수 선언
     private const string narrationSpeaker = "나레이션";
     private const string letterSpeaker = "편지지";
@@ -86,6 +90,13 @@ public class Ch1TalkManager : MonoBehaviour
     public bool isTransition = false;
 
     public string speakerKey;
+
+    public bool isNpcTalkActivated = false;
+    public int npcEndIndex = 0;
+    public bool HasTalkedToRayviyak { get; set; } = false;
+    public bool HasTalkedToViolet { get; set; } = false;
+    public bool HasTalkedToMrHam { get; set; } = false;
+    public bool HasTalkedToRusk { get; set; } = false;
 
     void Awake()
     {
@@ -139,14 +150,7 @@ public class Ch1TalkManager : MonoBehaviour
             return;
         }
 
-        // 인덱스가 462인 경우 499로 이동
-        if (currentDialogueIndex == 462)
-        {
-            currentDialogueIndex = 499;
-            PrintCh1ProDialogue(currentDialogueIndex);
-        }
-
-        if (isActivated && Input.GetMouseButtonDown(0) && !isWaitingForPlayer)
+        if (isActivated && (Input.GetKeyDown(KeyCode.Space) || Input.GetMouseButtonDown(0)) && !isWaitingForPlayer)
         {
             if (isQuestActive)
             {
@@ -171,12 +175,6 @@ public class Ch1TalkManager : MonoBehaviour
                 dialogue.GetComponentInChildren<Ch0DialogueBar>().CompleteTypingEffect();
                 anyTyping = true;
             }
-
-            if (currentDialogueIndex == 4)
-                destPointObject.SetActive(true);
-            else
-                destPointObject.SetActive(false);
-
             // 타이핑 중이었으면 아래 코드는 실행하지 않음
             if (!anyTyping)
             {
@@ -200,7 +198,7 @@ public class Ch1TalkManager : MonoBehaviour
         if (isWaitingForPlayer && mapManager != null)
         {
             // 카페바에 도착하면 스토리 다시 진행
-            if (mapManager.currentState == MapState.Cafe && mapManager.isInCafeBarZone && (currentDialogueIndex == 5 || currentDialogueIndex == 73 || currentDialogueIndex == 146 || currentDialogueIndex == 274 || currentDialogueIndex == 364 || currentDialogueIndex == 409 || currentDialogueIndex == 456 || currentDialogueIndex == 518))
+            if (mapManager.currentState == MapState.Cafe && mapManager.isInCafeBarZone && (currentDialogueIndex == 6 || currentDialogueIndex == 111 || currentDialogueIndex == 185 || currentDialogueIndex == 243 || currentDialogueIndex == 318 || currentDialogueIndex == 378 || currentDialogueIndex == 525 || currentDialogueIndex == 594))
             {
                 destPointObject.SetActive(false);
                 isWaitingForPlayer = false;
@@ -223,7 +221,7 @@ public class Ch1TalkManager : MonoBehaviour
                 trainRoom.SetActive(true);
                 currentDialogueIndex++;
                 PrintCh1ProDialogue(currentDialogueIndex);
-            }*/
+            }
             else if (mapManager.currentState == MapState.Balcony && currentDialogueIndex == 200) // 발코니 도착하면 스토리 다시 진행
             {
                 isWaitingForPlayer = false;
@@ -242,20 +240,95 @@ public class Ch1TalkManager : MonoBehaviour
                 currentDialogueIndex++;
                 PrintCh1ProDialogue(currentDialogueIndex);
             }
-
+            */
             // 카페에서 일해야 되는데 다른 곳으로 가려고 하면 다시 카페로 플레이어 강제 이동
-            if (mapManager.currentState != MapState.Cafe && (currentDialogueIndex == 5 || currentDialogueIndex == 73 || currentDialogueIndex == 146 || currentDialogueIndex == 274 || currentDialogueIndex == 364 || currentDialogueIndex == 409 || currentDialogueIndex == 456))
+            if (mapManager.currentState != MapState.Cafe && (currentDialogueIndex == 6 || currentDialogueIndex == 111 || currentDialogueIndex == 185 || currentDialogueIndex == 243 || currentDialogueIndex == 318 || currentDialogueIndex == 378 || currentDialogueIndex == 525 || currentDialogueIndex == 594))
             {
+                destPointObject.SetActive(true);
                 player.transform.position = new Vector3(0, 0, 0);
                 narration.SetActive(true);
                 dialogue.SetActive(false);
                 narrationBar.SetDialogue("나레이션", "지금은 일할 시간이야.");
             }
         }
+        if (isNpcTalkActivated && !isFadingOut && isWaitingForPlayer && (Input.GetKeyDown(KeyCode.Space) || Input.GetMouseButtonDown(0)))
+        {
+
+            bool anyTyping = false;
+
+            // 순서대로 확인
+            if (narration != null && narration.GetComponentInChildren<Ch0DialogueBar>().IsTyping())
+            {
+                narration.GetComponentInChildren<Ch0DialogueBar>().CompleteTypingEffect();
+                anyTyping = true;
+            }
+
+            if (dialogue != null && dialogue.GetComponentInChildren<Ch0DialogueBar>().IsTyping())
+            {
+                dialogue.GetComponentInChildren<Ch0DialogueBar>().CompleteTypingEffect();
+                anyTyping = true;
+            }
+
+            // 타이핑 중이었으면 아래 코드는 실행하지 않음
+            if (!anyTyping)
+            {
+                currentDialogueIndex++;
+                if (currentDialogueIndex >= ch1ProDialogue.Count)
+                {
+                    DeactivateTalk(); // 대사 리스트를 벗어나면 오브젝트 비활성화
+                }
+                else
+                {
+                    StartDialogueSequence(currentDialogueIndex, npcEndIndex);
+                }
+            }
+        }
     }
 
     private void HandleDialogueProgression(int index)
     {
+        if (ch1ProDialogue[index-1].line == "룸서비스 주문 음료 제작 " || index == 30 )
+        {
+            narration.SetActive(false);
+            dialogue.SetActive(false);
+            roomService.SetActive(true);
+            isWaitingForPlayer = true;
+        }
+        else if (index == 28)
+        {
+            Debug.Log("일반 주문 확인");
+
+            List<CafeOrder> orders = new List<CafeOrder>();
+            orders.Add(new CafeOrder(RandomDrinkSelector.Instance.GetRandomDrink(1)));
+            SceneTransitionManager.Instance.HandleDialogueTransition("ch1Scene", "CafeScene", index+1, orders);
+        }
+        else
+        {
+            PrintCh1ProDialogue(index);
+        }
+        
+        return;
+        //if(ch1ProDialogue[index].line == "음료제작")
+        {
+            narration.SetActive(false);
+            roomService.SetActive(true);
+            isWaitingForPlayer = true;
+
+            //NewRoomService.Instance.ShowRoomService(RandomDrinkSelector.Instance.GetRandomDrink(1), "");
+
+            // SceneTransitionManager.Instance.HandleRandomMenuTransition("ch1Scene", "CafeScene", index + 1, 1);
+        }
+        //Debug.Log(ch1ProDialogue[index].location);
+
+        if (ch1ProDialogue[index].location == "카페")
+        {
+            Debug.Log("자고 일어나서 카페가기");
+            Debug.Log(ch1ProDialogue[index - 1].location);
+        }
+        if (ch1ProDialogue[index].line == "음료제작")
+        {
+            Debug.Log("음료제작");
+        }
         if (index == 7) // 룸서비스 랜덤 3건
         {
             Debug.Log("배달 랜덤 룸서비스 주문 3건");
@@ -438,7 +511,7 @@ public class Ch1TalkManager : MonoBehaviour
     // csv 읽어오기
     void LoadDialogueFromCSV()
     {
-        List<Dictionary<string, object>> data_Dialog = Ch0CSVReader.Read("Travel Around The World - CH1");
+        List<Dictionary<string, object>> data_Dialog = Ch0CSVReader.Read("NewCH1");
 
         foreach (var row in data_Dialog)
         {
@@ -472,6 +545,7 @@ public class Ch1TalkManager : MonoBehaviour
             ["바이올렛"] = Resources.Load<Sprite>("NpcImage/Violet"),
             ["러스크"] = Resources.Load<Sprite>("NpcImage/Rusk"),
             ["Mr. Ham"] = Resources.Load<Sprite>("NpcImage/MrHam"),
+            ["나루"] = Resources.Load<Sprite>("NpcImage/Naru"),
 
             // 솔 표정 이미지
             ["솔_일반"] = Resources.Load<Sprite>("PlayerImage/Sol"),
@@ -507,16 +581,29 @@ public class Ch1TalkManager : MonoBehaviour
 
             // 슬로우 표정 이미지
             ["슬로우_일반"] = Resources.Load<Sprite>("NpcImage/Slow"),
+            ["슬로우_웃음"] = Resources.Load<Sprite>("NpcImage/Slow"),
             ["슬로우_당황"] = Resources.Load<Sprite>("NpcImage/Slow_당황"),
             ["슬로우_화남"] = Resources.Load<Sprite>("NpcImage/Slow_화남"),
+            ["슬로우_놀람"] = Resources.Load<Sprite>("NpcImage/Slow_당황"),
+            ["슬로우_슬픔"] = Resources.Load<Sprite>("NpcImage/Slow_슬픔"),
 
             // 가이 표정 이미지
             ["가이_일반"] = Resources.Load<Sprite>("NpcImage/Gai"),
             ["가이_당황"] = Resources.Load<Sprite>("NpcImage/Gai_당황"),
+            ["가이_웃음"] = Resources.Load<Sprite>("NpcImage/Gai"),
+            ["가이_슬픔"] = Resources.Load<Sprite>("NpcImage/Gai_슬픔"),
+            ["가이_화남"] = Resources.Load<Sprite>("NpcImage/Gai_화남"),
 
             // 파이아 표정 이미지
             ["파이아_일반"] = Resources.Load<Sprite>("NpcImage/Fire"),
             ["파이아_웃음"] = Resources.Load<Sprite>("NpcImage/Fire_웃음"),
+            ["파이아_놀람"] = Resources.Load<Sprite>("NpcImage/Fire_놀람"),
+
+            // 나루 표정 이미지
+            ["나루_일반"] = Resources.Load<Sprite>("NpcImage/Naru"),
+            ["나루_웃음"] = Resources.Load<Sprite>("NpcImage/Naru_웃음"),
+            ["나루_놀람"] = Resources.Load<Sprite>("NpcImage/Naru_놀람"),
+            ["나루_당황"] = Resources.Load<Sprite>("NpcImage/Naru_당황"),
 
             // 기본 NPC 이미지
             ["Default"] = Resources.Load<Sprite>("NpcImage/Default")
@@ -533,16 +620,20 @@ public class Ch1TalkManager : MonoBehaviour
             ["슬로우"] = Resources.Load<Sprite>("NpcImage/Slow_big"),
             ["가이"] = Resources.Load<Sprite>("NpcImage/Gai_big"),
             ["파이아"] = Resources.Load<Sprite>("NpcImage/Fire_full"),
+            ["나루"] = Resources.Load<Sprite>("NpcImage/Naru_full"),
             ["Default"] = Resources.Load<Sprite>("NpcImage/Default")
         };
     }
 
     public void PrintCh1ProDialogue(int index)
     {
-        if (index == 533)
+        if (index == 652)
         {
+            Debug.Log("test");
             // Transition to 'Ch2Scene'
-            SceneManager.LoadScene("Ch2Scene");
+            //SceneManager.LoadScene("Ch3Scene");
+
+            StartCoroutine(FadeOutAndLoadScene(cafe, "Ch3Scene"));
             return; // Exit the method to prevent further processing
         }
 
@@ -604,7 +695,7 @@ public class Ch1TalkManager : MonoBehaviour
         }
 
         // 플레이어 이미지 처리
-        playerImageObj.SetActive(currentDialogueIndex <= 5);
+        playerImageObj.SetActive(currentDialogueIndex <= 6);
 
         // 편지 띄우기
         if (currentDialogue.speaker == letterSpeaker)
@@ -635,19 +726,19 @@ public class Ch1TalkManager : MonoBehaviour
             dialogueBar.SetDialogue(currentDialogue.speaker, currentDialogue.line); // 타이핑 효과 적용
         }
 
-        if (index == 5 || index == 73 || index == 146 || index == 274 || index == 364 || index == 409 || index == 456 || index == 518) // 카페로 강제 이동 후 이동 가능하게 전환
+        if (currentDialogueIndex == 6 || currentDialogueIndex == 111 || currentDialogueIndex == 185 || currentDialogueIndex == 243 || currentDialogueIndex == 318 || currentDialogueIndex == 378 || currentDialogueIndex == 525 || currentDialogueIndex == 594) // 카페로 강제 이동 후 이동 가능하게 전환
         {
             player.transform.position = new Vector3(0, 0, 0);
             mapManager.currentState = MapState.Cafe;
             isWaitingForPlayer = true;
             player.SetActive(true);
-            map.SetActive(true);
             playerController.StartMove();
+            map.SetActive(true);
             trainRoom.SetActive(false);
             narration.SetActive(false);
             dialogue.SetActive(false);
         }
-        else if (index == 29 || index == 111 || index == 200 || index == 334 || index == 404 || index == 445) // 카페 일 끝나고 이동 가능하게 전환
+        else if (index == 69 || index == 169 || index == 226 || index == 302 || index == 363 || index == 414) // 카페 일 끝나고 이동 가능하게 전환
         {
             player.transform.position = new Vector3(2, -3.5f, 0);
             isWaitingForPlayer = true;
@@ -946,6 +1037,57 @@ public class Ch1TalkManager : MonoBehaviour
         }
     }
 
+    public void StartDialogueSequence(int startIndex, int endIndex)
+    {
+        currentDialogueIndex = startIndex;
+        npcEndIndex = endIndex;
+        if(isNpcTalkActivated)
+        {
+            playerController.StopMove();
+            PrintCh1ProDialogue(currentDialogueIndex);
+            if(currentDialogueIndex == endIndex)
+            {
+                isNpcTalkActivated = false;
+                playerController.StartMove();
+                narration.SetActive(false);
+                dialogue.SetActive(false);
+            }
+        }
+        else
+        {
+            return;
+        }
+        
+        
+        return;
+        if (currentDialogueIndex >= startIndex && currentDialogueIndex < endIndex) 
+        {
+            
+        }
+        {
+            narration.SetActive(false);
+            dialogue.SetActive(false);
+            playerController.StartMove();
+        }
+        //currentDialogueIndex = 76;
+        
+        //isNpcTalkActivated = false;
+        //HasTalkedToRayviyak = true;
+
+    }
+
+    public void EnableBedInteraction()
+    {
+        bedUsed = true; // 침대 상호작용 활성화
+    }
+
+    public void ShowNarration(string speaker, string text)
+    {
+        narration.SetActive(true);
+        dialogue.SetActive(false);
+        narrationBar.SetDialogue(speaker, text);
+    }
+
     public void DeactivateTalk()
     {
         this.gameObject.SetActive(false);
@@ -1065,4 +1207,15 @@ public class Ch1TalkManager : MonoBehaviour
         DeactivateTalk(); // FadeOut이 완료된 후 대화 비활성화
         isFadingOut = false; // 페이드아웃 종료
     }
+    private IEnumerator FadeOutAndLoadScene(GameObject obj, string sceneName)
+    {
+        isFadingOut = true; // 페이드아웃 시작
+        yield return StartCoroutine(screenFader.FadeOut(obj)); // FadeOut이 완료될 때까지 기다립니다.
+        narration.SetActive(false);
+        dialogue.SetActive(false);
+        DeactivateTalk(); // FadeOut이 완료된 후 대화 비활성화
+        isFadingOut = false; // 페이드아웃 종료
+        SceneManagerEx.Instance.SceanLoadQueue(sceneName); // 씬 로드
+    }
+
 }

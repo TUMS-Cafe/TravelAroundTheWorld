@@ -33,7 +33,7 @@ public class MakeOrderList : MonoBehaviour
         int day = PlayerManager.Instance.GetDay();
         if(day < 2)
         {
-            MakeFull(OrderStruct.RoomServiceOrder_after_tea[1]);
+            MakeFull(OrderStruct.RoomServiceOrder_before[0]);
         }
         else if(day < 5)
         {

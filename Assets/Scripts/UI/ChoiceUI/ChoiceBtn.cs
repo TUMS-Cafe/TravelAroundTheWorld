@@ -201,7 +201,7 @@ public class ChoiceBtn : MonoBehaviour
         bedNarration.SetActive(false);
         //fadeOut
 
-        Debug.Log(PlayerManager.Instance.GetDay());
+        //Debug.Log(PlayerManager.Instance.GetDay());
     }
 
     TalkManager FindInactiveTalkManager()

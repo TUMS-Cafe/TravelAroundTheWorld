@@ -1,0 +1,81 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &4318406800144279458
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6606103739548564701}
+  - component: {fileID: 8218582386574060278}
+  m_Layer: 0
+  m_Name: TalkManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6606103739548564701
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4318406800144279458}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -3.20653, y: 0.45286122, z: 3.6723526}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8218582386574060278
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4318406800144279458}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 86d9c6c331609fc4b9be48bceba40ec9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  narration: {fileID: 0}
+  dialogue: {fileID: 0}
+  imageObj: {fileID: 0}
+  nameObj: {fileID: 0}
+  backGround: {fileID: 0}
+  cafe: {fileID: 0}
+  cafe2: {fileID: 0}
+  garden: {fileID: 0}
+  gardenCafe: {fileID: 0}
+  bakery: {fileID: 0}
+  medicalRoom: {fileID: 0}
+  trainRoom: {fileID: 0}
+  trainRoomPenguinFox: {fileID: 0}
+  trainRoomHallway: {fileID: 0}
+  trainRoomHallwayWolf: {fileID: 0}
+  balcony: {fileID: 0}
+  Npc_Rayviyak: {fileID: 0}
+  Npc_MrHam: {fileID: 0}
+  Npc_Rusk: {fileID: 0}
+  Npc_Violet: {fileID: 0}
+  Npc_Kuraya: {fileID: 0}
+  screenFader: {fileID: 0}
+  dialogueBar: {fileID: 0}
+  narrationBar: {fileID: 0}
+  currentDialogueIndex: 0
+  playerController: {fileID: 0}
+  player: {fileID: 0}
+  map: {fileID: 0}
+  mapManager: {fileID: 0}
+  currentMusic: 
+  isAnimationPlaying: 0
+  isWaitingForPlayer: 0
+  isTransition: 0
+  speakerKey: 
+  bedUsed: 0
