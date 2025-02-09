@@ -1,6 +1,11 @@
 fileFormatVersion: 2
+<<<<<<<< HEAD:Assets/Prefabs/Story/Ch2/Ch2Bakery.prefab.meta
 guid: f9a66fa041e9b294d94db3258981b2e1
 PrefabImporter:
+========
+guid: 244744e254ba85841bfc84c26eecf895
+TextScriptImporter:
+>>>>>>>> main:Assets/Resources/NewCH1.csv.meta
   externalObjects: {}
   userData: 
   assetBundleName: 
