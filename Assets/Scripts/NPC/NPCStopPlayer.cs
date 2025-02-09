@@ -22,7 +22,7 @@ public class NPCStopPlayer : MonoBehaviour
     {
         if (other.CompareTag(playerTag))
         {
-            Debug.Log($"[디버그] {other.gameObject.name} (플레이어)가 {gameObject.name} (NPC)과 충돌 → 이동 정지");
+            Debug.Log($" {other.gameObject.name} (플레이어)가 {gameObject.name} (NPC)과 충돌 → 이동 정지");
 
             // 플레이어의 이동 차단
             PlayerController playerController = other.GetComponent<PlayerController>();
@@ -50,7 +50,7 @@ public class NPCStopPlayer : MonoBehaviour
     {
         if (other.CompareTag(playerTag))
         {
-            Debug.Log($"[디버그] {other.gameObject.name} (플레이어)가 {gameObject.name} (NPC)에서 벗어남 → 이동 가능");
+            Debug.Log($"{other.gameObject.name} (플레이어)가 {gameObject.name} (NPC)에서 벗어남 → 이동 가능");
 
             // 플레이어의 이동 다시 가능하게 설정
             PlayerController playerController = other.GetComponent<PlayerController>();

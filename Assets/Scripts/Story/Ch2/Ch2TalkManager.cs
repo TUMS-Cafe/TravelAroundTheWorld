@@ -120,7 +120,7 @@ public class Ch2TalkManager : MonoBehaviour
     {
         if (isWaitingForNPC && currentNPC != null)
         {
-            Debug.Log($"[대화 시작] {currentNPC.name}와 대화 진행");
+            Debug.Log($"{currentNPC.name}와 대화 진행");
 
             SetScene(dialogue, true);
 
@@ -850,12 +850,16 @@ public class Ch2TalkManager : MonoBehaviour
     }
 
     private void HandleDialogueProgression(int index)
-    {
+    {/*
         if (index == 46) // 예: 특정 인덱스에서 카페 씬으로 전환
         {
             Debug.Log("카페 씬으로 전환");
-            SceneTransitionManager.Instance.HandleDialogueTransition("Ch2Scene", "CafeScene", 15, 1);
+            List<CafeOrder> orders = new List<CafeOrder>();
+            orders.Add(new CafeOrder(RandomDrinkSelector.Instance.GetRandomDrink(1)));
+            SceneTransitionManager.Instance.HandleDialogueTransition("Ch2Scene 1", "CafeScene", 51, 1);
+
         }
+       */
     }
     void ChangeScene(GameObject scene, string musicKey = null, bool enablePlayer = false)
     {
