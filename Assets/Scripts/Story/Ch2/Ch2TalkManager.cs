@@ -45,7 +45,6 @@ public class Ch2TalkManager : MonoBehaviour
     private Dictionary<string, Sprite> characterImages; // 캐릭터 이미지 딕셔너리
     private Dictionary<string, Sprite> characterBigImages; // 캐릭터 큰 이미지 딕셔너리
 
-
     public GameObject backGround; //검은 배경
     public GameObject sea; // 바다 배경
     public GameObject volcano; // 화산 배경
@@ -85,7 +84,6 @@ public class Ch2TalkManager : MonoBehaviour
 
     void Update()
     {
-
         // 입력이 비활성화된 경우 스페이스바와 클릭을 무시
         if (isInputDisabled ) return;
 
@@ -176,8 +174,6 @@ public class Ch2TalkManager : MonoBehaviour
 
             // ???를 쿠라야로 처리
             string characterKey = currentDialogue.인물 == "???" ? "쿠라야" : currentDialogue.인물;
-
-
 
             // 다이얼로그가 활성화될 조건
             if (characterKey == "솔" || characterKey == "솔 " || characterKey == "쿠라야" || characterKey == "러스크" || characterKey == "파이아" ||characterKey == "바이올렛" || characterKey == "레이비야크" || characterKey == "Mr.Ham" || characterKey == "나루")
@@ -281,8 +277,6 @@ public class Ch2TalkManager : MonoBehaviour
         if (currentDialogueIndex < dialogues.Count - 1)
         {
             currentDialogueIndex++;
-
-
             if (!DoNotDisplayDialogue) DisplayCurrentDialogue();
         }
         else
@@ -377,9 +371,8 @@ public class Ch2TalkManager : MonoBehaviour
                 SetScene(volcano, false); // 화산 배경 비활성화
                 SetScene(backGround, true); // 검은 화면을 활성화
                 break;
-
-                //시계 알람 소리
             case 10:
+                //시계 알람 소리
                 PlaySoundEffect("clock alarm"); 
                 break;
             case 11:
