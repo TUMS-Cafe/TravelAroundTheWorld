@@ -39,7 +39,7 @@ public class TrashController : MonoBehaviour
             spriteRenderer.sprite = collisionSprite;
             Invoke("ResetSprite", spriteChangeDuration); // 일정 시간 후 원래 스프라이트로 복귀
         }
-        if (trash.name == "MakeIceCup")
+        /*if (trash.name == "MakeIceCup")
         {
             trash.SetActive(false);
             cafeMakeController.currentIngredients.Clear();
@@ -57,7 +57,17 @@ public class TrashController : MonoBehaviour
             trash.SetActive(false);
         }
         else if (trash.name == "Shot")
-            trash.SetActive(false);
+            trash.SetActive(false);*/
+
+        // 드래그앤드롭한 물체를 파괴
+        Destroy(trash.gameObject);
+
+        // Current Ingredients 초기화
+        if (cafeMakeController != null)
+        {
+            cafeMakeController.currentIngredients.Clear();
+            Debug.Log("All ingredients cleared and object destroyed.");
+        }
     }
 
     private void ResetSprite()

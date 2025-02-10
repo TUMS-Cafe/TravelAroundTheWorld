@@ -5,7 +5,9 @@ using UnityEngine;
 public class GameManager : MonoBehaviour
 {
     public GameObject Shot;
-    public GameObject Extract;
+    public GameObject BtnExtract;
+    public GameObject Steam;
+    public GameObject BtnSteam;
 
 
     public GameObject Beverage;
@@ -14,14 +16,18 @@ public class GameManager : MonoBehaviour
     public GameObject RecipeBook;
 
     public GameObject Milk;
-    public GameObject TeaInventory;
+
+    public Animator AniShot;
+    public Animator AniSteam;
+    public GameObject ShotAniObj;
+    public GameObject SteamAniObj;
 
     //private bool buyMilk = PlayerManager.Instance.IsBoughtCafeItem("우유");
     //private bool buyTeaSet = PlayerManager.Instance.IsBoughtCafeItem("티 세트");
 
     //private int Day = PlayerManager.Instance.GetDay();
 
-
+    public CafeMakeController cafeMake;
     public OrderController orderController;
 
     void Start()
@@ -31,17 +37,13 @@ public class GameManager : MonoBehaviour
 
         SoundManager.Instance.PlayMusic("CAFE", true);
 
-        Milk.SetActive(true);
-        TeaInventory.SetActive(true);
+        ShotAniObj.SetActive(false);
+        AniShot.enabled = true;
+        SteamAniObj.SetActive(false);
+        AniSteam.enabled = true;
 
-        /*if (buyMilk)
-        {
-            Milk.SetActive(true);
-        }
-        else if (buyTeaSet)
-        {
-            TeaInventory.SetActive(true);
-        }*/
+        Milk.SetActive(true);
+
 
         int deliveryNum = SceneTransitionManager.Instance.GetDeliveryNum();
 
@@ -57,10 +59,9 @@ public class GameManager : MonoBehaviour
     void UnlockNewIngredients()
     {
         int chapter = 1;
-        CafeMakeController cafeMake = FindObjectOfType<CafeMakeController>();
-        if (cafeMake != null)
-            cafeMake.UnlockIngredients();
-    }
+        if (cafeMake != null){
+        cafeMake.UnlockIngredients();
+    }}
 
 
     void Update()
@@ -98,10 +99,16 @@ public class GameManager : MonoBehaviour
             */
             if (clickedObject != null && clickedObject.name == "Extract")
             {
-                StartCoroutine(ActivateObjectAfterDelay(2f, Shot));
+                StartCoroutine(ShotActivateObjectAfterDelay(2f, Shot));
                 SoundManager.Instance.PlaySFX("grinding coffee");
+                Debug.Log("Extract button clicked.");
             }
-            if (clickedObject != null && clickedObject.name == "TeaInventory")
+            if (clickedObject != null && clickedObject.name == "Steam")
+            {
+                StartCoroutine(SteamActivateObjectAfterDelay(2f, Steam));
+                //SoundManager.Instance.PlaySFX("grinding coffee");
+            }
+            /*if (clickedObject != null && clickedObject.name == "TeaInventory")
             {
                 Vector2 currentPosition = clickedObject.transform.position;
 
@@ -124,15 +131,40 @@ public class GameManager : MonoBehaviour
                 {
                     Debug.Log("No match found for current position.");
                 }
-            }
+            }*/
 
 
         }
     }
-    IEnumerator ActivateObjectAfterDelay(float delay, GameObject obj)
+
+
+    IEnumerator ShotActivateObjectAfterDelay(float delay, GameObject obj)
     {
+        ShotAniObj.SetActive(true);
+        AniShot.enabled = true;
         SoundManager.Instance.PlaySFX("coffee machine (espresso)");
-        yield return new WaitForSeconds(delay);
+        AniShot.Play("StartShotAnimation");
+        yield return new WaitForSeconds(2f);
+        ShotAniObj.SetActive(false);
+        AniShot.enabled = false;
         obj.SetActive(true);
+
     }
-}
+
+    IEnumerator SteamActivateObjectAfterDelay(float delay, GameObject obj)
+    {
+        SteamAniObj.SetActive(true);
+        AniSteam.enabled = true;
+        SoundManager.Instance.PlaySFX("coffee machine (espresso)");
+        AniSteam.Play("StartSteamAnimation");
+        yield return new WaitForSeconds(2f);
+        SteamAniObj.SetActive(false);
+        AniSteam.enabled = false;
+        obj.SetActive(true);
+
+    }
+
+
+
+
+    }
