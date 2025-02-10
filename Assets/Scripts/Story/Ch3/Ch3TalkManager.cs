@@ -16,6 +16,7 @@ public class Ch3TalkManager : MonoBehaviour
 
     public GameObject imageObj; // 초상화 이미지 요소
     public GameObject nameObj; // 이름 요소
+    public GameObject bigImageObj; // 큰 이미지
 
     public GameObject backGround; //검은 배경
 
@@ -71,6 +72,7 @@ public class Ch3TalkManager : MonoBehaviour
 
     private Dictionary<string, Sprite> characterImages; // 캐릭터 이름과 이미지를 매핑하는 사전
     private Sprite characterSprite;
+    private Dictionary<string, Sprite> characterBigImages;
 
     public PlayerController playerController;
     public GameObject player; // 플레이어 캐릭터
@@ -262,6 +264,23 @@ public class Ch3TalkManager : MonoBehaviour
             }
         }
 
+        // 검은 인영
+        if (currentDialogueIndex == 281)
+        {
+            backGround.SetActive(true);
+            trainRoom.SetActive(false);
+            cafe.SetActive(false);
+            narration.SetActive(false);
+            dialogue.SetActive(true);
+        }
+        if (currentDialogueIndex == 282)
+        {
+            backGround.SetActive(false);
+            trainRoom.SetActive(false);
+            cafe.SetActive(true);
+            narration.SetActive(false);
+            dialogue.SetActive(true);
+        }
         //6일차 엔딩 분기점에서 해피엔딩 여부에 따라 대화 인덱스 변경
         if (isCh2HappyEnding)
         {
@@ -795,7 +814,8 @@ public class Ch3TalkManager : MonoBehaviour
             ["닉시"] = Resources.Load<Sprite>("NpcImage/Nicksy"),
             ["나루"] = Resources.Load<Sprite>("NpcImage/Naru"),
             ["쿠라야"] = Resources.Load<Sprite>("NpcImage/Kuraya"),
-            //["애쉬"] = Resources.Load<Sprite>("NpcImage/Ash"),
+            ["애쉬"] = Resources.Load<Sprite>("NpcImage/Ash"),
+            ["검은 인영"] = Resources.Load<Sprite>("NpcImage/sheep"),
 
             // 솔 표정 이미지
             ["솔_일반"] = Resources.Load<Sprite>("PlayerImage/Sol"),
@@ -859,8 +879,32 @@ public class Ch3TalkManager : MonoBehaviour
             ["쿠라야_찡그림"] = Resources.Load<Sprite>("NpcImage/Kuraya_화남"),
 
             // 애쉬 표정 이미지
+            ["애쉬_일반"] = Resources.Load<Sprite>("NpcImage/Ash"),
+            ["애쉬_놀람"] = Resources.Load<Sprite>("NpcImage/Ash"),
+            ["애쉬_당황"] = Resources.Load<Sprite>("NpcImage/Ash"),
+            ["애쉬_웃음"] = Resources.Load<Sprite>("NpcImage/Ash_웃음"),
+            ["애쉬_슬픔"] = Resources.Load<Sprite>("NpcImage/Ash_슬픔"),
+            ["애쉬_눈물"] = Resources.Load<Sprite>("NpcImage/Ash_슬픔"),
+            ["애쉬_화남"] = Resources.Load<Sprite>("NpcImage/Ash_화남"),
+            ["애쉬_찡그림"] = Resources.Load<Sprite>("NpcImage/Ash_화남"),
 
             // 기본 NPC 이미지
+            ["Default"] = Resources.Load<Sprite>("NpcImage/Default")
+        };
+
+        characterBigImages = new Dictionary<string, Sprite>
+        {
+            ["솔"] = Resources.Load<Sprite>("NpcImage/Sol"),
+            ["레이비야크"] = Resources.Load<Sprite>("NpcImage/Leviac_full"),
+            ["바이올렛"] = Resources.Load<Sprite>("NpcImage/Violet_full"),
+            ["러스크"] = Resources.Load<Sprite>("NpcImage/Rusk_full"),
+            ["Mr.Ham"] = Resources.Load<Sprite>("NpcImage/MrHam_full"),
+            ["파이아"] = Resources.Load<Sprite>("NpcImage/Fire_full"),
+            ["코코"] = Resources.Load<Sprite>("NpcImage/Coco_bigfull2"),
+            ["닉시"] = Resources.Load<Sprite>("NpcImage/Nicksy_bigfull2"),
+            ["나루"] = Resources.Load<Sprite>("NpcImage/Naru_full"),
+            ["쿠라야"] = Resources.Load<Sprite>("NpcImage/Kuraya_bigfull"),
+            ["애쉬"] = Resources.Load<Sprite>("NpcImage/Ash_bigfull"),
             ["Default"] = Resources.Load<Sprite>("NpcImage/Default")
         };
     }
@@ -912,6 +956,24 @@ public class Ch3TalkManager : MonoBehaviour
         else if (imageObj.GetComponent<Image>() != null)
         {
             imageObj.GetComponent<Image>().sprite = characterSprite;
+        }
+
+        // Set big image
+        if (speakerKey == "솔" || speakerKey == "검은 인영")
+        {
+            bigImageObj.SetActive(false);
+        }
+        else
+        {
+            if (characterBigImages.ContainsKey(speakerKey))
+            {
+                bigImageObj.GetComponent<Image>().sprite = characterBigImages[speakerKey];
+            }
+            else
+            {
+                bigImageObj.GetComponent<Image>().sprite = characterBigImages["Default"];
+            }
+            bigImageObj.SetActive(true);
         }
 
         //인물에 따라 대사/나레이션/텍스트 창 활성화
