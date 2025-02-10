@@ -33,14 +33,79 @@ public class Ch3DoorManager : MonoBehaviour
         MapState playerState = mapManager.currentState;
 
         // 문 이름과 MapState에 따라 플레이어의 위치를 이동시킵니다.
-        if (doorName == "Door1")
+        if (doorName == "Door302")
         {
-            if (playerState == MapState.Hallway)
+            if (playerState == MapState.Hallway3)
             {
                 // 플레이어의 y 좌표를 위쪽으로 이동
                 player.transform.position = new Vector3(player.transform.position.x, player.transform.position.y + 3.7f, player.transform.position.z);
             }
-            else if (playerState == MapState.TrainRoom3)
+            else if (playerState == MapState.TrainRoom302)
+            {
+                // 플레이어의 y 좌표를 아래쪽으로 이동
+                player.transform.position = new Vector3(player.transform.position.x, player.transform.position.y - 3.7f, player.transform.position.z);
+            }
+        }
+        else if (doorName == "Door301")
+        {
+            if (playerState == MapState.Hallway3)
+            {
+                // 플레이어의 y 좌표를 위쪽으로 이동
+                player.transform.position = new Vector3(player.transform.position.x, player.transform.position.y + 3.7f, player.transform.position.z);
+            }
+            else if (playerState == MapState.TrainRoom301)
+            {
+                // 플레이어의 y 좌표를 아래쪽으로 이동
+                player.transform.position = new Vector3(player.transform.position.x, player.transform.position.y - 3.7f, player.transform.position.z);
+            }
+        }
+        else if (doorName == "Door202")
+        {
+            if (playerState == MapState.Hallway2)
+            {
+                // 플레이어의 y 좌표를 위쪽으로 이동
+                player.transform.position = new Vector3(player.transform.position.x, player.transform.position.y + 3.7f, player.transform.position.z);
+            }
+            else if (playerState == MapState.TrainRoom202)
+            {
+                // 플레이어의 y 좌표를 아래쪽으로 이동
+                player.transform.position = new Vector3(player.transform.position.x, player.transform.position.y - 3.7f, player.transform.position.z);
+            }
+        }
+        else if (doorName == "Door201")
+        {
+            if (playerState == MapState.Hallway2)
+            {
+                // 플레이어의 y 좌표를 위쪽으로 이동
+                player.transform.position = new Vector3(player.transform.position.x, player.transform.position.y + 3.7f, player.transform.position.z);
+            }
+            else if (playerState == MapState.TrainRoom201)
+            {
+                // 플레이어의 y 좌표를 아래쪽으로 이동
+                player.transform.position = new Vector3(player.transform.position.x, player.transform.position.y - 3.7f, player.transform.position.z);
+            }
+        }
+        else if (doorName == "Door102")
+        {
+            if (playerState == MapState.Hallway1)
+            {
+                // 플레이어의 y 좌표를 위쪽으로 이동
+                player.transform.position = new Vector3(player.transform.position.x, player.transform.position.y + 3.7f, player.transform.position.z);
+            }
+            else if (playerState == MapState.TrainRoom102)
+            {
+                // 플레이어의 y 좌표를 아래쪽으로 이동
+                player.transform.position = new Vector3(player.transform.position.x, player.transform.position.y - 3.7f, player.transform.position.z);
+            }
+        }
+        else if (doorName == "Door101")
+        {
+            if (playerState == MapState.Hallway1)
+            {
+                // 플레이어의 y 좌표를 위쪽으로 이동
+                player.transform.position = new Vector3(player.transform.position.x, player.transform.position.y + 3.7f, player.transform.position.z);
+            }
+            else if (playerState == MapState.TrainRoom101)
             {
                 // 플레이어의 y 좌표를 아래쪽으로 이동
                 player.transform.position = new Vector3(player.transform.position.x, player.transform.position.y - 3.7f, player.transform.position.z);
@@ -48,7 +113,7 @@ public class Ch3DoorManager : MonoBehaviour
         }
         else if (doorName == "Door2")
         {
-            if (playerState == MapState.Hallway)
+            if (playerState == MapState.Hallway3)
             {
                 // 플레이어의 x 좌표를 오른쪽으로 이동
                 player.transform.position = new Vector3(player.transform.position.x + 1.7f, player.transform.position.y, player.transform.position.z);

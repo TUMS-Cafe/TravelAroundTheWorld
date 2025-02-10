@@ -47,6 +47,18 @@ public class Ch3BedButton : MonoBehaviour
         talkManager.map.SetActive(false);
         talkManager.trainRoom.SetActive(true);
 
+        talkManager.backCafe.SetActive(true);
+        talkManager.backBakery.SetActive(true);
+        talkManager.backMedicalRoom.SetActive(true);
+        talkManager.backBalcony.SetActive(true);
+        talkManager.assetCafe.SetActive(true);
+        talkManager.backCafeNight.SetActive(false);
+        talkManager.backBakeryNight.SetActive(false);
+        talkManager.backMedicalRoomNight.SetActive(false);
+        talkManager.backBalconyNight.SetActive(false);
+        talkManager.assetCafeNight.SetActive(false);
+        talkManager.map.SetActive(false);
+
         //1일차 밤->2일차 아침
         if (talkManager.currentDialogueIndex == 76)
         {

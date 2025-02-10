@@ -79,6 +79,17 @@ public class Ch3TalkManager : MonoBehaviour
     public GameObject map; // 맵
     public Ch3MapManager mapManager;
 
+    public GameObject backCafe;
+    public GameObject backBakery;
+    public GameObject backMedicalRoom;
+    public GameObject backBalcony;
+    public GameObject assetCafe;
+    public GameObject backCafeNight;
+    public GameObject backBakeryNight;
+    public GameObject backMedicalRoomNight;
+    public GameObject backBalconyNight;
+    public GameObject assetCafeNight;
+
     public string currentMusic = ""; // 현재 재생 중인 음악의 이름을 저장
 
     public bool isAnimationPlaying = false;
@@ -106,6 +117,19 @@ public class Ch3TalkManager : MonoBehaviour
         InitializeCharacterImages();
         playerController.StopMove();
         trainRoom.SetActive(true);
+        PlayerManager.Instance.SetSceneName("Ch3");
+        
+        backCafe.SetActive(true);
+        backBakery.SetActive(true);
+        backMedicalRoom.SetActive(true);
+        backBalcony.SetActive(true);
+        assetCafe.SetActive(true);
+        backCafeNight.SetActive(false);
+        backBakeryNight.SetActive(false);
+        backMedicalRoomNight.SetActive(false);
+        backBalconyNight.SetActive(false);
+        assetCafeNight.SetActive(false);
+        map.SetActive(false);
     }
 
     void Start()
@@ -208,7 +232,7 @@ public class Ch3TalkManager : MonoBehaviour
             }
             
             // 객실로 돌아가야 되는데 다른 곳으로 가려고 하면 다시 객실복도로 플레이어 강제 이동
-            if (mapManager.currentState != MapState.TrainRoom3 && mapManager.currentState != MapState.Hallway)
+            if (mapManager.currentState != MapState.TrainRoom302 && mapManager.currentState != MapState.Hallway3)
             {
                 if (isCh2HappyEnding && currentDialogueIndex == 533)
                 {
@@ -294,9 +318,8 @@ public class Ch3TalkManager : MonoBehaviour
             {
                 player.transform.position = new Vector3(-34, -2, 0);
                 playerController.StopMove();
-                mapManager.currentState = MapState.Hallway;
                 player.SetActive(true);
-                map.SetActive(true);
+                map.SetActive(false);
                 trainRoom.SetActive(false);
                 cafe.SetActive(false);
                 currentDialogueIndex = 488;
@@ -316,7 +339,7 @@ public class Ch3TalkManager : MonoBehaviour
                     {
                         player.transform.position = new Vector3(-34, -2, 0);
                         playerController.StopMove();
-                        mapManager.currentState = MapState.Hallway;
+                        mapManager.currentState = MapState.Hallway3;
                         player.SetActive(true);
                         map.SetActive(true);
                         trainRoom.SetActive(false);
@@ -343,7 +366,7 @@ public class Ch3TalkManager : MonoBehaviour
                     {
                         player.transform.position = new Vector3(-34, -2, 0);
                         playerController.StopMove();
-                        mapManager.currentState = MapState.Hallway;
+                        mapManager.currentState = MapState.Hallway3;
                         player.SetActive(true);
                         map.SetActive(true);
                         trainRoom.SetActive(false);
@@ -367,7 +390,7 @@ public class Ch3TalkManager : MonoBehaviour
                 {
                     player.transform.position = new Vector3(-34, -2, 0);
                     playerController.StopMove();
-                    mapManager.currentState = MapState.Hallway;
+                    mapManager.currentState = MapState.Hallway3;
                     player.SetActive(true);
                     map.SetActive(true);
                     trainRoom.SetActive(false);
@@ -407,7 +430,7 @@ public class Ch3TalkManager : MonoBehaviour
                 player.SetActive(true);
                 playerController.StopMove();
                 map.SetActive(true);
-                mapManager.currentState = MapState.Hallway;
+                mapManager.currentState = MapState.Hallway3;
                 trainRoom.SetActive(false);
                 cafe.SetActive(false);
                 currentDialogueIndex = 656;
@@ -427,7 +450,7 @@ public class Ch3TalkManager : MonoBehaviour
                     {
                         player.transform.position = new Vector3(-34, -2, 0);
                         playerController.StopMove();
-                        mapManager.currentState = MapState.Hallway;
+                        mapManager.currentState = MapState.Hallway3;
                         player.SetActive(true);
                         map.SetActive(true);
                         trainRoom.SetActive(false);
@@ -454,7 +477,7 @@ public class Ch3TalkManager : MonoBehaviour
                     {
                         player.transform.position = new Vector3(-34, -2, 0);
                         playerController.StopMove();
-                        mapManager.currentState = MapState.Hallway;
+                        mapManager.currentState = MapState.Hallway3;
                         player.SetActive(true);
                         map.SetActive(true);
                         trainRoom.SetActive(false);
@@ -998,6 +1021,22 @@ public class Ch3TalkManager : MonoBehaviour
             dialogueBar.SetDialogue(currentDialogue.speaker, currentDialogue.line); // 타이핑 효과 적용
         }
 
+        // 밤맵 전환
+        if (index == 56 || index == 104 || index == 206 || index == 261 || index == 399 || index == 480 || index == 648)
+        {
+            backCafe.SetActive(false);
+            backBakery.SetActive(false);
+            backMedicalRoom.SetActive(false);
+            backBalcony.SetActive(false);
+            assetCafe.SetActive(false);
+            backCafeNight.SetActive(true);
+            backBakeryNight.SetActive(true);
+            backMedicalRoomNight.SetActive(true);
+            backBalconyNight.SetActive(true);
+            assetCafeNight.SetActive(true);
+            map.SetActive(false);
+        }
+
         // 일해야 할 때 카페로 강제 이동 후 이동 가능하게 전환
         if (index == 10 || index == 98 || index == 157 || index == 255 || index == 393 || index == 455 || index == 688)
         {
@@ -1118,8 +1157,8 @@ public class Ch3TalkManager : MonoBehaviour
                 Npc_Rusk.SetActive(true);
                 Npc_Coco.SetActive(true);
                 Npc_Nicksy.SetActive(true);
-                Npc_Coco.transform.position = new Vector3(-3, 0.45f, 0); // Coco 위치 무대 앞
-                Npc_Nicksy.transform.position = new Vector3(-3.7f, 0.5f, 0); // Nicksy 위치 무대 앞
+                Npc_Coco.transform.position = new Vector3(-3, 0, 0); // Coco 위치 무대 앞
+                Npc_Nicksy.transform.position = new Vector3(-3.7f, 0, 0); // Nicksy 위치 무대 앞
                 Npc_Naru.SetActive(false);
                 Npc_Ash.SetActive(true);
                 if (isCh2HappyEnding)
