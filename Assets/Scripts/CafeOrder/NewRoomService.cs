@@ -13,7 +13,7 @@ public class NewRoomService : MonoBehaviour
     public Ch1TalkManager talkManager;
 
 
-    private List<int> availableRooms = new List<int> { 101, 102, 201, 202, 301, 302 };
+    private List<int> availableRooms = new List<int> { 101, 102, 201, 202, 301 };
     private string drink = "Espresso";
     private string korName = "Espresso";
 

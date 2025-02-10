@@ -271,6 +271,7 @@ public class Ch1TalkManager : MonoBehaviour
                 narrationBar.SetDialogue("나레이션", "지금은 일할 시간이야.");
             }
         }
+        // NPC랑 대화하는 부분
         if (isNpcTalkActivated && !isFadingOut && isWaitingForPlayer && (Input.GetKeyDown(KeyCode.Space) || Input.GetMouseButtonDown(0)))
         {
 
@@ -307,26 +308,24 @@ public class Ch1TalkManager : MonoBehaviour
 
     private void HandleDialogueProgression(int index) // 카페 주문 함수
     {
-        /*
-        if (ch1ProDialogue[index].line == "음료 주문이 들어왔다")
+        if (ch1ProDialogue[index-1].line == "음료 주문이 들어왔다")
         {
             List<CafeOrder> orders = new List<CafeOrder>();
             orders.Add(new CafeOrder(RandomDrinkSelector.Instance.GetRandomDrink(1)));
-            SceneTransitionManager.Instance.HandleDialogueTransition("ch1Scene", "CafeScene", index+1, orders);
+            SceneTransitionManager.Instance.HandleDialogueTransition("ch1Scene", "CafeScene", index, orders);
+            return;
 
         }
-        */
         if (ch1ProDialogue[index-1].line == "룸서비스")
         {
             narration.SetActive(false);
             dialogue.SetActive(false);
             roomService.SetActive(true);
             isWaitingForPlayer = true;
+            return;
         }
-        else
-        {
-            PrintCh1ProDialogue(index);
-        }
+
+        PrintCh1ProDialogue(index);
         return;
         if (index == 28)
         {
@@ -664,10 +663,17 @@ public class Ch1TalkManager : MonoBehaviour
 
     public void PrintCh1ProDialogue(int index)
     {
+        
         if (index == 652)
         {
             StartCoroutine(FadeOutAndLoadScene(cafe, "Ch3Scene"));
             return; // Exit the method to prevent further processing
+        }
+        if (index == 577 && PlayerManager.Instance.GetEnding(1))
+        {
+            currentDialogueIndex = 651;
+            PrintCh1ProDialogue(currentDialogueIndex);
+            return;
         }
 
         Debug.Log($"PrintCh1ProDialogue called with index: {index}");
@@ -1298,6 +1304,10 @@ public class Ch1TalkManager : MonoBehaviour
         currentDialogueIndex = 436;
         PrintCh1ProDialogue(currentDialogueIndex);
         EndingNarration.SetActive(false);
+        PlayerManager.Instance.SetHappyEnding(1);
+        Debug.Log(PlayerManager.Instance.GetEnding(1));
+        Debug.Log(PlayerManager.Instance.CountEndings());
+
     }
     public void BadEnding()
     {
