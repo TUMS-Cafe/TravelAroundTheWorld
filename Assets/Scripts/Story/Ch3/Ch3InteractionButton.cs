@@ -221,7 +221,7 @@ public class Ch3InteractionButton : MonoBehaviour
                     ch3TalkManager.isNpcTalkActivated = true;
                     ch3TalkManager.NpcDialogue(ch3TalkManager.currentDialogueIndex, npcName);
                 }
-
+                /*
                 //6일차 밤 미니게임 npc 찾았을때 대화
                 if (ch3TalkManager.isCh2HappyEnding && ch3TalkManager.currentDialogueIndex == 499 && npcName == "Npc_Coco")
                 {
@@ -247,6 +247,7 @@ public class Ch3InteractionButton : MonoBehaviour
                     ch3TalkManager.isNpcTalkActivated = true;
                     ch3TalkManager.NpcDialogue(ch3TalkManager.currentDialogueIndex, npcName);
                 }
+                */
             }
             else
             {

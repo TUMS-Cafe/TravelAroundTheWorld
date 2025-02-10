@@ -3388,7 +3388,7 @@ PrefabInstance:
       objectReference: {fileID: 1860025963}
     - target: {fileID: 8218582386574060278, guid: 7c836acbcfe72d8439cada7cff1dfb41, type: 3}
       propertyPath: isCh2HappyEnding
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8218582386574060278, guid: 7c836acbcfe72d8439cada7cff1dfb41, type: 3}
       propertyPath: playerController

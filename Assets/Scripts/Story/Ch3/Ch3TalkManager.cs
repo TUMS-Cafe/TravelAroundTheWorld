@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro; // TextMeshPro 네임스페이스 추가
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class Ch3TalkManager : MonoBehaviour
 {
@@ -95,11 +96,6 @@ public class Ch3TalkManager : MonoBehaviour
     public bool HasTalkedToAsh = false;
     public bool HasTalkedToKuraya = false;
 
-    public bool isTimeOut = false;
-    public bool isMiniGameStart = false;
-    public bool isMiniGameSuccess = false;
-    public bool isMiniGameFail = false;
-
     void Awake()
     {
         Instance = this;
@@ -180,7 +176,7 @@ public class Ch3TalkManager : MonoBehaviour
         if (isWaitingForPlayer && mapManager != null)
         {
             // 카페바에 도착하면 스토리 다시 진행
-            if (mapManager.currentState == MapState.Cafe && mapManager.isInCafeBarZone && (currentDialogueIndex == 10 || currentDialogueIndex == 98 || currentDialogueIndex == 157 || currentDialogueIndex == 255 || currentDialogueIndex == 393 || currentDialogueIndex == 455 || currentDialogueIndex == 702))
+            if (mapManager.currentState == MapState.Cafe && mapManager.isInCafeBarZone && (currentDialogueIndex == 10 || currentDialogueIndex == 98 || currentDialogueIndex == 157 || currentDialogueIndex == 255 || currentDialogueIndex == 393 || currentDialogueIndex == 455))
             {
                 isWaitingForPlayer = false;
                 player.SetActive(false);
@@ -201,7 +197,7 @@ public class Ch3TalkManager : MonoBehaviour
             }
 
             // 카페에서 일해야 되는데 다른 곳으로 가려고 하면 다시 카페로 플레이어 강제 이동
-            if (mapManager.currentState != MapState.Cafe && (currentDialogueIndex == 10 || currentDialogueIndex == 98 || currentDialogueIndex == 157 || currentDialogueIndex == 255 || currentDialogueIndex == 393 || currentDialogueIndex == 455 || currentDialogueIndex == 702))
+            if (mapManager.currentState != MapState.Cafe && (currentDialogueIndex == 10 || currentDialogueIndex == 98 || currentDialogueIndex == 157 || currentDialogueIndex == 255 || currentDialogueIndex == 393 || currentDialogueIndex == 455))
             {
                 player.transform.position = new Vector3(0, 0, 0);
                 narration.SetActive(true);
@@ -209,19 +205,20 @@ public class Ch3TalkManager : MonoBehaviour
                 narrationBar.SetDialogue("나레이션", "지금은 일할 시간이야.");
             }
 
+            /*
             // 객실로 돌아가야 되는데 다른 곳으로 가려고 하면 다시 객실복도로 플레이어 강제 이동
             if (mapManager.currentState != MapState.TrainRoom3 && mapManager.currentState != MapState.Hallway)
             {
                 if (isCh2HappyEnding)
                 {
-                    if(isMiniGameSuccess && !isTimeOut && currentDialogueIndex == 517)
+                    if(currentDialogueIndex == 517)
                     {
                         player.transform.position = new Vector3(-34, -2, 0);
                         narration.SetActive(true);
                         dialogue.SetActive(false);
                         narrationBar.SetDialogue("나레이션", "돌아다니기엔 너무 늦었다. 오늘은 이만 객실로 돌아가자.");
                     }
-                    else if (isMiniGameFail && isTimeOut && currentDialogueIndex == 540)
+                    else if (currentDialogueIndex == 540)
                     {
                         player.transform.position = new Vector3(-34, -2, 0);
                         narration.SetActive(true);
@@ -231,14 +228,14 @@ public class Ch3TalkManager : MonoBehaviour
                 }
                 else if (!isCh2HappyEnding)
                 {
-                    if (isMiniGameSuccess && !isTimeOut && currentDialogueIndex == 684)
+                    if (currentDialogueIndex == 684)
                     {
                         player.transform.position = new Vector3(-34, -2, 0);
                         narration.SetActive(true);
                         dialogue.SetActive(false);
                         narrationBar.SetDialogue("나레이션", "돌아다니기엔 너무 늦었다. 오늘은 이만 객실로 돌아가자.");
                     }
-                    else if (isMiniGameFail && isTimeOut && currentDialogueIndex == 697)
+                    else if (currentDialogueIndex == 697)
                     {
                         player.transform.position = new Vector3(-34, -2, 0);
                         narration.SetActive(true);
@@ -247,6 +244,7 @@ public class Ch3TalkManager : MonoBehaviour
                     }
                 }
             }
+            */
         }
         // npc 대화 버튼 눌렸을때 대화 진행
         if (isNpcTalkActivated && !isFadingOut && isWaitingForPlayer && (Input.GetKeyDown(KeyCode.Space) || Input.GetMouseButtonDown(0)))
@@ -307,94 +305,77 @@ public class Ch3TalkManager : MonoBehaviour
                 currentDialogueIndex = 488;
                 PrintProDialogue(488);
             }
-            //미니게임 성공
-            else if (isMiniGameStart && isMiniGameSuccess && !isMiniGameFail && !isWaitingForPlayer)
+            //미니게임 씬 연결
+            else if (currentDialogueIndex == 499)
             {
-                //성공 시 대화 출력
-                if (currentDialogueIndex == 499)
-                {
-                    player.transform.position = new Vector3(-34, -2, 0);
-                    playerController.StopMove();
-                    mapManager.currentState = MapState.Hallway;
-                    player.SetActive(true);
-                    map.SetActive(true);
-                    trainRoom.SetActive(false);
-                    cafe.SetActive(false);
-                    currentDialogueIndex = 504;
-                    PrintProDialogue(504);
-                }
-                //객실로 돌아가야할 때
-                else if (currentDialogueIndex == 517)
-                {
-                    isWaitingForPlayer = true;
-                    playerController.StartMove();
-                    narration.SetActive(false);
-                    dialogue.SetActive(false);
-                    EnableBedInteraction();
-                }
+                SceneManager.LoadScene("HideandSeek");
             }
-            //미니게임 실패
-            else if (isMiniGameStart && !isMiniGameSuccess && !isMiniGameFail && isTimeOut && isWaitingForPlayer)
+            // Ch3 미니게임 완료 여부 및 성공 여부 체크
+            else if (PlayerManager.Instance.IsCh3MiniGamePlayed())
             {
-                isMiniGameFail = true;
-                isWaitingForPlayer = false;
-            }
-            else if (isMiniGameStart && !isMiniGameSuccess && isMiniGameFail && !isWaitingForPlayer)
-            {
-                //실패 시 대화 출력
-                if (currentDialogueIndex == 499)
+                if (PlayerManager.Instance.IsCh3MiniGameSuccess())
                 {
-                    playerController.StopMove();
-                    player.SetActive(true);
-                    map.SetActive(true);
-                    trainRoom.SetActive(false);
-                    cafe.SetActive(false);
-                    currentDialogueIndex = 518;
-                    PrintProDialogue(518);
+                    if (currentDialogueIndex == 0)
+                    {
+                        player.transform.position = new Vector3(-34, -2, 0);
+                        playerController.StopMove();
+                        mapManager.currentState = MapState.Hallway;
+                        player.SetActive(true);
+                        map.SetActive(true);
+                        trainRoom.SetActive(false);
+                        cafe.SetActive(false);
+                        currentDialogueIndex = 500;
+                        PrintProDialogue(500);
+                    }
+                    //객실로 돌아가야할 때
+                    else if (currentDialogueIndex == 513)
+                    {
+                        currentDialogueIndex = 533;
+                        isWaitingForPlayer = true;
+                        player.SetActive(true);
+                        map.SetActive(true);
+                        playerController.StartMove();
+                        trainRoom.SetActive(false);
+                        narration.SetActive(false);
+                        dialogue.SetActive(false);
+                    }
                 }
-                //잠시 암전 2초
-                else if (currentDialogueIndex == 519)
+                else
                 {
-                    //background의 order in layer를 5로 하고 2초 유지, 자동으로 520부터 다시 출력
-                    player.transform.position = new Vector3(-34, -2, 0);
-                    playerController.StopMove();
-                    mapManager.currentState = MapState.Hallway;
-                    currentDialogueIndex = 520;
-                    PrintProDialogue(520);
+                    if (currentDialogueIndex == 0)
+                    {
+                        player.transform.position = new Vector3(-34, -2, 0);
+                        playerController.StopMove();
+                        mapManager.currentState = MapState.Hallway;
+                        player.SetActive(true);
+                        map.SetActive(true);
+                        trainRoom.SetActive(false);
+                        cafe.SetActive(false);
+                        currentDialogueIndex = 513;
+                        PrintProDialogue(513);
+                    }
+                    else if (currentDialogueIndex == 533)
+                    {
+                        isWaitingForPlayer = true;
+                        player.SetActive(true);
+                        map.SetActive(true);
+                        playerController.StartMove();
+                        trainRoom.SetActive(false);
+                        narration.SetActive(false);
+                        dialogue.SetActive(false);
+                    }
                 }
-                //객실로 돌아가야할 때
-                else if (currentDialogueIndex == 540)
-                {
-                    isWaitingForPlayer = true;
-                    playerController.StartMove();
-                    narration.SetActive(false);
-                    dialogue.SetActive(false);
-                    EnableBedInteraction();
-                }
-            }
-            //7일차 늑대 객실 앞 복도로 자동 이동
-            else if (currentDialogueIndex == 545)
-            {
-                player.transform.position = new Vector3(-34, -2, 0);
-                playerController.StopMove();
-                mapManager.currentState = MapState.Hallway;
-                player.SetActive(true);
-                map.SetActive(true);
-                trainRoom.SetActive(false);
-                cafe.SetActive(false);
-                currentDialogueIndex = 545;
-                PrintProDialogue(545);
             }
         }
         else if (!isCh2HappyEnding)
         {
             if (currentDialogueIndex == 466)
             {
-                currentDialogueIndex = 647;
-                PrintProDialogue(647);
+                currentDialogueIndex = 640;
+                PrintProDialogue(640);
             }
             //펭귄여우객실로 자동 이동
-            else if (currentDialogueIndex == 662)
+            else if (currentDialogueIndex == 655)
             {
                 player.transform.position = new Vector3(-34, -2, 0);
                 player.SetActive(true);
@@ -403,74 +384,15 @@ public class Ch3TalkManager : MonoBehaviour
                 mapManager.currentState = MapState.Hallway;
                 trainRoom.SetActive(false);
                 cafe.SetActive(false);
-                currentDialogueIndex = 663;
-                PrintProDialogue(663);
+                currentDialogueIndex = 656;
+                PrintProDialogue(656);
             }
-            //미니게임 성공
-            else if (isMiniGameStart && isMiniGameSuccess && !isMiniGameFail && !isWaitingForPlayer)
+            //미니게임 씬 연결
+            else if (currentDialogueIndex == 667)
             {
-                //성공 시 대화 출력
-                if (currentDialogueIndex == 674)
-                {
-                    player.transform.position = new Vector3(-34, -2, 0);
-                    playerController.StopMove();
-                    mapManager.currentState = MapState.Hallway;
-                    player.SetActive(true);
-                    map.SetActive(true);
-                    trainRoom.SetActive(false);
-                    cafe.SetActive(false);
-                    currentDialogueIndex = 679;
-                    PrintProDialogue(679);
-                }
-                //객실로 돌아가야할 때
-                else if (currentDialogueIndex == 684)
-                {
-                    isWaitingForPlayer = true;
-                    playerController.StartMove();
-                    narration.SetActive(false);
-                    dialogue.SetActive(false);
-                    EnableBedInteraction();
-                }
+                SceneManager.LoadScene("HideandSeek");
             }
-            //미니게임 실패
-            else if (isMiniGameStart && !isMiniGameSuccess && !isMiniGameFail && isTimeOut && isWaitingForPlayer)
-            {
-                isMiniGameFail = true;
-                isWaitingForPlayer = false;
-            }
-            else if (isMiniGameStart && !isMiniGameSuccess && isMiniGameFail && !isWaitingForPlayer)
-            {
-                //실패 시 대화 출력
-                if (currentDialogueIndex == 674)
-                {
-                    playerController.StopMove();
-                    player.SetActive(true);
-                    map.SetActive(true);
-                    trainRoom.SetActive(false);
-                    cafe.SetActive(false);
-                    currentDialogueIndex = 685;
-                    PrintProDialogue(685);
-                }
-                //잠시 암전 2초
-                else if (currentDialogueIndex == 686)
-                {
-                    //background의 order in layer를 5로 하고 2초 유지, 자동으로 520부터 다시 출력
-                    player.transform.position = new Vector3(-34, -2, 0);
-                    playerController.StopMove();
-                    mapManager.currentState = MapState.Hallway;
-                    currentDialogueIndex = 687;
-                    PrintProDialogue(687);
-                }
-                //객실로 돌아가야할 때
-                else if (currentDialogueIndex == 697)
-                {
-                    isWaitingForPlayer = true;
-                    playerController.StartMove();
-                    narration.SetActive(false);
-                    dialogue.SetActive(false);
-                    EnableBedInteraction();
-                }
-            }
+            //성공/실패 시 인덱스 변경
         }
     }
 
@@ -935,7 +857,7 @@ public class Ch3TalkManager : MonoBehaviour
         }
 
         // 일해야 할 때 카페로 강제 이동 후 이동 가능하게 전환
-        if (index == 10 || index == 98 || index == 157 || index == 255 || index == 393 || index == 455 || index == 702)
+        if (index == 10 || index == 98 || index == 157 || index == 255 || index == 393 || index == 455)
         {
             player.transform.position = new Vector3(0, 0, 0);
             mapManager.currentState = MapState.Cafe;
@@ -1101,64 +1023,6 @@ public class Ch3TalkManager : MonoBehaviour
                 }
                 //대화 다 안해도 침대 상호작용 가능
                 EnableBedInteraction();
-            }
-            //6일차 해피엔딩 일때 미니게임 시작, 정원으로 자동 이동
-            if (!isMiniGameStart && !isWaitingForPlayer && isCh2HappyEnding && index == 499)
-            {
-                isMiniGameStart = true;
-                player.transform.position = new Vector3(-19, 0, 0);
-                isWaitingForPlayer = true;
-                player.SetActive(true);
-                playerController.StartMove();
-                map.SetActive(true);
-                mapManager.currentState = MapState.Garden;
-                trainRoom.SetActive(false);
-                cafe.SetActive(false);
-                narration.SetActive(false);
-                dialogue.SetActive(false);
-
-                Npc_Coco.SetActive(true);
-                Npc_Coco.transform.position = new Vector3(-18, 2.6f, 0);
-                Npc_Nicksy.SetActive(true);
-                Npc_Nicksy.transform.position = new Vector3(-15, -3, 0);
-            }
-            //6일차 배드엔딩 일때 미니게임 시작, 정원으로 자동 이동
-            if (!isMiniGameStart && !isWaitingForPlayer && !isCh2HappyEnding && index == 674)
-            {
-                isMiniGameStart = true;
-                player.transform.position = new Vector3(-19, 0, 0);
-                isWaitingForPlayer = true;
-                player.SetActive(true);
-                playerController.StartMove();
-                map.SetActive(true);
-                mapManager.currentState = MapState.Garden;
-                trainRoom.SetActive(false);
-                cafe.SetActive(false);
-                narration.SetActive(false);
-                dialogue.SetActive(false);
-
-                Npc_Coco.SetActive(true);
-                Npc_Coco.transform.position = new Vector3(-18, 2.6f, 0);
-                Npc_Nicksy.SetActive(true);
-                Npc_Nicksy.transform.position = new Vector3(-15, -3, 0);
-            }
-            //7일차 엔딩
-            else if (isCh2HappyEnding && currentDialogueIndex == 647)
-            {
-                player.SetActive(false);
-                map.SetActive(false);
-                trainRoom.SetActive(false);
-                cafe.SetActive(false);
-                backGround.SetActive(true);
-                currentDialogueIndex = 757;
-            }
-            else if (!isCh2HappyEnding && currentDialogueIndex == 757)
-            {
-                player.SetActive(false);
-                map.SetActive(false);
-                trainRoom.SetActive(false);
-                cafe.SetActive(false);
-                backGround.SetActive(true);
             }
         }
         else
@@ -1616,120 +1480,6 @@ public class Ch3TalkManager : MonoBehaviour
                     playerController.StartMove();
                 }
             }
-
-            //6일차 밤 미니게임 npc 찾았을때 대화
-            if (isCh2HappyEnding && isWaitingForPlayer && isMiniGameStart && !isMiniGameSuccess && !isMiniGameFail && !isTimeOut && (mapManager.currentState == MapState.Garden || mapManager.currentState == MapState.Cafe) && npc == "Npc_Coco" && !HasTalkedToCoco && index >= 500 && index <= 502)
-            {
-                if (index >= 500 && index <= 501)
-                {
-                    PrintProDialogue(index);
-                }
-                else if (index == 502)
-                {
-                    currentDialogueIndex = 499;
-                    narration.SetActive(false);
-                    dialogue.SetActive(false);
-                    isNpcTalkActivated = false;
-                    HasTalkedToCoco = true;
-                    
-                    // 두 명을 다 찾지 않았을 때만 움직이도록 변경
-                    if (HasTalkedToNicksy)
-                    {
-                        //player.transform.position = new Vector3(-34, -2, 0);
-                        playerController.StopMove();
-                        isMiniGameSuccess = true;
-                        isWaitingForPlayer = false;
-                    }
-                    else
-                    {
-                        playerController.StartMove();
-                    }
-                }
-            }
-            else if (isCh2HappyEnding && isWaitingForPlayer && isMiniGameStart && !isMiniGameSuccess && !isMiniGameFail && !isTimeOut && (mapManager.currentState == MapState.Garden || mapManager.currentState == MapState.Cafe) && npc == "Npc_Nicksy" && !HasTalkedToNicksy && index >= 502 && index <= 504)
-            {
-                if (index >= 502 && index <= 503)
-                {
-                    PrintProDialogue(index);
-                }
-                else if (index == 504)
-                {
-                    currentDialogueIndex = 499;
-                    narration.SetActive(false);
-                    dialogue.SetActive(false);
-                    isNpcTalkActivated = false;
-                    HasTalkedToNicksy = true;
-
-                    // 두 명을 다 찾지 않았을 때만 움직이도록 변경
-                    if (HasTalkedToCoco)
-                    {
-                        //player.transform.position = new Vector3(-34, -2, 0);
-                        playerController.StopMove();
-                        isMiniGameSuccess = true;
-                        isWaitingForPlayer = false;
-                    }
-                    else
-                    {
-                        playerController.StartMove();
-                    }
-                }
-            }
-            else if (!isCh2HappyEnding && isWaitingForPlayer && isMiniGameStart && !isMiniGameSuccess && !isMiniGameFail && !isTimeOut && (mapManager.currentState == MapState.Garden || mapManager.currentState == MapState.Cafe) && npc == "Npc_Coco" && !HasTalkedToCoco && index >= 675 && index <= 677)
-            {
-                if (index >= 675 && index <= 676)
-                {
-                    PrintProDialogue(index);
-                }
-                else if (index == 677)
-                {
-                    currentDialogueIndex = 674;
-                    narration.SetActive(false);
-                    dialogue.SetActive(false);
-                    isNpcTalkActivated = false;
-                    HasTalkedToCoco = true;
-
-                    // 두 명을 다 찾지 않았을 때만 움직이도록 변경
-                    if (HasTalkedToNicksy)
-                    {
-                        //player.transform.position = new Vector3(-34, -2, 0);
-                        playerController.StopMove();
-                        isMiniGameSuccess = true;
-                        isWaitingForPlayer = false;
-                    }
-                    else
-                    {
-                        playerController.StartMove();
-                    }
-                }
-            }
-            else if (!isCh2HappyEnding && isWaitingForPlayer && isMiniGameStart && !isMiniGameSuccess && !isMiniGameFail && !isTimeOut && (mapManager.currentState == MapState.Garden || mapManager.currentState == MapState.Cafe) && npc == "Npc_Nicksy" && !HasTalkedToNicksy && index >= 677 && index <= 679)
-            {
-                if (index >= 677 && index <= 678)
-                {
-                    PrintProDialogue(index);
-                }
-                else if (index == 679)
-                {
-                    currentDialogueIndex = 674;
-                    narration.SetActive(false);
-                    dialogue.SetActive(false);
-                    isNpcTalkActivated = false;
-                    HasTalkedToNicksy = true;
-
-                    // 두 명을 다 찾지 않았을 때만 움직이도록 변경
-                    if (HasTalkedToCoco)
-                    {
-                        //player.transform.position = new Vector3(-34, -2, 0);
-                        playerController.StopMove();
-                        isMiniGameSuccess = true;
-                        isWaitingForPlayer = false;
-                    }
-                    else
-                    {
-                        playerController.StartMove();
-                    }
-                }
-            }
         }
         else
         {
@@ -1801,7 +1551,7 @@ public class Ch3TalkManager : MonoBehaviour
             case locationTrainRoom:
                 PlayMusic(locationTrainRoom);
                 //일해야 할 때 객실 화면 끄기
-                if (currentDialogueIndex == 10 || currentDialogueIndex == 98 || currentDialogueIndex == 157 || currentDialogueIndex == 255 || currentDialogueIndex == 393 || currentDialogueIndex == 455 || currentDialogueIndex == 702)
+                if (currentDialogueIndex == 10 || currentDialogueIndex == 98 || currentDialogueIndex == 157 || currentDialogueIndex == 255 || currentDialogueIndex == 393 || currentDialogueIndex == 455)
                 {
                     trainRoom.SetActive(false);
                 }

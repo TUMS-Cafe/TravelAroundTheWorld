@@ -221,6 +221,7 @@ public class Ch3NpcScript : MonoBehaviour
                 currentNpc = "Null";
             }
         }
+        /*
         // 6일차 밤 미니게임 npc 찾았을때 대화
         else if (isPlayerInRange && !talkManager.isTimeOut && talkManager.currentDialogueIndex == 499)
         {
@@ -248,6 +249,7 @@ public class Ch3NpcScript : MonoBehaviour
                 currentNpc = "Npc_Nicksy";
             }
         }
+        */
         else
         {
             dialogueButton.SetActive(false);

@@ -77,6 +77,7 @@ public class Ch3BedButton : MonoBehaviour
             talkManager.currentDialogueIndex = 453;
             talkManager.PrintProDialogue(talkManager.currentDialogueIndex);
         }
+        /*
         //6일차 밤->7일차 아침 (해피엔딩, 미니게임 성공)
         if (talkManager.isCh2HappyEnding && talkManager.isMiniGameSuccess && !talkManager.isMiniGameFail && talkManager.currentDialogueIndex == 517)
         {
@@ -101,6 +102,7 @@ public class Ch3BedButton : MonoBehaviour
             talkManager.currentDialogueIndex = 698;
             talkManager.PrintProDialogue(talkManager.currentDialogueIndex);
         }
+        */
 
         player.GetComponent<PlayerController>().StartMove();
     }
