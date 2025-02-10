@@ -61,12 +61,15 @@ public class Ch2TalkManager : MonoBehaviour
     public bool isWaitingForNPC = false; // NPC 기다리고 있는지 여부
 
     public Ch2MapManager mapManager; // 맵 매니저 참조
+    public PlayerManager PlayerManager; //플레이어 매니저
 
     public Ch0DialogueBar dialogueBar; // 대화창 스크립트 (타이핑 효과 호출을 위해)
     public Ch0DialogueBar narrationBar; // 나레이션창 스크립트 (타이핑 효과 호출을 위해)
 
     void Start()
     {
+        
+        //PlayerManager.Instance.SetSceneName("Ch2");
         dialogueBar = dialogue.GetComponentInChildren<Ch0DialogueBar>();
         narrationBar = narration.GetComponentInChildren<Ch0DialogueBar>();
 
