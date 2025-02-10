@@ -711,8 +711,12 @@ public class Ch2TalkManager : MonoBehaviour
                 ChangeScene(backGround); break;
             case 582:
                 ChangeScene(cafe2); break;
+            case 604:
+                StartCoroutine(LoadCh3SceneAfterInput()); //클릭시 Ch3Scene으로 이동
+                PlayerManager.Instance.SetHappyEnding(2); break;
             case 605:
-                ChangeScene(cafe2); break;
+                ChangeScene(cafe2);
+                break;
             case 674:
                 //레이비야크와 상호작용
                 InteractWithNPC(Npc_Rayviyak, new Vector2(-15, 0), map);
@@ -805,11 +809,26 @@ public class Ch2TalkManager : MonoBehaviour
                 ChangeScene(bakery); break;
             case 786:
                 ChangeScene(backGround); break;
+            case 787:
+                PlayerManager.Instance.GetEnding(2); break;
+            case 788:
+                StartCoroutine(LoadCh3SceneAfterInput()); break;
             default:
                 break; //아무 것도 활성화하지 않음
         }
     
     }
+
+    IEnumerator LoadCh3SceneAfterInput() //Ch3Scene으로 이동
+    {
+        // 사용자가 입력(스페이스바 또는 마우스 클릭)할 때까지 대기
+        yield return new WaitUntil(() => Input.GetKeyDown(KeyCode.Space) || Input.GetMouseButtonDown(0));
+
+        Debug.Log("Ch3Scene으로 이동");
+
+        SceneManager.LoadScene("Ch3Scene"); // Ch3Scene으로 이동
+    }
+
     //NPC 상호작용
     void InteractWithNPC(GameObject npc, Vector2 playerPosition, GameObject sceneToActivate, GameObject sceneToDeactivate = null)
     {
