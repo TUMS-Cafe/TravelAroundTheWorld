@@ -218,9 +218,8 @@ public class Ch2TalkManager : MonoBehaviour
 
             // 
             HandleDialogueProgression(currentDialogueIndex);
-        }
-       
 
+        }
     }
     public void EnableMap()
     {
@@ -282,13 +281,15 @@ public class Ch2TalkManager : MonoBehaviour
         if (currentDialogueIndex < dialogues.Count - 1)
         {
             currentDialogueIndex++;
+
+
             if (!DoNotDisplayDialogue) DisplayCurrentDialogue();
         }
         else
         {
         }
     }
-    void ShowChoice(string option1, string option2, int nextIndex1, int nextIndex2)
+    void ShowChoice(string option1, string option2, int nextIndex1, int nextIndex2, bool skipTo366 = false)
     {
         isInputDisabled = true; // 선택할 때까지 입력 차단
         choiceUI.SetActive(true); // 선택지 UI 활성화
@@ -304,21 +305,55 @@ public class Ch2TalkManager : MonoBehaviour
         choiceButton1.onClick.RemoveAllListeners();
         choiceButton2.onClick.RemoveAllListeners();
 
-        choiceButton1.onClick.AddListener(() => SelectChoice(nextIndex1));
-        choiceButton2.onClick.AddListener(() => SelectChoice(nextIndex2));
+        choiceButton1.onClick.AddListener(() => SelectChoice(nextIndex1, false));  
+        choiceButton2.onClick.AddListener(() => SelectChoice(nextIndex2, false)); 
     }
-    void SelectChoice(int nextDialogueIndex)
+    void SelectChoice(int nextDialogueIndex, bool skipTo366 = false)
     {
         choiceUI.SetActive(false); // 선택지 UI 숨기기
         isInputDisabled = false; // 입력 다시 활성화
         currentDialogueIndex = nextDialogueIndex; // 선택한 대사로 이동
+        /*
+        if (skipTo366)
+        {
+            StartCoroutine(ProceedTo366AfterDialogue());
+        }*/
+        // "네, 알려드릴게요" 선택했을 경우 (715~716 진행 후 720으로 이동)
+        if (nextDialogueIndex == 715)
+        {
+            StartCoroutine(ProceedTo720AfterDialogue());
+        }
 
-        //  나레이션 텍스트 다시 활성화
+        // 나레이션 텍스트 다시 활성화
         dialogueText.gameObject.SetActive(true);
-
         DisplayCurrentDialogue(); // 다음 대사 출력
     }
 
+    IEnumerator ProceedTo366AfterDialogue()
+    {
+        
+        while (currentDialogueIndex <= 358)
+        {
+            yield return null; // 사용자가 클릭으로 직접 진행
+        }
+        
+        yield return new WaitUntil(() => Input.GetKeyDown(KeyCode.Space) || Input.GetMouseButtonDown(0));
+
+        currentDialogueIndex = 366; // 358 이후 자동으로 366으로 이동
+        DisplayCurrentDialogue();
+    }
+    IEnumerator ProceedTo720AfterDialogue()
+    {
+        while (currentDialogueIndex <= 716)
+        {
+            yield return null; // 사용자가 클릭으로 직접 진행
+        }
+
+        yield return new WaitUntil(() => Input.GetKeyDown(KeyCode.Space) || Input.GetMouseButtonDown(0));
+        
+            currentDialogueIndex = 720;
+            DisplayCurrentDialogue();
+}
     // 화면 변경 함수
     void UpdateSceneBasedOnDialogueIndex(int index)
     {
@@ -596,7 +631,10 @@ public class Ch2TalkManager : MonoBehaviour
             case 340:
                 // 340과 341의 대사 함께 출력
                 //narrationText.gameObject.SetActive(false);
-                ShowChoice("네, 도와주세요.", "...아뇨, 제 힘으로 해결해 볼게요.",342,359); // 선택지 UI 표시
+                ShowChoice("네, 도와주세요.", "...아뇨, 제 힘으로 해결해 볼게요.",342,359, true); // 선택지 UI 표시
+                break;
+            case 358:
+                StartCoroutine(ProceedTo366AfterDialogue());
                 break;
             case 367:
                 //레이비야크와 상호작용
