@@ -45,13 +45,14 @@ public class TrashController : MonoBehaviour
             cafeMakeController.currentIngredients.Clear();
             Debug.Log("Current ingredients: " + string.Join(", ", cafeMakeController.currentIngredients)); // 리스트의 현재 상태를 출력
         }
-        else if(trash.name == "MakeHotCup"){
+        else if (trash.name == "MakeHotCup")
+        {
             trash.SetActive(false);
             cafeMakeController.currentIngredients.Clear();
             Debug.Log("Current ingredients: " + string.Join(", ", cafeMakeController.currentIngredients)); // 리스트의 현재 상태를 출력
         }
         else if (trash.name == "DoneEsp" || trash.name == "DoneIceAm" || trash.name == "DoneHotAm" ||
-            trash.name == "DoneIceLt" || trash.name == "DoneHotLt" || trash.name == "DoneHb"||
+            trash.name == "DoneIceLt" || trash.name == "DoneHotLt" || trash.name == "DoneHb" ||
             trash.name == "DoneRoo" || trash.name == "DoneGt" || trash.name == "DoneCm")
         {
             trash.SetActive(false);
