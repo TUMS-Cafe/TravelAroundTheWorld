@@ -1,9 +1,5 @@
 fileFormatVersion: 2
-<<<<<<<< HEAD:Assets/Prefabs/Story/Ch2.meta
-guid: e9fee422b582a8a47b11797da0b10b7c
-========
 guid: 0c9a4f9e85e36174c897803b40f3e66b
->>>>>>>> feature/seonho/hideandseek:Assets/Scripts/Story/HideandSeek.meta
 folderAsset: yes
 DefaultImporter:
   externalObjects: {}
