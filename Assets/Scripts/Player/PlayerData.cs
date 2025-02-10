@@ -40,4 +40,6 @@ public class PlayerData
     public List<bool> chapterEndings;
     //Ch3 미니게임 플레이 여부
     public bool ch3MiniGamePlyaed;
+    //Ch3 미니게임 결과
+    public bool ch3MiniGameResult;
 }

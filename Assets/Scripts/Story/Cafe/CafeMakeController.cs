@@ -4,17 +4,13 @@ using UnityEngine;
 
 public class CafeMakeController : MonoBehaviour
 {
-    public GameObject Espresso;
-    public GameObject IceAmericano;
-    public GameObject HotAmericano;
-    public GameObject IceLatte;
-    public GameObject HotLatte;
-    public GameObject HibiscusTea;
-    public GameObject ChamomileTea;
-    public GameObject RooibosTea;
-    public GameObject GreenTea;
+    public GameObject Espresso, HotAmericano, IceAmericano, HotLatte, IceLatte;
+    public GameObject HibiscusTea, ChamomileTea, RooibosTea, GreenTea, LunaTea;
+    public GameObject Affogato, HotCaramelLatte, IceCaramelLatte, HotCinnamonLatte, IceCinnamonLatte, HotVanillaLatte, IceVanillaLatte, MintLatte;
+    public GameObject StrawberryJuice, MangoJuice, BlueberryJuice, StrawberryLatte, MangoLatte, BlueberryLatte, SweetPotatoLatte;
 
     public GameObject Shot;
+    public GameObject MilkSteam;
 
     public GameObject makeIceCup;
     public GameObject makeHotCup;
@@ -36,6 +32,9 @@ public class CafeMakeController : MonoBehaviour
     private int randomNum = SceneTransitionManager.Instance.GetRandomMenuNum();
     private int deliveryNum = SceneTransitionManager.Instance.GetDeliveryNum();
 
+    //private int randomNum = SceneTransitionManager.Instance.GetRandomMenuNum();
+    //private int deliveryNum = SceneTransitionManager.Instance.GetDeliveryNum();
+
     private SpriteRenderer iceCupSpriteRenderer;
     private SpriteRenderer hotCupSpriteRenderer;
 
@@ -56,8 +55,28 @@ public class CafeMakeController : MonoBehaviour
     public Sprite HotCupWithChamomile;
     public Sprite HotCupWithRooibos;
 
+    //addzzz 임시 챕터, 해금 식재료 리스트
+    private int currentChapter = 1; 
+    private List<string> unlockedIngredients = new List<string>();
+
+    //ani
+    public GameObject StrawberryJuiceAnimation; 
+    public Animator strawberryJuiceAnimator; 
+    public GameObject MangoJuiceAnimation;
+    public Animator mangoJuiceAnimator;
+    public GameObject BlueberryJuiceAnimation;
+    public Animator blueberryJuiceAnimator;
+    public GameObject MintLatteAnimator;
+    public Animator mintLatteAnimator;
+    public GameObject SweetPotatoLatteAnimator;
+    public Animator sweetPotatoLatteAnimator;
+
+
     void Start()
     {
+        unlockedIngredients = new List<string>();
+        UnlockIngredients();
+
         iceCupSpriteRenderer = makeIceCup.GetComponent<SpriteRenderer>();
         hotCupSpriteRenderer = makeHotCup.GetComponent<SpriteRenderer>();
 
@@ -77,15 +96,42 @@ public class CafeMakeController : MonoBehaviour
         HotCupWithHibiscus = Resources.Load<Sprite>("CafeMaking/HotCup+Hibiscus");
         HotCupWithChamomile = Resources.Load<Sprite>("CafeMaking/HotCup+Chamonile");
         HotCupWithRooibos = Resources.Load<Sprite>("CafeMaking/HotCup+Rooibos");
+
+        //ani
+        StrawberryJuiceAnimation.SetActive(false);
+        MangoJuiceAnimation.SetActive(false);
+        BlueberryJuiceAnimation.SetActive(false);
+        MintLatteAnimator.SetActive(false);
+        SweetPotatoLatteAnimator.SetActive(false);
+
+    }
+
+    //addzzz
+    public void UnlockIngredients()
+    {
+        if (currentChapter >= 0)
+            unlockedIngredients.AddRange(new string[] { "Water", "Shot", "Ice" });
+        if (currentChapter >= 1)
+            unlockedIngredients.AddRange(new string[] { "Milk", "HibiscusLeaf", "RooibosLeaf", "GreenTeaLeaf", "ChamomileLeaf", "LunaLeaf" });
+        if (currentChapter >= 2)
+            unlockedIngredients.AddRange(new string[] { "IceCream", "CaramelSyrup", "VanillaSyrup", "Cinnamon" });
+        if (currentChapter >= 3)
+            unlockedIngredients.AddRange(new string[] { "Strawberry", "Mango", "Blueberry", "Mint", "SweetPotato" });
+    }
+
+    public bool CanUseIngredient(string ingredient)
+    {
+        return unlockedIngredients.Contains(ingredient);
     }
 
     void OnEnable()
     {
-        deliveryOrder = deliveryData.deliveryOrder;
+        /*deliveryOrder = deliveryData.deliveryOrder;
         Debug.Log("deliveryNum = " + deliveryNum);
         Debug.Log("delivery menu = " + deliveryData.deliveryOrder);
-
+*/
     }
+    
 
     public void HandleMakeArea(GameObject ingredient)
     {
@@ -111,7 +157,7 @@ public class CafeMakeController : MonoBehaviour
                 SoundManager.Instance.PlaySFX("cupsetdown");
             }
             else if (ingredient.name == "GreenTeaLeaf" || ingredient.name == "HibiscusLeaf" ||
-                ingredient.name == "RooibosLeaf"|| ingredient.name == "ChamomilLeaf")
+                ingredient.name == "RooibosLeaf"|| ingredient.name == "ChamomileLeaf")
             {
                 SoundManager.Instance.PlaySFX("tea stir");
             }
@@ -237,6 +283,132 @@ public class CafeMakeController : MonoBehaviour
             makeHotCup.SetActive(false);
             currentIngredients.Clear();
         }
+        else if ((currentIngredients.Contains("HotCup") || currentIngredients.Contains("MakeHotCup")) && currentIngredients.Contains("Water") && currentIngredients.Contains("LunaLeaf"))
+        {
+            LunaTea.SetActive(true);
+            Debug.Log("LunaTea is maded");
+            makeHotCup.SetActive(false);
+            currentIngredients.Clear();
+        }
+        //------------------------------
+        else if ((currentIngredients.Contains("HotCup") || currentIngredients.Contains("MakeHotCup")) && currentIngredients.Contains("IceCream") && currentIngredients.Contains("Shot"))
+        {
+            Affogato.SetActive(true);
+            Debug.Log("Affogato is maded");
+            makeHotCup.SetActive(false);
+            currentIngredients.Clear();
+        }
+        else if ((currentIngredients.Contains("HotCup") || currentIngredients.Contains("MakeHotCup")) && currentIngredients.Contains("Shot") && currentIngredients.Contains("MilkSteam") && currentIngredients.Contains("CaramelSyrup"))
+        {
+            HotCaramelLatte.SetActive(true);
+            Debug.Log("HotCaramelLatte is maded");
+            makeHotCup.SetActive(false);
+            currentIngredients.Clear();
+        }
+        else if ((currentIngredients.Contains("HotCup") || currentIngredients.Contains("MakeHotCup")) && currentIngredients.Contains("Shot") && currentIngredients.Contains("MilkSteam") && currentIngredients.Contains("Cinnamon"))
+        {
+            HotCinnamonLatte.SetActive(true);
+            Debug.Log("HotCinnamonLatte is maded");
+            makeHotCup.SetActive(false);
+            currentIngredients.Clear();
+        }
+        else if ((currentIngredients.Contains("HotCup") || currentIngredients.Contains("MakeHotCup")) && currentIngredients.Contains("Shot") && currentIngredients.Contains("MilkSteam") && currentIngredients.Contains("VanillaSyrup"))
+        {
+            HotVanillaLatte.SetActive(true);
+            Debug.Log("HotVanillaLatte is maded");
+            makeHotCup.SetActive(false);
+            currentIngredients.Clear();
+        }
+        else if ((currentIngredients.Contains("IceCup") || currentIngredients.Contains("MakeIceCup")) && currentIngredients.Contains("Water") && currentIngredients.Contains("Ice") && currentIngredients.Contains("Shot") && currentIngredients.Contains("CaramelSyrup"))
+        {
+            IceCaramelLatte.SetActive(true);
+            Debug.Log("IceCaramelLatte is maded");
+            makeIceCup.SetActive(false);
+            currentIngredients.Clear();
+        }
+        else if ((currentIngredients.Contains("IceCup") || currentIngredients.Contains("MakeIceCup")) && currentIngredients.Contains("Water") && currentIngredients.Contains("Ice") && currentIngredients.Contains("Shot") && currentIngredients.Contains("Cinnamon"))
+        {
+            IceCinnamonLatte.SetActive(true);
+            Debug.Log("IceCinnamonLatte is maded");
+            makeIceCup.SetActive(false);
+            currentIngredients.Clear();
+        }
+        else if ((currentIngredients.Contains("IceCup") || currentIngredients.Contains("MakeIceCup")) && currentIngredients.Contains("Water") && currentIngredients.Contains("Ice") && currentIngredients.Contains("Shot") && currentIngredients.Contains("VanillaSyrup"))
+        {
+            IceVanillaLatte.SetActive(true);
+            Debug.Log("IceVanillaLatte is maded");
+            makeIceCup.SetActive(false);
+            currentIngredients.Clear();
+        }
+        
+        //--------------------
+        else if ((currentIngredients.Contains("IceCup") || currentIngredients.Contains("MakeIceCup")) && currentIngredients.Contains("Water") && currentIngredients.Contains("Ice") && currentIngredients.Contains("Strawberry"))
+        {
+            StrawberryJuice.SetActive(true);
+            Debug.Log("StrawberryJuice is maded");
+            makeIceCup.SetActive(false);
+            currentIngredients.Clear();
+
+            //애니 
+            StartCoroutine(PlayStrawberryJuiceAnimation());
+        }
+        else if ((currentIngredients.Contains("IceCup") || currentIngredients.Contains("MakeIceCup")) && currentIngredients.Contains("Water") && currentIngredients.Contains("Ice") && currentIngredients.Contains("Mango"))
+        {
+            MangoJuice.SetActive(true);
+            Debug.Log("MangoJuice is maded");
+            makeIceCup.SetActive(false);
+            currentIngredients.Clear();
+            StartCoroutine(PlayMangoJuiceAnimation());
+        }
+        else if ((currentIngredients.Contains("IceCup") || currentIngredients.Contains("MakeIceCup")) && currentIngredients.Contains("Water") && currentIngredients.Contains("Ice") && currentIngredients.Contains("Blueberry"))
+        {
+            BlueberryJuice.SetActive(true);
+            Debug.Log("BlueberryJuice is maded");
+            makeIceCup.SetActive(false);
+            currentIngredients.Clear();
+            StartCoroutine(PlayBlueberryJuiceAnimation());
+        }
+        else if ((currentIngredients.Contains("IceCup") || currentIngredients.Contains("MakeIceCup")) && currentIngredients.Contains("Milk") && currentIngredients.Contains("Ice") && currentIngredients.Contains("Strawberry"))
+        {
+            StrawberryLatte.SetActive(true);
+            Debug.Log("StrawberryLatte is maded");
+            makeIceCup.SetActive(false);
+            currentIngredients.Clear();
+            StartCoroutine(PlayStrawberryJuiceAnimation());
+        }
+        else if ((currentIngredients.Contains("IceCup") || currentIngredients.Contains("MakeIceCup")) && currentIngredients.Contains("Milk") && currentIngredients.Contains("Ice") && currentIngredients.Contains("Mango"))
+        {
+            MangoLatte.SetActive(true);
+            Debug.Log("MangoLatte is maded");
+            makeIceCup.SetActive(false);
+            currentIngredients.Clear();
+            StartCoroutine(PlayMangoJuiceAnimation());
+        }
+        else if ((currentIngredients.Contains("IceCup") || currentIngredients.Contains("MakeIceCup")) && currentIngredients.Contains("Milk") && currentIngredients.Contains("Ice") && currentIngredients.Contains("Blueberry"))
+        {
+            BlueberryLatte.SetActive(true);
+            Debug.Log("BlueberryLatte is maded");
+            makeIceCup.SetActive(false);
+            currentIngredients.Clear();
+            StartCoroutine(PlayBlueberryJuiceAnimation());
+        }
+        else if ((currentIngredients.Contains("HotCup") || currentIngredients.Contains("MakeHotCup")) && currentIngredients.Contains("MilkSteam") && currentIngredients.Contains("Mint"))
+        {
+            MintLatte.SetActive(true);
+            Debug.Log("MintLatte is maded");
+            makeHotCup.SetActive(false);
+            currentIngredients.Clear();
+            StartCoroutine(PlayMintLatteAnimation());
+        }
+        else if ((currentIngredients.Contains("HotCup") || currentIngredients.Contains("MakeHotCup")) && currentIngredients.Contains("MilkSteam") && currentIngredients.Contains("SweetPotato"))
+        {
+            SweetPotatoLatte.SetActive(true);
+            Debug.Log("SweetPotatoLatte is maded");
+            makeHotCup.SetActive(false);
+            currentIngredients.Clear();
+            StartCoroutine(PlaySweetPotatoLatteAnimation());
+        }
+
         Invoke("CheckOrder", 0.2f);
     }
     public void CheckOrder()
@@ -276,10 +448,10 @@ public class CafeMakeController : MonoBehaviour
             ProcessDirectOrder(HibiscusTea, "HibiscusTea", 150);
             ProcessDirectOrder(RooibosTea, "RooibosTea", 160);
             ProcessDirectOrder(ChamomileTea, "ChamomileTea", 120);
-        }
+        //}
 
         SceneTransitionManager.Instance.UpdateCafeOrders(updatedOrders);
-    }
+    }}
 
     private void ProcessOrder(GameObject drink, string drinkName, int earnings, bool isDeliveryOrder)
     {
@@ -338,10 +510,10 @@ public class CafeMakeController : MonoBehaviour
         currentIngredients.Clear();
         newNum++;
         Debug.Log("주문 제작 완료 수 = "+ newNum);
-        if (randomNum > 0)
+        /*if (randomNum > 0)
         {
             SceneTransitionManager.Instance.UpdateRandomMenuDelivery(newNum);
-
+        */
             if (orderListParent.childCount == 5)
             {
                 for (int i = 0; i < orderListParent.childCount; i++)
@@ -358,14 +530,59 @@ public class CafeMakeController : MonoBehaviour
                     }
                 }
             }
-        }
+        /*}
         else
-            SceneTransitionManager.Instance.UpdateCafeDelivery(newNum);
+            SceneTransitionManager.Instance.UpdateCafeDelivery(newNum);*/
     }
 
     public void BackToDelivery()
     {
         Beverage.SetActive(false);
         Delivery.SetActive(true);
+    }
+
+    IEnumerator PlayStrawberryJuiceAnimation(){
+        StrawberryJuiceAnimation.SetActive(true); 
+        strawberryJuiceAnimator.Play("StrawberryJuiceAnimation"); 
+
+        yield return new WaitForSeconds(strawberryJuiceAnimator.GetCurrentAnimatorStateInfo(0).length); 
+
+        StrawberryJuiceAnimation.SetActive(false);
+    }
+    IEnumerator PlayMangoJuiceAnimation()
+    {
+        MangoJuiceAnimation.SetActive(true);
+        mangoJuiceAnimator.Play("MangoJuiceAnimation");
+
+        yield return new WaitForSeconds(mangoJuiceAnimator.GetCurrentAnimatorStateInfo(0).length);
+
+        MangoJuiceAnimation.SetActive(false);
+    }
+    IEnumerator PlayBlueberryJuiceAnimation()
+    {
+        BlueberryJuiceAnimation.SetActive(true);
+        blueberryJuiceAnimator.Play("BlueberryJuiceAnimation");
+
+        yield return new WaitForSeconds(blueberryJuiceAnimator.GetCurrentAnimatorStateInfo(0).length);
+
+        BlueberryJuiceAnimation.SetActive(false);
+    }
+    IEnumerator PlayMintLatteAnimation()
+    {
+        MintLatteAnimator.SetActive(true);
+        mintLatteAnimator.Play("MintLatteAnimation");
+
+        yield return new WaitForSeconds(mintLatteAnimator.GetCurrentAnimatorStateInfo(0).length);
+
+        MintLatteAnimator.SetActive(false);
+    }
+    IEnumerator PlaySweetPotatoLatteAnimation()
+    {
+        SweetPotatoLatteAnimator.SetActive(true);
+        sweetPotatoLatteAnimator.Play("SweetPotatoLatteAnimation");
+
+        yield return new WaitForSeconds(sweetPotatoLatteAnimator.GetCurrentAnimatorStateInfo(0).length);
+
+        SweetPotatoLatteAnimator.SetActive(false);
     }
 }
