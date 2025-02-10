@@ -45,7 +45,6 @@ public class Ch2TalkManager : MonoBehaviour
     private Dictionary<string, Sprite> characterImages; // 캐릭터 이미지 딕셔너리
     private Dictionary<string, Sprite> characterBigImages; // 캐릭터 큰 이미지 딕셔너리
 
-
     public GameObject backGround; //검은 배경
     public GameObject sea; // 바다 배경
     public GameObject volcano; // 화산 배경
@@ -62,12 +61,15 @@ public class Ch2TalkManager : MonoBehaviour
     public bool isWaitingForNPC = false; // NPC 기다리고 있는지 여부
 
     public Ch2MapManager mapManager; // 맵 매니저 참조
+    public PlayerManager PlayerManager; //플레이어 매니저
 
     public Ch0DialogueBar dialogueBar; // 대화창 스크립트 (타이핑 효과 호출을 위해)
     public Ch0DialogueBar narrationBar; // 나레이션창 스크립트 (타이핑 효과 호출을 위해)
 
     void Start()
     {
+        
+        //PlayerManager.Instance.SetSceneName("Ch2");
         dialogueBar = dialogue.GetComponentInChildren<Ch0DialogueBar>();
         narrationBar = narration.GetComponentInChildren<Ch0DialogueBar>();
 
@@ -85,7 +87,6 @@ public class Ch2TalkManager : MonoBehaviour
 
     void Update()
     {
-
         // 입력이 비활성화된 경우 스페이스바와 클릭을 무시
         if (isInputDisabled ) return;
 
@@ -177,8 +178,6 @@ public class Ch2TalkManager : MonoBehaviour
             // ???를 쿠라야로 처리
             string characterKey = currentDialogue.인물 == "???" ? "쿠라야" : currentDialogue.인물;
 
-
-
             // 다이얼로그가 활성화될 조건
             if (characterKey == "솔" || characterKey == "솔 " || characterKey == "쿠라야" || characterKey == "러스크" || characterKey == "파이아" ||characterKey == "바이올렛" || characterKey == "레이비야크" || characterKey == "Mr.Ham" || characterKey == "나루")
             {
@@ -218,9 +217,8 @@ public class Ch2TalkManager : MonoBehaviour
 
             // 
             HandleDialogueProgression(currentDialogueIndex);
-        }
-       
 
+        }
     }
     public void EnableMap()
     {
@@ -288,7 +286,7 @@ public class Ch2TalkManager : MonoBehaviour
         {
         }
     }
-    void ShowChoice(string option1, string option2, int nextIndex1, int nextIndex2)
+    void ShowChoice(string option1, string option2, int nextIndex1, int nextIndex2, bool skipTo366 = false)
     {
         isInputDisabled = true; // 선택할 때까지 입력 차단
         choiceUI.SetActive(true); // 선택지 UI 활성화
@@ -304,21 +302,55 @@ public class Ch2TalkManager : MonoBehaviour
         choiceButton1.onClick.RemoveAllListeners();
         choiceButton2.onClick.RemoveAllListeners();
 
-        choiceButton1.onClick.AddListener(() => SelectChoice(nextIndex1));
-        choiceButton2.onClick.AddListener(() => SelectChoice(nextIndex2));
+        choiceButton1.onClick.AddListener(() => SelectChoice(nextIndex1, false));  
+        choiceButton2.onClick.AddListener(() => SelectChoice(nextIndex2, false)); 
     }
-    void SelectChoice(int nextDialogueIndex)
+    void SelectChoice(int nextDialogueIndex, bool skipTo366 = false)
     {
         choiceUI.SetActive(false); // 선택지 UI 숨기기
         isInputDisabled = false; // 입력 다시 활성화
         currentDialogueIndex = nextDialogueIndex; // 선택한 대사로 이동
+        /*
+        if (skipTo366)
+        {
+            StartCoroutine(ProceedTo366AfterDialogue());
+        }*/
+        // "네, 알려드릴게요" 선택했을 경우 (715~716 진행 후 720으로 이동)
+        if (nextDialogueIndex == 715)
+        {
+            StartCoroutine(ProceedTo720AfterDialogue());
+        }
 
-        //  나레이션 텍스트 다시 활성화
+        // 나레이션 텍스트 다시 활성화
         dialogueText.gameObject.SetActive(true);
-
         DisplayCurrentDialogue(); // 다음 대사 출력
     }
 
+    IEnumerator ProceedTo366AfterDialogue()
+    {
+        
+        while (currentDialogueIndex <= 358)
+        {
+            yield return null; // 사용자가 클릭으로 직접 진행
+        }
+        
+        yield return new WaitUntil(() => Input.GetKeyDown(KeyCode.Space) || Input.GetMouseButtonDown(0));
+
+        currentDialogueIndex = 366; // 358 이후 자동으로 366으로 이동
+        DisplayCurrentDialogue();
+    }
+    IEnumerator ProceedTo720AfterDialogue()
+    {
+        while (currentDialogueIndex <= 716)
+        {
+            yield return null; // 사용자가 클릭으로 직접 진행
+        }
+
+        yield return new WaitUntil(() => Input.GetKeyDown(KeyCode.Space) || Input.GetMouseButtonDown(0));
+        
+            currentDialogueIndex = 720;
+            DisplayCurrentDialogue();
+}
     // 화면 변경 함수
     void UpdateSceneBasedOnDialogueIndex(int index)
     {
@@ -342,9 +374,8 @@ public class Ch2TalkManager : MonoBehaviour
                 SetScene(volcano, false); // 화산 배경 비활성화
                 SetScene(backGround, true); // 검은 화면을 활성화
                 break;
-
-                //시계 알람 소리
             case 10:
+                //시계 알람 소리
                 PlaySoundEffect("clock alarm"); 
                 break;
             case 11:
@@ -596,7 +627,10 @@ public class Ch2TalkManager : MonoBehaviour
             case 340:
                 // 340과 341의 대사 함께 출력
                 //narrationText.gameObject.SetActive(false);
-                ShowChoice("네, 도와주세요.", "...아뇨, 제 힘으로 해결해 볼게요.",342,359); // 선택지 UI 표시
+                ShowChoice("네, 도와주세요.", "...아뇨, 제 힘으로 해결해 볼게요.",342,359, true); // 선택지 UI 표시
+                break;
+            case 358:
+                StartCoroutine(ProceedTo366AfterDialogue());
                 break;
             case 367:
                 //레이비야크와 상호작용
@@ -673,8 +707,12 @@ public class Ch2TalkManager : MonoBehaviour
                 ChangeScene(backGround); break;
             case 582:
                 ChangeScene(cafe2); break;
+            case 604:
+                StartCoroutine(LoadCh3SceneAfterInput()); //클릭시 Ch3Scene으로 이동
+                PlayerManager.Instance.SetHappyEnding(2); break;
             case 605:
-                ChangeScene(cafe2); break;
+                ChangeScene(cafe2);
+                break;
             case 674:
                 //레이비야크와 상호작용
                 InteractWithNPC(Npc_Rayviyak, new Vector2(-15, 0), map);
@@ -767,11 +805,26 @@ public class Ch2TalkManager : MonoBehaviour
                 ChangeScene(bakery); break;
             case 786:
                 ChangeScene(backGround); break;
+            case 787:
+                PlayerManager.Instance.GetEnding(2); break;
+            case 788:
+                StartCoroutine(LoadCh3SceneAfterInput()); break;
             default:
                 break; //아무 것도 활성화하지 않음
         }
     
     }
+
+    IEnumerator LoadCh3SceneAfterInput() //Ch3Scene으로 이동
+    {
+        // 사용자가 입력(스페이스바 또는 마우스 클릭)할 때까지 대기
+        yield return new WaitUntil(() => Input.GetKeyDown(KeyCode.Space) || Input.GetMouseButtonDown(0));
+
+        Debug.Log("Ch3Scene으로 이동");
+
+        SceneManager.LoadScene("Ch3Scene"); // Ch3Scene으로 이동
+    }
+
     //NPC 상호작용
     void InteractWithNPC(GameObject npc, Vector2 playerPosition, GameObject sceneToActivate, GameObject sceneToDeactivate = null)
     {
