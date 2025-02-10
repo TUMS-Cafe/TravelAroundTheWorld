@@ -21,6 +21,7 @@ public class GameManager : MonoBehaviour
 
     private int Day = PlayerManager.Instance.GetDay();
 
+    public RecipeBookUI RecipeBookUI;
 
     public OrderController orderController;
 
@@ -73,14 +74,14 @@ public class GameManager : MonoBehaviour
             {
                 Delivery.SetActive(true);
                 CafeMap.SetActive(false);
-            }
+            }*/
+
             if (clickedObject != null && (clickedObject.name == "RecipeBook" || clickedObject.name == "Recipe"))
             {
-                RecipeBook.SetActive(true);
-                CafeMap.SetActive(false);
+                RecipeBookUI.OpenRecipeBook();
                 Beverage.SetActive(false);
             }
-            */
+
             if (clickedObject != null && clickedObject.name == "Extract")
             {
                 StartCoroutine(ActivateObjectAfterDelay(2f, Shot));
