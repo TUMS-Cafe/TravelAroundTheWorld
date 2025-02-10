@@ -176,7 +176,7 @@ public class Ch3TalkManager : MonoBehaviour
         if (isWaitingForPlayer && mapManager != null)
         {
             // 카페바에 도착하면 스토리 다시 진행
-            if (mapManager.currentState == MapState.Cafe && mapManager.isInCafeBarZone && (currentDialogueIndex == 10 || currentDialogueIndex == 98 || currentDialogueIndex == 157 || currentDialogueIndex == 255 || currentDialogueIndex == 393 || currentDialogueIndex == 455))
+            if (mapManager.currentState == MapState.Cafe && mapManager.isInCafeBarZone && (currentDialogueIndex == 10 || currentDialogueIndex == 98 || currentDialogueIndex == 157 || currentDialogueIndex == 255 || currentDialogueIndex == 393 || currentDialogueIndex == 455 || currentDialogueIndex == 688))
             {
                 isWaitingForPlayer = false;
                 player.SetActive(false);
@@ -197,54 +197,32 @@ public class Ch3TalkManager : MonoBehaviour
             }
 
             // 카페에서 일해야 되는데 다른 곳으로 가려고 하면 다시 카페로 플레이어 강제 이동
-            if (mapManager.currentState != MapState.Cafe && (currentDialogueIndex == 10 || currentDialogueIndex == 98 || currentDialogueIndex == 157 || currentDialogueIndex == 255 || currentDialogueIndex == 393 || currentDialogueIndex == 455))
+            if (mapManager.currentState != MapState.Cafe && (currentDialogueIndex == 10 || currentDialogueIndex == 98 || currentDialogueIndex == 157 || currentDialogueIndex == 255 || currentDialogueIndex == 393 || currentDialogueIndex == 455 || currentDialogueIndex == 688))
             {
                 player.transform.position = new Vector3(0, 0, 0);
                 narration.SetActive(true);
                 dialogue.SetActive(false);
                 narrationBar.SetDialogue("나레이션", "지금은 일할 시간이야.");
             }
-
-            /*
+            
             // 객실로 돌아가야 되는데 다른 곳으로 가려고 하면 다시 객실복도로 플레이어 강제 이동
             if (mapManager.currentState != MapState.TrainRoom3 && mapManager.currentState != MapState.Hallway)
             {
-                if (isCh2HappyEnding)
+                if (isCh2HappyEnding && currentDialogueIndex == 533)
                 {
-                    if(currentDialogueIndex == 517)
-                    {
-                        player.transform.position = new Vector3(-34, -2, 0);
-                        narration.SetActive(true);
-                        dialogue.SetActive(false);
-                        narrationBar.SetDialogue("나레이션", "돌아다니기엔 너무 늦었다. 오늘은 이만 객실로 돌아가자.");
-                    }
-                    else if (currentDialogueIndex == 540)
-                    {
-                        player.transform.position = new Vector3(-34, -2, 0);
-                        narration.SetActive(true);
-                        dialogue.SetActive(false);
-                        narrationBar.SetDialogue("나레이션", "돌아다니기엔 너무 늦었다. 오늘은 이만 객실로 돌아가자.");
-                    }
+                    player.transform.position = new Vector3(-34, -2, 0);
+                    narration.SetActive(true);
+                    dialogue.SetActive(false);
+                    narrationBar.SetDialogue("나레이션", "돌아다니기엔 너무 늦었다. 오늘은 이만 객실로 돌아가자.");
                 }
-                else if (!isCh2HappyEnding)
+                else if (!isCh2HappyEnding && currentDialogueIndex == 683)
                 {
-                    if (currentDialogueIndex == 684)
-                    {
-                        player.transform.position = new Vector3(-34, -2, 0);
-                        narration.SetActive(true);
-                        dialogue.SetActive(false);
-                        narrationBar.SetDialogue("나레이션", "돌아다니기엔 너무 늦었다. 오늘은 이만 객실로 돌아가자.");
-                    }
-                    else if (currentDialogueIndex == 697)
-                    {
-                        player.transform.position = new Vector3(-34, -2, 0);
-                        narration.SetActive(true);
-                        dialogue.SetActive(false);
-                        narrationBar.SetDialogue("나레이션", "돌아다니기엔 너무 늦었다. 오늘은 이만 객실로 돌아가자.");
-                    }
+                    player.transform.position = new Vector3(-34, -2, 0);
+                    narration.SetActive(true);
+                    dialogue.SetActive(false);
+                    narrationBar.SetDialogue("나레이션", "돌아다니기엔 너무 늦었다. 오늘은 이만 객실로 돌아가자.");
                 }
             }
-            */
         }
         // npc 대화 버튼 눌렸을때 대화 진행
         if (isNpcTalkActivated && !isFadingOut && isWaitingForPlayer && (Input.GetKeyDown(KeyCode.Space) || Input.GetMouseButtonDown(0)))
@@ -340,7 +318,7 @@ public class Ch3TalkManager : MonoBehaviour
                         dialogue.SetActive(false);
                     }
                 }
-                else
+                if (!PlayerManager.Instance.IsCh3MiniGameSuccess())
                 {
                     if (currentDialogueIndex == 0)
                     {
@@ -364,6 +342,35 @@ public class Ch3TalkManager : MonoBehaviour
                         narration.SetActive(false);
                         dialogue.SetActive(false);
                     }
+                }
+                //늑대 객실 앞 복도로 자동 이동
+                if (currentDialogueIndex == 539)
+                {
+                    player.transform.position = new Vector3(-34, -2, 0);
+                    playerController.StopMove();
+                    mapManager.currentState = MapState.Hallway;
+                    player.SetActive(true);
+                    map.SetActive(true);
+                    trainRoom.SetActive(false);
+                    cafe.SetActive(false);
+                }
+                // 7일차 낮 엔딩
+                if (currentDialogueIndex == 640)
+                {
+                    mapManager.currentState = MapState.Null;
+                    player.SetActive(false);
+                    map.SetActive(false);
+                    backGround.SetActive(true);
+                    trainRoom.SetActive(false);
+                    cafe.SetActive(false);
+                    narration.SetActive(false);
+                    dialogue.SetActive(false);
+                    currentDialogueIndex = 743;
+                }
+                // 다음 챕터 씬 연결
+                if (currentDialogueIndex == 745)
+                {
+                    //StartCoroutine(FadeOutAndLoadScene(cafe, "Ch4Scene"));
                 }
             }
         }
@@ -392,7 +399,80 @@ public class Ch3TalkManager : MonoBehaviour
             {
                 SceneManager.LoadScene("HideandSeek");
             }
-            //성공/실패 시 인덱스 변경
+            // Ch3 미니게임 완료 여부 및 성공 여부 체크
+            else if (PlayerManager.Instance.IsCh3MiniGamePlayed())
+            {
+                if (PlayerManager.Instance.IsCh3MiniGameSuccess())
+                {
+                    if (currentDialogueIndex == 0)
+                    {
+                        player.transform.position = new Vector3(-34, -2, 0);
+                        playerController.StopMove();
+                        mapManager.currentState = MapState.Hallway;
+                        player.SetActive(true);
+                        map.SetActive(true);
+                        trainRoom.SetActive(false);
+                        cafe.SetActive(false);
+                        currentDialogueIndex = 668;
+                        PrintProDialogue(668);
+                    }
+                    //객실로 돌아가야할 때
+                    else if (currentDialogueIndex == 673)
+                    {
+                        currentDialogueIndex = 683;
+                        isWaitingForPlayer = true;
+                        player.SetActive(true);
+                        map.SetActive(true);
+                        playerController.StartMove();
+                        trainRoom.SetActive(false);
+                        narration.SetActive(false);
+                        dialogue.SetActive(false);
+                    }
+                }
+                if (!PlayerManager.Instance.IsCh3MiniGameSuccess())
+                {
+                    if (currentDialogueIndex == 0)
+                    {
+                        player.transform.position = new Vector3(-34, -2, 0);
+                        playerController.StopMove();
+                        mapManager.currentState = MapState.Hallway;
+                        player.SetActive(true);
+                        map.SetActive(true);
+                        trainRoom.SetActive(false);
+                        cafe.SetActive(false);
+                        currentDialogueIndex = 673;
+                        PrintProDialogue(673);
+                    }
+                    else if (currentDialogueIndex == 683)
+                    {
+                        isWaitingForPlayer = true;
+                        player.SetActive(true);
+                        map.SetActive(true);
+                        playerController.StartMove();
+                        trainRoom.SetActive(false);
+                        narration.SetActive(false);
+                        dialogue.SetActive(false);
+                    }
+                }
+                // 7일차 낮 엔딩
+                if (currentDialogueIndex == 743)
+                {
+                    PlayMusic(locationTrainRoom);
+                    mapManager.currentState = MapState.Null;
+                    player.SetActive(false);
+                    map.SetActive(false);
+                    backGround.SetActive(true);
+                    trainRoom.SetActive(false);
+                    cafe.SetActive(false);
+                    narration.SetActive(false);
+                    dialogue.SetActive(false);
+                }
+                // 다음 챕터 씬 연결
+                if (currentDialogueIndex == 745)
+                {
+                    //StartCoroutine(FadeOutAndLoadScene(cafe, "Ch4Scene"));
+                }
+            }
         }
     }
 
@@ -857,7 +937,7 @@ public class Ch3TalkManager : MonoBehaviour
         }
 
         // 일해야 할 때 카페로 강제 이동 후 이동 가능하게 전환
-        if (index == 10 || index == 98 || index == 157 || index == 255 || index == 393 || index == 455)
+        if (index == 10 || index == 98 || index == 157 || index == 255 || index == 393 || index == 455 || index == 688)
         {
             player.transform.position = new Vector3(0, 0, 0);
             mapManager.currentState = MapState.Cafe;
@@ -1551,7 +1631,7 @@ public class Ch3TalkManager : MonoBehaviour
             case locationTrainRoom:
                 PlayMusic(locationTrainRoom);
                 //일해야 할 때 객실 화면 끄기
-                if (currentDialogueIndex == 10 || currentDialogueIndex == 98 || currentDialogueIndex == 157 || currentDialogueIndex == 255 || currentDialogueIndex == 393 || currentDialogueIndex == 455)
+                if (currentDialogueIndex == 10 || currentDialogueIndex == 98 || currentDialogueIndex == 157 || currentDialogueIndex == 255 || currentDialogueIndex == 393 || currentDialogueIndex == 455 || currentDialogueIndex == 688)
                 {
                     trainRoom.SetActive(false);
                 }

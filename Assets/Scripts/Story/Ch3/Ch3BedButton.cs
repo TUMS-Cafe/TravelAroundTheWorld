@@ -77,32 +77,30 @@ public class Ch3BedButton : MonoBehaviour
             talkManager.currentDialogueIndex = 453;
             talkManager.PrintProDialogue(talkManager.currentDialogueIndex);
         }
-        /*
         //6일차 밤->7일차 아침 (해피엔딩, 미니게임 성공)
-        if (talkManager.isCh2HappyEnding && talkManager.isMiniGameSuccess && !talkManager.isMiniGameFail && talkManager.currentDialogueIndex == 517)
+        if (talkManager.isCh2HappyEnding && PlayerManager.Instance.IsCh3MiniGameSuccess() && talkManager.currentDialogueIndex == 533)
         {
-            talkManager.currentDialogueIndex = 541;
+            talkManager.currentDialogueIndex = 534;
             talkManager.PrintProDialogue(talkManager.currentDialogueIndex);
         }
         //6일차 밤->7일차 아침 (해피엔딩, 미니게임 실패)
-        if (talkManager.isCh2HappyEnding && !talkManager.isMiniGameSuccess && talkManager.isMiniGameFail && talkManager.currentDialogueIndex == 540)
+        if (talkManager.isCh2HappyEnding && !PlayerManager.Instance.IsCh3MiniGameSuccess() && talkManager.currentDialogueIndex == 533)
         {
-            talkManager.currentDialogueIndex = 541;
+            talkManager.currentDialogueIndex = 534;
             talkManager.PrintProDialogue(talkManager.currentDialogueIndex);
         }
         //6일차 밤->7일차 아침 (배드엔딩, 미니게임 성공)
-        if (!talkManager.isCh2HappyEnding && talkManager.isMiniGameSuccess && !talkManager.isMiniGameFail && talkManager.currentDialogueIndex == 684)
+        if (!talkManager.isCh2HappyEnding && PlayerManager.Instance.IsCh3MiniGameSuccess() && talkManager.currentDialogueIndex == 683)
         {
-            talkManager.currentDialogueIndex = 698;
+            talkManager.currentDialogueIndex = 684;
             talkManager.PrintProDialogue(talkManager.currentDialogueIndex);
         }
         //6일차 밤->7일차 아침 (해피엔딩, 미니게임 실패)
-        if (!talkManager.isCh2HappyEnding && !talkManager.isMiniGameSuccess && talkManager.isMiniGameFail && talkManager.currentDialogueIndex == 697)
+        if (!talkManager.isCh2HappyEnding && !PlayerManager.Instance.IsCh3MiniGameSuccess() && talkManager.currentDialogueIndex == 683)
         {
-            talkManager.currentDialogueIndex = 698;
+            talkManager.currentDialogueIndex = 684;
             talkManager.PrintProDialogue(talkManager.currentDialogueIndex);
         }
-        */
 
         player.GetComponent<PlayerController>().StartMove();
     }
