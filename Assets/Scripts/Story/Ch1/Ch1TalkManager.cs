@@ -117,6 +117,8 @@ public class Ch1TalkManager : MonoBehaviour
 
     void Start()
     {
+        PlayerManager.Instance.SetSceneName("Ch1");
+        Debug.Log("씬 이름 "+PlayerManager.Instance.GetSceneName());
         if (isTransition)
         {
             ActivateTalk("카페", currentDialogueIndex);
