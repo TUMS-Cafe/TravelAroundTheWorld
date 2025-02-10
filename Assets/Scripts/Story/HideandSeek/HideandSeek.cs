@@ -51,6 +51,7 @@ public class HideandSeek : MonoBehaviour
         if (success)
         {
             Debug.Log("모든 NPC를 찾았습니다!");
+            PlayerManager.Instance.SetCh3MiniGameSuccess();
         }
         else
         {
