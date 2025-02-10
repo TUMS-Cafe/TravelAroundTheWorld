@@ -145,9 +145,19 @@ public class OrderController : MonoBehaviour
     {
         string order = null;
         if (deliveryNum > 0)
+        {
             order = deliveryOrder;
+        }
         else
+        {
             order = SceneTransitionManager.Instance.GetCafeOrders();
+            if (string.IsNullOrEmpty(order))
+            {
+                Debug.LogError("Error: Order is null or empty in DisplayOrder!");
+                return; // 예외 방지
+            }
+        }
+
         GameObject orderPrefab = GetOrderPrefab(order);
         if (orderPrefab != null)
         {
