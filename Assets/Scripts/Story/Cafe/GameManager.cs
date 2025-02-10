@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
@@ -22,10 +23,11 @@ public class GameManager : MonoBehaviour
     public GameObject ShotAniObj;
     public GameObject SteamAniObj;
 
+
     //private bool buyMilk = PlayerManager.Instance.IsBoughtCafeItem("우유");
     //private bool buyTeaSet = PlayerManager.Instance.IsBoughtCafeItem("티 세트");
 
-    //private int Day = PlayerManager.Instance.GetDay();
+    private int Day = PlayerManager.Instance.GetDay();
 
     public CafeMakeController cafeMake;
     public OrderController orderController;
@@ -42,7 +44,7 @@ public class GameManager : MonoBehaviour
         SteamAniObj.SetActive(false);
         AniSteam.enabled = true;
 
-        Milk.SetActive(true);
+        //Milk.SetActive(true);
 
 
         int deliveryNum = SceneTransitionManager.Instance.GetDeliveryNum();
@@ -66,6 +68,7 @@ public class GameManager : MonoBehaviour
 
     void Update()
     {
+        
         if (Input.GetMouseButtonDown(0))
         {
             Vector2 clickPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
@@ -108,6 +111,16 @@ public class GameManager : MonoBehaviour
                 StartCoroutine(SteamActivateObjectAfterDelay(2f, Steam));
                 //SoundManager.Instance.PlaySFX("grinding coffee");
             }
+            if (clickedObject.name == "btnLeft")
+            {
+                Debug.Log("왼쪽 버튼 클릭됨!");
+                FindObjectOfType<InventoryController>().MoveInventory(-1);
+            }
+            else if (clickedObject.name == "btnRight")
+            {
+                Debug.Log("오른쪽 버튼 클릭됨!");
+                FindObjectOfType<InventoryController>().MoveInventory(1);
+            }
             /*if (clickedObject != null && clickedObject.name == "TeaInventory")
             {
                 Vector2 currentPosition = clickedObject.transform.position;
@@ -127,12 +140,12 @@ public class GameManager : MonoBehaviour
                     clickedObject.transform.position = targetPosition1;
                     Debug.Log("Moved to: " + targetPosition1);
                 }
-                else
-                {
-                    Debug.Log("No match found for current position.");
-                }
+                
             }*/
-
+            else
+            {
+                Debug.Log("No match found for current position.");
+            }
 
         }
     }

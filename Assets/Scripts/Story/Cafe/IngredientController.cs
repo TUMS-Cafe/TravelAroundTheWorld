@@ -25,6 +25,8 @@ public class IngredientController : MonoBehaviour
     public GameObject RooibosTea;
     public GameObject GreenTea;
 
+    public GameObject Affogato;
+
 
     void Start()
     {
