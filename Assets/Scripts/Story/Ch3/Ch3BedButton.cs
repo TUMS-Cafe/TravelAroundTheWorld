@@ -65,6 +65,42 @@ public class Ch3BedButton : MonoBehaviour
             talkManager.currentDialogueIndex = 253;
             talkManager.PrintProDialogue(talkManager.currentDialogueIndex);
         }
+        //4일차 밤->5일차 아침
+        if (talkManager.currentDialogueIndex == 356)
+        {
+            talkManager.currentDialogueIndex = 391;
+            talkManager.PrintProDialogue(talkManager.currentDialogueIndex);
+        }
+        //5일차 밤->6일차 아침
+        if (talkManager.currentDialogueIndex == 418)
+        {
+            talkManager.currentDialogueIndex = 453;
+            talkManager.PrintProDialogue(talkManager.currentDialogueIndex);
+        }
+        //6일차 밤->7일차 아침 (해피엔딩, 미니게임 성공)
+        if (talkManager.isCh2HappyEnding && PlayerManager.Instance.IsCh3MiniGameSuccess() && talkManager.currentDialogueIndex == 533)
+        {
+            talkManager.currentDialogueIndex = 534;
+            talkManager.PrintProDialogue(talkManager.currentDialogueIndex);
+        }
+        //6일차 밤->7일차 아침 (해피엔딩, 미니게임 실패)
+        if (talkManager.isCh2HappyEnding && !PlayerManager.Instance.IsCh3MiniGameSuccess() && talkManager.currentDialogueIndex == 533)
+        {
+            talkManager.currentDialogueIndex = 534;
+            talkManager.PrintProDialogue(talkManager.currentDialogueIndex);
+        }
+        //6일차 밤->7일차 아침 (배드엔딩, 미니게임 성공)
+        if (!talkManager.isCh2HappyEnding && PlayerManager.Instance.IsCh3MiniGameSuccess() && talkManager.currentDialogueIndex == 683)
+        {
+            talkManager.currentDialogueIndex = 684;
+            talkManager.PrintProDialogue(talkManager.currentDialogueIndex);
+        }
+        //6일차 밤->7일차 아침 (해피엔딩, 미니게임 실패)
+        if (!talkManager.isCh2HappyEnding && !PlayerManager.Instance.IsCh3MiniGameSuccess() && talkManager.currentDialogueIndex == 683)
+        {
+            talkManager.currentDialogueIndex = 684;
+            talkManager.PrintProDialogue(talkManager.currentDialogueIndex);
+        }
 
         player.GetComponent<PlayerController>().StartMove();
     }
