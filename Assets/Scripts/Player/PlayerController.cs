@@ -45,7 +45,6 @@ public class PlayerController : MonoBehaviour
             Move();
         }
     }
-
     //키보드 이동
     void OnMove(InputValue inputValue)
     {
