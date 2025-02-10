@@ -221,6 +221,32 @@ public class Ch3InteractionButton : MonoBehaviour
                     ch3TalkManager.isNpcTalkActivated = true;
                     ch3TalkManager.NpcDialogue(ch3TalkManager.currentDialogueIndex, npcName);
                 }
+
+                //6일차 밤 미니게임 npc 찾았을때 대화
+                if (ch3TalkManager.isCh2HappyEnding && ch3TalkManager.currentDialogueIndex == 499 && npcName == "Npc_Coco")
+                {
+                    ch3TalkManager.currentDialogueIndex = 500;
+                    ch3TalkManager.isNpcTalkActivated = true;
+                    ch3TalkManager.NpcDialogue(ch3TalkManager.currentDialogueIndex, npcName);
+                }
+                if (ch3TalkManager.isCh2HappyEnding && ch3TalkManager.currentDialogueIndex == 499 && npcName == "Npc_Nicksy")
+                {
+                    ch3TalkManager.currentDialogueIndex = 502;
+                    ch3TalkManager.isNpcTalkActivated = true;
+                    ch3TalkManager.NpcDialogue(ch3TalkManager.currentDialogueIndex, npcName);
+                }
+                if (!ch3TalkManager.isCh2HappyEnding && ch3TalkManager.currentDialogueIndex == 674 && npcName == "Npc_Coco")
+                {
+                    ch3TalkManager.currentDialogueIndex = 675;
+                    ch3TalkManager.isNpcTalkActivated = true;
+                    ch3TalkManager.NpcDialogue(ch3TalkManager.currentDialogueIndex, npcName);
+                }
+                if (!ch3TalkManager.isCh2HappyEnding && ch3TalkManager.currentDialogueIndex == 674 && npcName == "Npc_Nicksy")
+                {
+                    ch3TalkManager.currentDialogueIndex = 677;
+                    ch3TalkManager.isNpcTalkActivated = true;
+                    ch3TalkManager.NpcDialogue(ch3TalkManager.currentDialogueIndex, npcName);
+                }
             }
             else
             {

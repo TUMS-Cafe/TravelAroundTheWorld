@@ -9,7 +9,7 @@ public class Ch3NpcScript : MonoBehaviour
     public Ch3TalkManager talkManager; // Ch3TalkManager 참조
     public Transform player; // 플레이어의 위치
 
-    public float interactionRange = 5f; // NPC와 상호작용 가능한 범위
+    public float interactionRange = 1f; // NPC와 상호작용 가능한 범위
 
     private bool isPlayerInRange = false; // 플레이어가 범위 내에 있는지 확인
     public string currentNpc="Null";
@@ -219,6 +219,33 @@ public class Ch3NpcScript : MonoBehaviour
             {
                 dialogueButton.SetActive(false);
                 currentNpc = "Null";
+            }
+        }
+        // 6일차 밤 미니게임 npc 찾았을때 대화
+        else if (isPlayerInRange && !talkManager.isTimeOut && talkManager.currentDialogueIndex == 499)
+        {
+            if (talkManager.isCh2HappyEnding && gameObject.name == "Npc_Coco" && !talkManager.HasTalkedToCoco)
+            {
+                dialogueButton.SetActive(true);
+                currentNpc = "Npc_Coco";
+            }
+            else if (talkManager.isCh2HappyEnding && gameObject.name == "Npc_Nicksy" && !talkManager.HasTalkedToNicksy)
+            {
+                dialogueButton.SetActive(true);
+                currentNpc = "Npc_Nicksy";
+            }
+        }
+        else if (isPlayerInRange && !talkManager.isTimeOut && talkManager.currentDialogueIndex == 674)
+        {
+            if (!talkManager.isCh2HappyEnding && gameObject.name == "Npc_Coco" && !talkManager.HasTalkedToCoco)
+            {
+                dialogueButton.SetActive(true);
+                currentNpc = "Npc_Coco";
+            }
+            else if (!talkManager.isCh2HappyEnding && gameObject.name == "Npc_Nicksy" && !talkManager.HasTalkedToNicksy)
+            {
+                dialogueButton.SetActive(true);
+                currentNpc = "Npc_Nicksy";
             }
         }
         else
