@@ -32,9 +32,9 @@ public class RandomDrinkSelector : MonoBehaviour
         // 챕터별 음료 이름 초기화
         drinkNamesByChapter = new Dictionary<int, List<string>>
         {
-            { 1, new List<string> { "Espresso", "HotAmericano", "IceAmericano"} },
-            { 2, new List<string> { "HotAmericano" } },
-            { 3, new List<string> { "IceAmericano" } }
+            { 1, new List<string> { "Espresso", "HotAmericano", "IceAmericano", "HotLatte", "IceLatte", "HibiscusTea", "RooibosTea", "GreenTea", "ChamomileTea" } },
+            { 2, new List<string> { "Affogato", "HotCaramelLatte", "IceCaramelLatte", "HotCinnamonLatte", "IceCinnamonLatte", "HotVanillaLatte", "IceVanillaLatte" } },
+            { 3, new List<string> { "StrawberryJuice", "MangoJuice", "BlueberryJuice", "StrawberryLatte", "MangoLatte", "BlueberryLatte", "MintLatte", "SweetPotatoLatte" } }
         };
         /*
         {

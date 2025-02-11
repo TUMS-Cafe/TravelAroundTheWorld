@@ -117,6 +117,7 @@ public class Ch1TalkManager : MonoBehaviour
 
     void Start()
     {
+        Debug.Log("씬 이름 " + PlayerManager.Instance.GetSceneName());
         PlayerManager.Instance.SetSceneName("Ch1");
         Debug.Log("씬 이름 "+PlayerManager.Instance.GetSceneName());
         if (isTransition)
@@ -1156,7 +1157,7 @@ public class Ch1TalkManager : MonoBehaviour
                     currentDialogueIndex = 69;
                 else if (currentDialogueIndex >= 170 && currentDialogueIndex <= 190)
                     currentDialogueIndex = 169;
-                else if (currentDialogueIndex >= 230 && currentDialogueIndex <= 250)
+                else if (currentDialogueIndex >= 200 && currentDialogueIndex <= 250)
                     currentDialogueIndex = 226;
                 else if (currentDialogueIndex >= 300 && currentDialogueIndex <= 320)
                     currentDialogueIndex = 302;

@@ -10,7 +10,8 @@ public class NewRoomService : MonoBehaviour
     public GameObject roomNumber;
     public GameObject drinkImg;
     public GameObject drinkName;
-    public Ch1TalkManager talkManager;
+    public Ch1TalkManager talkManager1;
+    public Ch3TalkManager talkManager3;
 
 
     private List<int> availableRooms = new List<int> { 101, 102, 201, 202, 301 };
@@ -41,6 +42,21 @@ public class NewRoomService : MonoBehaviour
         drink = RandomDrinkSelector.Instance.ChangeDrinkNameToEnglish(transform.GetChild(1).GetChild(4).GetComponent<TextMeshProUGUI>().text); 
         List<CafeOrder> orders = new List<CafeOrder>();
         orders.Add(new CafeOrder(drink));
-        SceneTransitionManager.Instance.HandleDialogueTransition("ch1Scene", "CafeScene", talkManager.currentDialogueIndex, orders);
+        //Debug.Log("현재 씬 이름 확인 " + PlayerManager.Instance.GetSceneName());
+        //Debug.Log("Ch1이랑 같은지 확인 "+ (PlayerManager.Instance.GetSceneName() == "Ch1"));
+        //Debug.Log("음료 이름 확인 " + drink);
+        if (PlayerManager.Instance.GetSceneName() == "Ch1")
+        {
+            SceneTransitionManager.Instance.HandleDialogueTransition("ch1Scene", "CafeScene", talkManager1.currentDialogueIndex, orders);
+        }
+        else if (PlayerManager.Instance.GetSceneName() == "Ch2") 
+        {
+            SceneTransitionManager.Instance.HandleDialogueTransition("Ch2Scene", "CafeScene", talkManager1.currentDialogueIndex, orders); // 수정 필요
+        }
+        else if (PlayerManager.Instance.GetSceneName() == "Ch3")
+        {
+            SceneTransitionManager.Instance.HandleDialogueTransition("Ch3Scene", "CafeScene", talkManager3.currentDialogueIndex+1, orders);
+        }
+
     }
 }
