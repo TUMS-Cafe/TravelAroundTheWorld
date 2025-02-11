@@ -75,9 +75,9 @@ public class Ch3InteractionButton : MonoBehaviour
                     ch3TalkManager.isNpcTalkActivated = true;
                     ch3TalkManager.NpcDialogue(ch3TalkManager.currentDialogueIndex, npcName);
                 }
-                if (ch3TalkManager.currentDialogueIndex == 76 && npcName == "Npc_Rusk")
+                if (!ch3TalkManager.isCh2HappyEnding && ch3TalkManager.currentDialogueIndex == 76 && npcName == "Npc_Rusk")
                 {
-                    ch3TalkManager.currentDialogueIndex = 83;
+                    ch3TalkManager.currentDialogueIndex = 88;
                     ch3TalkManager.isNpcTalkActivated = true;
                     ch3TalkManager.NpcDialogue(ch3TalkManager.currentDialogueIndex, npcName);
                 }
@@ -145,6 +145,109 @@ public class Ch3InteractionButton : MonoBehaviour
                     ch3TalkManager.isNpcTalkActivated = true;
                     ch3TalkManager.NpcDialogue(ch3TalkManager.currentDialogueIndex, npcName);
                 }
+
+                //4일차 밤 Npc 대화
+                if (ch3TalkManager.currentDialogueIndex == 356 && npcName == "Npc_Rayviyak")
+                {
+                    ch3TalkManager.currentDialogueIndex = 357;
+                    ch3TalkManager.isNpcTalkActivated = true;
+                    ch3TalkManager.NpcDialogue(ch3TalkManager.currentDialogueIndex, npcName);
+                }
+                if (ch3TalkManager.currentDialogueIndex == 356 && npcName == "Npc_Nicksy")
+                {
+                    ch3TalkManager.currentDialogueIndex = 363;
+                    ch3TalkManager.isNpcTalkActivated = true;
+                    ch3TalkManager.NpcDialogue(ch3TalkManager.currentDialogueIndex, npcName);
+                }
+                if (ch3TalkManager.isCh2HappyEnding && ch3TalkManager.currentDialogueIndex == 356 && npcName == "Npc_Kuraya")
+                {
+                    ch3TalkManager.currentDialogueIndex = 371;
+                    ch3TalkManager.isNpcTalkActivated = true;
+                    ch3TalkManager.NpcDialogue(ch3TalkManager.currentDialogueIndex, npcName);
+                }
+                if (!ch3TalkManager.isCh2HappyEnding && ch3TalkManager.currentDialogueIndex == 356 && npcName == "Npc_Rusk")
+                {
+                    ch3TalkManager.currentDialogueIndex = 384;
+                    ch3TalkManager.isNpcTalkActivated = true;
+                    ch3TalkManager.NpcDialogue(ch3TalkManager.currentDialogueIndex, npcName);
+                }
+                if (ch3TalkManager.currentDialogueIndex == 356 && npcName == "Npc_MrHam")
+                {
+                    ch3TalkManager.currentDialogueIndex = 387;
+                    ch3TalkManager.isNpcTalkActivated = true;
+                    ch3TalkManager.NpcDialogue(ch3TalkManager.currentDialogueIndex, npcName);
+                }
+                if (ch3TalkManager.currentDialogueIndex == 356 && npcName == "Npc_Ash")
+                {
+                    ch3TalkManager.currentDialogueIndex = 389;
+                    ch3TalkManager.isNpcTalkActivated = true;
+                    ch3TalkManager.NpcDialogue(ch3TalkManager.currentDialogueIndex, npcName);
+                }
+
+                //5일차 밤 Npc 대화
+                if (ch3TalkManager.currentDialogueIndex == 418 && npcName == "Npc_Rayviyak")
+                {
+                    ch3TalkManager.currentDialogueIndex = 419;
+                    ch3TalkManager.isNpcTalkActivated = true;
+                    ch3TalkManager.NpcDialogue(ch3TalkManager.currentDialogueIndex, npcName);
+                }
+                if (ch3TalkManager.currentDialogueIndex == 418 && npcName == "Npc_Violet")
+                {
+                    ch3TalkManager.currentDialogueIndex = 430;
+                    ch3TalkManager.isNpcTalkActivated = true;
+                    ch3TalkManager.NpcDialogue(ch3TalkManager.currentDialogueIndex, npcName);
+                }
+                if (ch3TalkManager.isCh2HappyEnding && ch3TalkManager.currentDialogueIndex == 418 && npcName == "Npc_Rusk")
+                {
+                    ch3TalkManager.currentDialogueIndex = 431;
+                    ch3TalkManager.isNpcTalkActivated = true;
+                    ch3TalkManager.NpcDialogue(ch3TalkManager.currentDialogueIndex, npcName);
+                }
+                if (!ch3TalkManager.isCh2HappyEnding && ch3TalkManager.currentDialogueIndex == 418 && npcName == "Npc_Rusk")
+                {
+                    ch3TalkManager.currentDialogueIndex = 439;
+                    ch3TalkManager.isNpcTalkActivated = true;
+                    ch3TalkManager.NpcDialogue(ch3TalkManager.currentDialogueIndex, npcName);
+                }
+                if (ch3TalkManager.currentDialogueIndex == 418 && npcName == "Npc_MrHam")
+                {
+                    ch3TalkManager.currentDialogueIndex = 441;
+                    ch3TalkManager.isNpcTalkActivated = true;
+                    ch3TalkManager.NpcDialogue(ch3TalkManager.currentDialogueIndex, npcName);
+                }
+                if (ch3TalkManager.currentDialogueIndex == 418 && npcName == "Npc_Naru")
+                {
+                    ch3TalkManager.currentDialogueIndex = 445;
+                    ch3TalkManager.isNpcTalkActivated = true;
+                    ch3TalkManager.NpcDialogue(ch3TalkManager.currentDialogueIndex, npcName);
+                }
+                /*
+                //6일차 밤 미니게임 npc 찾았을때 대화
+                if (ch3TalkManager.isCh2HappyEnding && ch3TalkManager.currentDialogueIndex == 499 && npcName == "Npc_Coco")
+                {
+                    ch3TalkManager.currentDialogueIndex = 500;
+                    ch3TalkManager.isNpcTalkActivated = true;
+                    ch3TalkManager.NpcDialogue(ch3TalkManager.currentDialogueIndex, npcName);
+                }
+                if (ch3TalkManager.isCh2HappyEnding && ch3TalkManager.currentDialogueIndex == 499 && npcName == "Npc_Nicksy")
+                {
+                    ch3TalkManager.currentDialogueIndex = 502;
+                    ch3TalkManager.isNpcTalkActivated = true;
+                    ch3TalkManager.NpcDialogue(ch3TalkManager.currentDialogueIndex, npcName);
+                }
+                if (!ch3TalkManager.isCh2HappyEnding && ch3TalkManager.currentDialogueIndex == 674 && npcName == "Npc_Coco")
+                {
+                    ch3TalkManager.currentDialogueIndex = 675;
+                    ch3TalkManager.isNpcTalkActivated = true;
+                    ch3TalkManager.NpcDialogue(ch3TalkManager.currentDialogueIndex, npcName);
+                }
+                if (!ch3TalkManager.isCh2HappyEnding && ch3TalkManager.currentDialogueIndex == 674 && npcName == "Npc_Nicksy")
+                {
+                    ch3TalkManager.currentDialogueIndex = 677;
+                    ch3TalkManager.isNpcTalkActivated = true;
+                    ch3TalkManager.NpcDialogue(ch3TalkManager.currentDialogueIndex, npcName);
+                }
+                */
             }
             else
             {

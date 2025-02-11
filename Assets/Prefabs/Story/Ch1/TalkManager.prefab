@@ -9,7 +9,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 348764826084680994}
-  - component: {fileID: 5705592646663647476}
   m_Layer: 0
   m_Name: TalkManager
   m_TagString: Untagged
@@ -32,44 +31,3 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &5705592646663647476
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2482505830252439801}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7d4aa952fac14a5418f9b863cfe514b8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  narration: {fileID: 0}
-  dialogue: {fileID: 0}
-  imageObj: {fileID: 0}
-  nameObj: {fileID: 0}
-  letter: {fileID: 0}
-  letterText: {fileID: 0}
-  player: {fileID: 0}
-  map: {fileID: 0}
-  questObject: {fileID: 0}
-  questText: {fileID: 0}
-  cafe: {fileID: 0}
-  trainRoom: {fileID: 0}
-  trainRoomHallway: {fileID: 0}
-  garden: {fileID: 0}
-  bakery: {fileID: 0}
-  medicalRoom: {fileID: 0}
-  jazzBar: {fileID: 0}
-  Npc_Rayviyak: {fileID: 0}
-  Npc_MrHam: {fileID: 0}
-  Npc_Rusk: {fileID: 0}
-  Npc_Violet: {fileID: 0}
-  screenFader: {fileID: 0}
-  dialogueBar: {fileID: 0}
-  narrationBar: {fileID: 0}
-  currentDialogueIndex: 0
-  questManager: {fileID: 0}
-  playerController: {fileID: 0}
-  mapManager: {fileID: 0}
-  isWaitingForPlayer: 0

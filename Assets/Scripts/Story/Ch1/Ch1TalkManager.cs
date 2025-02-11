@@ -4,6 +4,8 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using System;
+using System.Reflection;
 
 public class Ch1TalkManager : MonoBehaviour
 {
@@ -56,6 +58,8 @@ public class Ch1TalkManager : MonoBehaviour
 
     public GameObject destPointObject;
 
+    public GameObject roomService;
+
     // 문자열 상수 선언
     private const string narrationSpeaker = "나레이션";
     private const string letterSpeaker = "편지지";
@@ -87,8 +91,18 @@ public class Ch1TalkManager : MonoBehaviour
 
     public string speakerKey;
 
+    public bool isNpcTalkActivated = false;
+    public int npcEndIndex = 0;
     public bool HasTalkedToRayviyak { get; set; } = false;
     public bool HasTalkedToViolet { get; set; } = false;
+    public bool HasTalkedToMrHam { get; set; } = false;
+    public bool HasTalkedToRusk { get; set; } = false;
+
+    public GameObject EndingNarration;
+
+    private bool AfterTalk = false;
+
+    public GameObject blackScreen;
 
     void Awake()
     {
@@ -103,6 +117,8 @@ public class Ch1TalkManager : MonoBehaviour
 
     void Start()
     {
+        PlayerManager.Instance.SetSceneName("Ch1");
+        Debug.Log("씬 이름 "+PlayerManager.Instance.GetSceneName());
         if (isTransition)
         {
             ActivateTalk("카페", currentDialogueIndex);
@@ -142,18 +158,11 @@ public class Ch1TalkManager : MonoBehaviour
             return;
         }
 
-        // 인덱스가 516인 경우 541로 이동. bad ending
-        if (currentDialogueIndex == 516)
-        {
-            currentDialogueIndex = 541;
-            PrintCh1ProDialogue(currentDialogueIndex);
-        }
-
-        if (isActivated && Input.GetMouseButtonDown(0) && !isWaitingForPlayer)
+        if (isActivated && (Input.GetKeyDown(KeyCode.Space) || Input.GetMouseButtonDown(0)) && !isWaitingForPlayer)
         {
             if (isQuestActive)
             {
-                // 퀘스트 UI 비활성화
+                // 퀘스트 UI를 비활성화
                 questObject.SetActive(false);
                 narration.SetActive(false);
                 dialogue.SetActive(false);
@@ -174,12 +183,6 @@ public class Ch1TalkManager : MonoBehaviour
                 dialogue.GetComponentInChildren<Ch0DialogueBar>().CompleteTypingEffect();
                 anyTyping = true;
             }
-
-            if (currentDialogueIndex == 4)
-                destPointObject.SetActive(true);
-            else
-                destPointObject.SetActive(false);
-
             // 타이핑 중이었으면 아래 코드는 실행하지 않음
             if (!anyTyping)
             {
@@ -203,7 +206,7 @@ public class Ch1TalkManager : MonoBehaviour
         if (isWaitingForPlayer && mapManager != null)
         {
             // 카페바에 도착하면 스토리 다시 진행
-            if (mapManager.currentState == MapState.Cafe && mapManager.isInCafeBarZone && (currentDialogueIndex == 5 || currentDialogueIndex == 78 || currentDialogueIndex == 157 || currentDialogueIndex == 285 || currentDialogueIndex == 386 || currentDialogueIndex == 441 || currentDialogueIndex == 510 || currentDialogueIndex == 560))
+            if (mapManager.currentState == MapState.Cafe && mapManager.isInCafeBarZone && (currentDialogueIndex == 6 || currentDialogueIndex == 111 || currentDialogueIndex == 185 || currentDialogueIndex == 243 || currentDialogueIndex == 318 || currentDialogueIndex == 378 || currentDialogueIndex == 525 || currentDialogueIndex == 594))
             {
                 destPointObject.SetActive(false);
                 isWaitingForPlayer = false;
@@ -216,9 +219,23 @@ public class Ch1TalkManager : MonoBehaviour
                 Npc_MrHam.SetActive(false);
                 Npc_Rusk.SetActive(false);
                 Npc_Violet.SetActive(false);
-            }            
+            }
+            if (mapManager.currentState == MapState.Garden && currentDialogueIndex == 414) // 엔딩 분기점 정원 도착시 스토리 진행
+            {
+                AfterTalk = true;
+                isWaitingForPlayer = false;
+                player.SetActive(false);
+                map.SetActive(false);
+                garden.SetActive(true);
+                currentDialogueIndex++;
+                PrintCh1ProDialogue(currentDialogueIndex);
+                Npc_Rayviyak.SetActive(false);
+                Npc_MrHam.SetActive(false);
+                Npc_Rusk.SetActive(false);
+                Npc_Violet.SetActive(false);
+            }
             // 객실에 도착하면 스토리 다시 진행
-            else if (mapManager.currentState == MapState.TrainRoom3 && (currentDialogueIndex == 32))
+            /*else if (mapManager.currentState == MapState.TrainRoom3 && (currentDialogueIndex == 29 || currentDialogueIndex == 101))
             {
                 isWaitingForPlayer = false;
                 player.SetActive(false);
@@ -227,7 +244,7 @@ public class Ch1TalkManager : MonoBehaviour
                 currentDialogueIndex++;
                 PrintCh1ProDialogue(currentDialogueIndex);
             }
-            else if (mapManager.currentState == MapState.Balcony && currentDialogueIndex == 220) // 발코니 도착하면 스토리 다시 진행
+            else if (mapManager.currentState == MapState.Balcony && currentDialogueIndex == 200) // 발코니 도착하면 스토리 다시 진행
             {
                 isWaitingForPlayer = false;
                 player.SetActive(false);
@@ -245,21 +262,108 @@ public class Ch1TalkManager : MonoBehaviour
                 currentDialogueIndex++;
                 PrintCh1ProDialogue(currentDialogueIndex);
             }
-
+            */
             // 카페에서 일해야 되는데 다른 곳으로 가려고 하면 다시 카페로 플레이어 강제 이동
-            if (mapManager.currentState != MapState.Cafe && (currentDialogueIndex == 5 || currentDialogueIndex == 78 || currentDialogueIndex == 157 || currentDialogueIndex == 285 || currentDialogueIndex == 386 || currentDialogueIndex == 441 || currentDialogueIndex == 510 || currentDialogueIndex == 560))
+            if (mapManager.currentState != MapState.Cafe && (currentDialogueIndex == 6 || currentDialogueIndex == 111 || currentDialogueIndex == 185 || currentDialogueIndex == 243 || currentDialogueIndex == 318 || currentDialogueIndex == 378 || currentDialogueIndex == 525 || currentDialogueIndex == 594))
             {
+                destPointObject.SetActive(true);
                 player.transform.position = new Vector3(0, 0, 0);
                 narration.SetActive(true);
                 dialogue.SetActive(false);
                 narrationBar.SetDialogue("나레이션", "지금은 일할 시간이야.");
             }
         }
+        // NPC랑 대화하는 부분
+        if (isNpcTalkActivated && !isFadingOut && isWaitingForPlayer && (Input.GetKeyDown(KeyCode.Space) || Input.GetMouseButtonDown(0)))
+        {
+
+            bool anyTyping = false;
+
+            // 순서대로 확인
+            if (narration != null && narration.GetComponentInChildren<Ch0DialogueBar>().IsTyping())
+            {
+                narration.GetComponentInChildren<Ch0DialogueBar>().CompleteTypingEffect();
+                anyTyping = true;
+            }
+
+            if (dialogue != null && dialogue.GetComponentInChildren<Ch0DialogueBar>().IsTyping())
+            {
+                dialogue.GetComponentInChildren<Ch0DialogueBar>().CompleteTypingEffect();
+                anyTyping = true;
+            }
+
+            // 타이핑 중이었으면 아래 코드는 실행하지 않음
+            if (!anyTyping)
+            {
+                currentDialogueIndex++;
+                if (currentDialogueIndex >= ch1ProDialogue.Count)
+                {
+                    DeactivateTalk(); // 대사 리스트를 벗어나면 오브젝트 비활성화
+                }
+                else
+                {
+                    StartDialogueSequence(currentDialogueIndex, npcEndIndex);
+                }
+            }
+        }
     }
 
-    private void HandleDialogueProgression(int index)
+    private void HandleDialogueProgression(int index) // 카페 주문 함수
     {
-        // 2일차 주문 리스트
+        if (ch1ProDialogue[index-1].line == "음료 주문이 들어왔다")
+        {
+            List<CafeOrder> orders = new List<CafeOrder>();
+            orders.Add(new CafeOrder(RandomDrinkSelector.Instance.GetRandomDrink(1)));
+            SceneTransitionManager.Instance.HandleDialogueTransition("ch1Scene", "CafeScene", index, orders);
+            return;
+
+        }
+        if (ch1ProDialogue[index-1].line == "룸서비스")
+        {
+            narration.SetActive(false);
+            dialogue.SetActive(false);
+            roomService.SetActive(true);
+            isWaitingForPlayer = true;
+            return;
+        }
+
+        PrintCh1ProDialogue(index);
+        return;
+        if (index == 28)
+        {
+            Debug.Log("일반 주문 확인");
+
+            List<CafeOrder> orders = new List<CafeOrder>();
+            orders.Add(new CafeOrder(RandomDrinkSelector.Instance.GetRandomDrink(1)));
+            SceneTransitionManager.Instance.HandleDialogueTransition("ch1Scene", "CafeScene", index+1, orders);
+        }
+        else
+        {
+            PrintCh1ProDialogue(index);
+        }
+        
+        return;
+        //if(ch1ProDialogue[index].line == "음료제작")
+        {
+            narration.SetActive(false);
+            roomService.SetActive(true);
+            isWaitingForPlayer = true;
+
+            //NewRoomService.Instance.ShowRoomService(RandomDrinkSelector.Instance.GetRandomDrink(1), "");
+
+            // SceneTransitionManager.Instance.HandleRandomMenuTransition("ch1Scene", "CafeScene", index + 1, 1);
+        }
+        //Debug.Log(ch1ProDialogue[index].location);
+
+        if (ch1ProDialogue[index].location == "카페")
+        {
+            Debug.Log("자고 일어나서 카페가기");
+            Debug.Log(ch1ProDialogue[index - 1].location);
+        }
+        if (ch1ProDialogue[index].line == "음료제작")
+        {
+            Debug.Log("음료제작");
+        }
         if (index == 7) // 룸서비스 랜덤 3건
         {
             Debug.Log("배달 랜덤 룸서비스 주문 3건");
@@ -275,27 +379,27 @@ public class Ch1TalkManager : MonoBehaviour
         {
             SceneTransitionManager.Instance.HandleRandomMenuTransition("ch1Scene", "CafeScene", 15, 2);
         }
-        else if (index == 20) // 따아 1잔 직접 주문
+        else if (index == 19) // 따아 1잔 직접 주문
         {
             List<CafeOrder> orders = new List<CafeOrder>();
             orders.Add(new CafeOrder("HotAmericano"));
-            SceneTransitionManager.Instance.HandleDialogueTransition("ch1Scene", "CafeScene", 21, orders);
+            SceneTransitionManager.Instance.HandleDialogueTransition("ch1Scene", "CafeScene", 20, orders);
         }
-        else if (index == 23) // 랜덤 주문 1건
+        else if (index == 21) // 랜덤 주문 1건
         {
-            SceneTransitionManager.Instance.HandleRandomMenuTransition("ch1Scene", "CafeScene", 24, 1);
+            SceneTransitionManager.Instance.HandleRandomMenuTransition("ch1Scene", "CafeScene", 22, 1);
         }
-        else if (index == 27) // 아아 1잔 직접 주문
+        else if (index == 25) // 아아 1잔 직접 주문
         {
             List<CafeOrder> orders = new List<CafeOrder>();
             orders.Add(new CafeOrder("IceAmericano"));
-            SceneTransitionManager.Instance.HandleDialogueTransition("ch1Scene", "CafeScene", 28, orders);
+            SceneTransitionManager.Instance.HandleDialogueTransition("ch1Scene", "CafeScene", 26, orders);
         }
-        else if (index == 30) // 랜덤 주문 1건
+        else if (index == 27) // 랜덤 주문 1건
         {
-            SceneTransitionManager.Instance.HandleRandomMenuTransition("ch1Scene", "CafeScene", 31, 1);
+            SceneTransitionManager.Instance.HandleRandomMenuTransition("ch1Scene", "CafeScene", 28, 1);
         }
-        // 3일차 주문 리스트
+
         else if (index == 75) // 룸서비스 랜덤 4건
         {
             Debug.Log("배달 랜덤 룸서비스 주문 4건");
@@ -442,7 +546,7 @@ public class Ch1TalkManager : MonoBehaviour
     // csv 읽어오기
     void LoadDialogueFromCSV()
     {
-        List<Dictionary<string, object>> data_Dialog = Ch0CSVReader.Read("Travel Around The World - CH1");
+        List<Dictionary<string, object>> data_Dialog = Ch0CSVReader.Read("NewNewCH1");
 
         foreach (var row in data_Dialog)
         {
@@ -460,9 +564,9 @@ public class Ch1TalkManager : MonoBehaviour
 
             ch1ProDialogue.Add(new Ch1ProDialogue(day, location, speaker, line, screenEffect, backgroundMusic, expression, note, quest, questContent));
 
-            //Debug.Log("LoadDialogueCSV List has Data");
-            
+            Debug.Log("LoadDialogueCSV List has Data");
         }
+        Debug.Log("daat_dialogue is full ");
     }
 
     // 이미지 가져오는 코드
@@ -475,7 +579,10 @@ public class Ch1TalkManager : MonoBehaviour
             ["레이비야크"] = Resources.Load<Sprite>("NpcImage/Leviac"),
             ["바이올렛"] = Resources.Load<Sprite>("NpcImage/Violet"),
             ["러스크"] = Resources.Load<Sprite>("NpcImage/Rusk"),
-            ["Mr. Ham"] = Resources.Load<Sprite>("NpcImage/MrHam"),
+            ["Mr.Ham"] = Resources.Load<Sprite>("NpcImage/MrHam"),
+            ["나루"] = Resources.Load<Sprite>("NpcImage/Naru"),
+            ["슬로우"] = Resources.Load<Sprite>("NpcImage/Slow"),
+            ["가이"] = Resources.Load<Sprite>("NpcImage/Gai"),
 
             // 솔 표정 이미지
             ["솔_일반"] = Resources.Load<Sprite>("PlayerImage/Sol"),
@@ -488,6 +595,7 @@ public class Ch1TalkManager : MonoBehaviour
             // 레이비야크 표정 이미지
             ["레이비야크_일반"] = Resources.Load<Sprite>("NpcImage/Leviac"),
             ["레이비야크_웃음"] = Resources.Load<Sprite>("NpcImage/Leviac_웃음"),
+            ["레이비야크_당황"] = Resources.Load<Sprite>("NpcImage/Leviac_당황"),
 
             // 바이올렛 표정 이미지
             ["바이올렛_일반"] = Resources.Load<Sprite>("NpcImage/Violet"),
@@ -499,10 +607,10 @@ public class Ch1TalkManager : MonoBehaviour
             ["러스크_웃음"] = Resources.Load<Sprite>("NpcImage/Rusk_웃음"),
 
             // Mr. Ham 표정 이미지
-            ["Mr. Ham_일반"] = Resources.Load<Sprite>("NpcImage/MrHam"),
-            ["Mr. Ham_웃음"] = Resources.Load<Sprite>("NpcImage/MrHam_웃음"),
-            ["Mr. Ham_화남"] = Resources.Load<Sprite>("NpcImage/MrHam_화남"),
-            ["Mr. Ham_아쉬움"] = Resources.Load<Sprite>("NpcImage/MrHam_아쉬움"),
+            ["Mr.Ham_일반"] = Resources.Load<Sprite>("NpcImage/MrHam"),
+            ["Mr.Ham_웃음"] = Resources.Load<Sprite>("NpcImage/MrHam_웃음"),
+            ["Mr.Ham_화남"] = Resources.Load<Sprite>("NpcImage/MrHam_화남"),
+            ["Mr.Ham_아쉬움"] = Resources.Load<Sprite>("NpcImage/MrHam_아쉬움"),
 
             // 루카스 표정 이미지
             ["루카스_일반"] = Resources.Load<Sprite>("NpcImage/Lucas"),
@@ -511,16 +619,29 @@ public class Ch1TalkManager : MonoBehaviour
 
             // 슬로우 표정 이미지
             ["슬로우_일반"] = Resources.Load<Sprite>("NpcImage/Slow"),
+            ["슬로우_웃음"] = Resources.Load<Sprite>("NpcImage/Slow"),
             ["슬로우_당황"] = Resources.Load<Sprite>("NpcImage/Slow_당황"),
             ["슬로우_화남"] = Resources.Load<Sprite>("NpcImage/Slow_화남"),
+            ["슬로우_놀람"] = Resources.Load<Sprite>("NpcImage/Slow_당황"),
+            ["슬로우_슬픔"] = Resources.Load<Sprite>("NpcImage/Slow_슬픔"),
 
             // 가이 표정 이미지
             ["가이_일반"] = Resources.Load<Sprite>("NpcImage/Gai"),
             ["가이_당황"] = Resources.Load<Sprite>("NpcImage/Gai_당황"),
+            ["가이_웃음"] = Resources.Load<Sprite>("NpcImage/Gai"),
+            ["가이_슬픔"] = Resources.Load<Sprite>("NpcImage/Gai_슬픔"),
+            ["가이_화남"] = Resources.Load<Sprite>("NpcImage/Gai_화남"),
 
             // 파이아 표정 이미지
             ["파이아_일반"] = Resources.Load<Sprite>("NpcImage/Fire"),
             ["파이아_웃음"] = Resources.Load<Sprite>("NpcImage/Fire_웃음"),
+            ["파이아_놀람"] = Resources.Load<Sprite>("NpcImage/Fire_놀람"),
+
+            // 나루 표정 이미지
+            ["나루_일반"] = Resources.Load<Sprite>("NpcImage/Naru"),
+            ["나루_웃음"] = Resources.Load<Sprite>("NpcImage/Naru_웃음"),
+            ["나루_놀람"] = Resources.Load<Sprite>("NpcImage/Naru_놀람"),
+            ["나루_당황"] = Resources.Load<Sprite>("NpcImage/Naru_당황"),
 
             // 기본 NPC 이미지
             ["Default"] = Resources.Load<Sprite>("NpcImage/Default")
@@ -532,21 +653,28 @@ public class Ch1TalkManager : MonoBehaviour
             ["레이비야크"] = Resources.Load<Sprite>("NpcImage/Leviac_full"),
             ["바이올렛"] = Resources.Load<Sprite>("NpcImage/Violet_full"),
             ["러스크"] = Resources.Load<Sprite>("NpcImage/Rusk_full"),
-            ["Mr. Ham"] = Resources.Load<Sprite>("NpcImage/MrHam_full"),
+            ["Mr.Ham"] = Resources.Load<Sprite>("NpcImage/MrHam_full"),
             ["루카스"] = Resources.Load<Sprite>("NpcImage/Lucas_big"),
             ["슬로우"] = Resources.Load<Sprite>("NpcImage/Slow_big"),
             ["가이"] = Resources.Load<Sprite>("NpcImage/Gai_big"),
             ["파이아"] = Resources.Load<Sprite>("NpcImage/Fire_full"),
+            ["나루"] = Resources.Load<Sprite>("NpcImage/Naru_full"),
             ["Default"] = Resources.Load<Sprite>("NpcImage/Default")
         };
     }
 
     public void PrintCh1ProDialogue(int index)
     {
-        if (index == 533)
+        
+        if (index == 652)
         {
-            // ch2씬으로 전환
-            SceneManager.LoadScene("Ch2Scene");
+            StartCoroutine(FadeOutAndLoadScene(cafe, "Ch3Scene"));
+            return; // Exit the method to prevent further processing
+        }
+        if (index == 577 && PlayerManager.Instance.GetEnding(1))
+        {
+            currentDialogueIndex = 651;
+            PrintCh1ProDialogue(currentDialogueIndex);
             return;
         }
 
@@ -608,7 +736,7 @@ public class Ch1TalkManager : MonoBehaviour
         }
 
         // 플레이어 이미지 처리
-        playerImageObj.SetActive(currentDialogueIndex <= 5);
+        playerImageObj.SetActive(currentDialogueIndex <= 6);
 
         // 편지 띄우기
         if (currentDialogue.speaker == letterSpeaker)
@@ -638,20 +766,32 @@ public class Ch1TalkManager : MonoBehaviour
             dialogue.SetActive(true);
             dialogueBar.SetDialogue(currentDialogue.speaker, currentDialogue.line); // 타이핑 효과 적용
         }
+        
+        if (currentDialogue.screenEffect == "검은 화면")
+        {
+            blackScreen.SetActive(true);
+        }
+        else
+        {
+            blackScreen.SetActive(false);
+        }
 
-        if (index == 5 || index == 78 || index == 157 || index == 285 || index == 386 || index == 441 || index == 510 || index == 560) // 카페로 강제 이동 후 이동 가능하게 전환
+        if (currentDialogueIndex == 6 || currentDialogueIndex == 111 || currentDialogueIndex == 185 || currentDialogueIndex == 243 || currentDialogueIndex == 318 || currentDialogueIndex == 378 || currentDialogueIndex == 525 || currentDialogueIndex == 594) // 카페로 강제 이동 후 이동 가능하게 전환
         {
             player.transform.position = new Vector3(0, 0, 0);
             mapManager.currentState = MapState.Cafe;
             isWaitingForPlayer = true;
             player.SetActive(true);
-            map.SetActive(true);
             playerController.StartMove();
+            map.SetActive(true);
             trainRoom.SetActive(false);
-            narration.SetActive(false);
             dialogue.SetActive(false);
+
+            destPointObject.SetActive(true);
+            narration.SetActive(true);
+            narrationBar.SetDialogue("나레이션", "지금은 일할 시간이야.");
         }
-        else if (index == 32 || index == 111 || index == 200 || index == 334 || index == 404 || index == 445) // 카페 일 끝나고 이동 가능하게 전환
+        else if (index == 69 || index == 169 || index == 226 || index == 302 || index == 363 || index == 414) // 카페 일 끝나고 이동 가능하게 전환
         {
             player.transform.position = new Vector3(2, -3.5f, 0);
             isWaitingForPlayer = true;
@@ -666,6 +806,50 @@ public class Ch1TalkManager : MonoBehaviour
             Npc_Rusk.SetActive(true);
             Npc_Violet.SetActive(true);
         }
+        else if (index == 434)
+        {
+            EndingNarration.SetActive(true);
+            isWaitingForPlayer = true;
+        }
+        else if (index == 449)
+        {
+            if (AfterTalk)
+            {
+                player.transform.position = new Vector3(-17.55f, -0.3f, 0);
+                AfterTalk = false;
+            }
+            garden.SetActive(false);
+            isWaitingForPlayer = true;
+            playerController.StartMove();
+            map.SetActive(true);
+            player.SetActive(true);
+            narration.SetActive(false);
+            dialogue.SetActive(false);
+            Npc_Rayviyak.SetActive(true);
+            Npc_MrHam.SetActive(true);
+            Npc_Rusk.SetActive(true);
+            Npc_Violet.SetActive(false);
+        }
+        else if (index == 582)
+        {
+            if (AfterTalk)
+            {
+                player.transform.position = new Vector3(-17.55f, -0.3f, 0);
+                AfterTalk = false;
+            }
+            garden.SetActive(false);
+            isWaitingForPlayer = true;
+            playerController.StartMove();
+            map.SetActive(true);
+            player.SetActive(true);
+            narration.SetActive(false);
+            dialogue.SetActive(false);
+            Npc_Rayviyak.SetActive(true);
+            Npc_MrHam.SetActive(true);
+            Npc_Rusk.SetActive(true);
+            Npc_Violet.SetActive(true);
+        }
+        /*
         else if (index == 512)
         {
             mapManager.currentState = MapState.TrainRoom3;
@@ -680,7 +864,7 @@ public class Ch1TalkManager : MonoBehaviour
             cafe.SetActive(true);
             PrintCh1ProDialogue(index);
         }
-        else if (index == 42) // 퀘스트 활성화
+        else if (index == 32) // 퀘스트 활성화
         {
             string quest = currentDialogue.quest;
             string questContent = currentDialogue.questContent;
@@ -692,7 +876,7 @@ public class Ch1TalkManager : MonoBehaviour
             Npc_Rayviyak.SetActive(false);
             isQuestActive = true;
         }
-        else if (index == 43 && mapManager.currentState == MapState.TrainRoom3) // 퀘스트 받은 후 이동 가능하게 전환
+        else if (index == 33 && mapManager.currentState == MapState.TrainRoom3) // 퀘스트 받은 후 이동 가능하게 전환
         {
             isWaitingForPlayer = true;
             playerController.StartMove();
@@ -703,7 +887,7 @@ public class Ch1TalkManager : MonoBehaviour
             dialogue.SetActive(false);
             Npc_Rayviyak.SetActive(true);
         }
-        /*else if (index == 37 && mapManager.currentState == MapState.Cafe) // 정원 npc와 대화 이후 이동 가능하게 전환
+        else if (index == 37 && mapManager.currentState == MapState.Cafe) // 정원 npc와 대화 이후 이동 가능하게 전환
         {
             isWaitingForPlayer = true;
             playerController.StartMove();
@@ -757,7 +941,7 @@ public class Ch1TalkManager : MonoBehaviour
             narration.SetActive(false);
             dialogue.SetActive(false);
             Npc_Violet.SetActive(true);
-        }*/
+        }
         else if (index == 216 || index == 450) // 치타샵 ui 활성화
         {
             // Shop UI를 표시
@@ -784,7 +968,7 @@ public class Ch1TalkManager : MonoBehaviour
             Npc_Rusk.SetActive(true);
             Npc_Violet.SetActive(true);
         }
-        /*else if (index == 257) // 빵집 npc와 대화 후 객실 자동 이동 및 맵상태 변경
+        else if (index == 257) // 빵집 npc와 대화 후 객실 자동 이동 및 맵상태 변경
         {
             player.transform.position = new Vector3(-44.5f, 9f, 0f);
             mapManager.currentState = MapState.TrainRoom3;
@@ -828,64 +1012,111 @@ public class Ch1TalkManager : MonoBehaviour
         }
     }
 
-    public void StartDialogueSequence(int startIndex, int endIndex)
+    public void OnDialogueButtonClicked(int index) // 빈 함수
     {
-        for (int i = startIndex; i <= endIndex; i++)
+        /*currentDialogueIndex = index;
+
+        if (currentDialogueIndex == 33)
         {
-            PrintCh1ProDialogue(i);
+            map.SetActive(false);
+            player.SetActive(false);
+            Npc_Rayviyak.SetActive(false);
+            garden.SetActive(true);
+            isWaitingForPlayer = false;
+            PrintCh1ProDialogue(currentDialogueIndex);
         }
-    }
-
-    public void EnableBedInteraction()
-    {
-        bedUsed = true; // 침대 상호작용 활성화
-    }
-
-    public void ShowNarration(string speaker, string text)
-    {
-        narration.SetActive(true);
-        dialogue.SetActive(false);
-        narrationBar.SetDialogue(speaker, text);
-    }
-
-    public void OnDialogueButtonClicked(int index)
-    {
-        if (currentDialogueIndex == 43)
+        else if (currentDialogueIndex == 37)
         {
-            // 현재 오브젝트의 이름을 확인하기 위해 호출한 객체에서 정보를 받아야 함
-            GameObject currentNpc = GameObject.FindGameObjectWithTag("CurrentNpc"); // 'CurrentNpc'는 현재 상호작용하는 NPC에 태그 지정
-
-            if (currentNpc != null && currentNpc.name == "Npc_Rayviyak" && !HasTalkedToRayviyak)
-            {
-                StartDialogueSequence(44, 47);
-                HasTalkedToRayviyak = true;
-                currentDialogueIndex = 43; // 대화 후 인덱스 유지
-            }
-            else if (currentNpc != null && currentNpc.name == "Npc_Violet" && !HasTalkedToViolet)
-            {
-                StartDialogueSequence(49, 75);
-                HasTalkedToViolet = true;
-                currentDialogueIndex = 43; // 대화 후 인덱스 유지
-            }
-            else if (currentNpc != null && currentNpc.name != "Npc_Rayviyak" && currentNpc.name != "Npc_Violet")
-            {
-                ShowNarration("나레이션", "지금은 바빠 보여.");
-                currentDialogueIndex = 43; // 인덱스 유지
-            }
-
-            // 레이비야크와 바이올렛 둘 다 대화가 끝났다면, 침대와 상호작용할 수 있게 설정
-            if (HasTalkedToRayviyak && HasTalkedToViolet)
-            {
-                EnableBedInteraction();
-            }
+            map.SetActive(false);
+            player.SetActive(false);
+            Npc_Violet.SetActive(false);
+            cafe.SetActive(true);
+            dialogue.SetActive(true);
+            isWaitingForPlayer = false;
+            PrintCh1ProDialogue(currentDialogueIndex);
+        }
+        else if (currentDialogueIndex == 104)
+        {
+            map.SetActive(false);
+            player.SetActive(false);
+            Npc_Rayviyak.SetActive(false);
+            garden.SetActive(true);
+            isWaitingForPlayer = false;
+            PrintCh1ProDialogue(currentDialogueIndex);
+        }
+        else if (currentDialogueIndex == 187)
+        {
+            map.SetActive(false);
+            player.SetActive(false);
+            Npc_Rayviyak.SetActive(false);
+            garden.SetActive(true);
+            isWaitingForPlayer = false;
+            PrintCh1ProDialogue(currentDialogueIndex);
+        }
+        else if (currentDialogueIndex == 191)
+        {
+            map.SetActive(false);
+            player.SetActive(false);
+            Npc_Violet.SetActive(false);
+            cafe.SetActive(true);
+            dialogue.SetActive(true);
+            isWaitingForPlayer = false;
+            PrintCh1ProDialogue(currentDialogueIndex);
+        }
+        else if (currentDialogueIndex == 207)
+        {
+            map.SetActive(false);
+            player.SetActive(false);
+            Npc_Rusk.SetActive(false);
+            bakery.SetActive(true);
+            dialogue.SetActive(true);
+            isWaitingForPlayer = false;
+            PrintCh1ProDialogue(currentDialogueIndex);
+        }
+        else if (currentDialogueIndex == 318)
+        {
+            map.SetActive(false);
+            player.SetActive(false);
+            Npc_Rayviyak.SetActive(false);
+            garden.SetActive(true);
+            isWaitingForPlayer = false;
+            PrintCh1ProDialogue(currentDialogueIndex);
+        }
+        else if (currentDialogueIndex == 322)
+        {
+            map.SetActive(false);
+            player.SetActive(false);
+            Npc_Violet.SetActive(false);
+            cafe.SetActive(true);
+            dialogue.SetActive(true);
+            isWaitingForPlayer = false;
+            PrintCh1ProDialogue(currentDialogueIndex);
+        }
+        else if (currentDialogueIndex == 326)
+        {
+            map.SetActive(false);
+            player.SetActive(false);
+            Npc_Rusk.SetActive(false);
+            bakery.SetActive(true);
+            dialogue.SetActive(true);
+            isWaitingForPlayer = false;
+            PrintCh1ProDialogue(currentDialogueIndex);
+        }
+        else if (currentDialogueIndex == 330)
+        {
+            map.SetActive(false);
+            player.SetActive(false);
+            Npc_MrHam.SetActive(false);
+            medicalRoom.SetActive(true);
+            dialogue.SetActive(true);
+            isWaitingForPlayer = false;
+            PrintCh1ProDialogue(currentDialogueIndex);
         }
         else
         {
-            // 기존의 다른 인덱스에 대한 대화 로직
-            PrintCh1ProDialogue(index);
-        }
+            PrintCh1ProDialogue(currentDialogueIndex);
+        }*/
     }
-
 
     public void ActivateTalk(string locationName, int curDialogueIdx)
     {
@@ -903,6 +1134,59 @@ public class Ch1TalkManager : MonoBehaviour
         }
     }
 
+    public void StartDialogueSequence(int startIndex, int endIndex) // 밤 대화 함수
+    {
+        Debug.Log(startIndex);
+        currentDialogueIndex = startIndex;
+        npcEndIndex = endIndex;
+        if(isNpcTalkActivated)
+        {
+            Debug.Log("NPC와 대화중");
+            playerController.StopMove();
+            PrintCh1ProDialogue(currentDialogueIndex);
+            if (currentDialogueIndex == endIndex)
+            {
+                Debug.Log("NPC 마지막 인덱스 도착");
+                isNpcTalkActivated = false;
+                playerController.StartMove();
+                narration.SetActive(false);
+                dialogue.SetActive(false);
+
+                if (currentDialogueIndex >= 90 && currentDialogueIndex <= 110)
+                    currentDialogueIndex = 69;
+                else if (currentDialogueIndex >= 170 && currentDialogueIndex <= 190)
+                    currentDialogueIndex = 169;
+                else if (currentDialogueIndex >= 230 && currentDialogueIndex <= 250)
+                    currentDialogueIndex = 226;
+                else if (currentDialogueIndex >= 300 && currentDialogueIndex <= 320)
+                    currentDialogueIndex = 302;
+                else if (currentDialogueIndex >= 360 && currentDialogueIndex <= 380)
+                    currentDialogueIndex = 363;
+                else if (currentDialogueIndex >= 390 && currentDialogueIndex <= 550)
+                    currentDialogueIndex = 449;
+                else if (currentDialogueIndex >= 560 && currentDialogueIndex <= 700)
+                    currentDialogueIndex = 582;
+            }
+        }
+        else
+        {
+            return;
+        }
+        return;
+    }
+
+    public void EnableBedInteraction()
+    {
+        bedUsed = true; // 침대 상호작용 활성화
+    }
+
+    public void ShowNarration(string speaker, string text)
+    {
+        narration.SetActive(true);
+        dialogue.SetActive(false);
+        narrationBar.SetDialogue(speaker, text);
+    }
+
     public void DeactivateTalk()
     {
         this.gameObject.SetActive(false);
@@ -911,6 +1195,10 @@ public class Ch1TalkManager : MonoBehaviour
 
     public void CheckTalk(string location)
     {
+        if (isNpcTalkActivated)
+        {
+            return;
+        }
         letter.SetActive(false);
         cafe.SetActive(false);
         trainRoom.SetActive(false);
@@ -1012,6 +1300,24 @@ public class Ch1TalkManager : MonoBehaviour
             currentMusic = newMusic;
         }
     }
+    public void HappyEnding()
+    {
+        isWaitingForPlayer = false;
+        currentDialogueIndex = 436;
+        PrintCh1ProDialogue(currentDialogueIndex);
+        EndingNarration.SetActive(false);
+        PlayerManager.Instance.SetHappyEnding(1);
+        Debug.Log(PlayerManager.Instance.GetEnding(1));
+        Debug.Log(PlayerManager.Instance.CountEndings());
+
+    }
+    public void BadEnding()
+    {
+        isWaitingForPlayer = false;
+        currentDialogueIndex = 577;
+        PrintCh1ProDialogue(currentDialogueIndex);
+        EndingNarration.SetActive(false);
+    }
 
     private IEnumerator FadeOutAndDeactivateTalk(GameObject obj)
     {
@@ -1022,4 +1328,15 @@ public class Ch1TalkManager : MonoBehaviour
         DeactivateTalk(); // FadeOut이 완료된 후 대화 비활성화
         isFadingOut = false; // 페이드아웃 종료
     }
+    private IEnumerator FadeOutAndLoadScene(GameObject obj, string sceneName)
+    {
+        isFadingOut = true; // 페이드아웃 시작
+        yield return StartCoroutine(screenFader.FadeOut(obj)); // FadeOut이 완료될 때까지 기다립니다.
+        narration.SetActive(false);
+        dialogue.SetActive(false);
+        DeactivateTalk(); // FadeOut이 완료된 후 대화 비활성화
+        isFadingOut = false; // 페이드아웃 종료
+        SceneManagerEx.Instance.SceanLoadQueue(sceneName); // 씬 로드
+    }
+
 }

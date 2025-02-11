@@ -369,7 +369,6 @@ MonoBehaviour:
   interactionDistance: 1
   talkActived: 0
   talkManager: {fileID: 0}
-  playerController: {fileID: 0}
 --- !u!61 &8492902798634757816
 BoxCollider2D:
   m_ObjectHideFlags: 0

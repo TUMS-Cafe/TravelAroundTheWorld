@@ -1,11 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
     public GameObject Shot;
-    public GameObject Extract;
+    public GameObject BtnExtract;
+    public GameObject Steam;
+    public GameObject BtnSteam;
 
 
     public GameObject Beverage;
@@ -14,28 +17,45 @@ public class GameManager : MonoBehaviour
     public GameObject RecipeBook;
 
     public GameObject Milk;
-    public GameObject TeaInventory;
 
-    private bool buyMilk = PlayerManager.Instance.IsBoughtCafeItem("우유");
-    private bool buyTeaSet = PlayerManager.Instance.IsBoughtCafeItem("티 세트");
+    public Animator AniShot;
+    public Animator AniSteam;
+    public GameObject ShotAniObj;
+    public GameObject SteamAniObj;
 
-    private int Day = PlayerManager.Instance.GetDay();
+    public RecipeBookUI RecipeBookUI;
 
+    //private bool buyMilk = PlayerManager.Instance.IsBoughtCafeItem("우유");
+    //private bool buyTeaSet = PlayerManager.Instance.IsBoughtCafeItem("티 세트");
 
+    //private int Day = PlayerManager.Instance.GetDay();
+
+    public CafeMakeController cafeMake;
     public OrderController orderController;
+    public InventoryController inventoryController;
 
     void Start()
     {
+
+        if (cafeMake != null)
+        {
+            Debug.Log("Unlocking Ingredients...");
+            cafeMake.UnlockIngredientsByChapter();
+        }
+        else
+        {
+            Debug.LogError("CafeMakeController is not assigned in GameManager!");
+        }
+
         SoundManager.Instance.PlayMusic("CAFE", true);
 
-        if (buyMilk)
-        {
-            Milk.SetActive(true);
-        }
-        else if (buyTeaSet)
-        {
-            TeaInventory.SetActive(true);
-        }
+        ShotAniObj.SetActive(false);
+        AniShot.enabled = true;
+        SteamAniObj.SetActive(false);
+        AniSteam.enabled = true;
+
+        //Milk.SetActive(true);
+
 
         int deliveryNum = SceneTransitionManager.Instance.GetDeliveryNum();
 
@@ -48,10 +68,10 @@ public class GameManager : MonoBehaviour
     }
 
 
+
     void Update()
     {
-        Debug.Log("Day = " + Day);
-        Debug.Log("buy Milk = " + buyMilk);
+        
         if (Input.GetMouseButtonDown(0))
         {
             Vector2 clickPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
@@ -75,20 +95,45 @@ public class GameManager : MonoBehaviour
             {
                 Delivery.SetActive(true);
                 CafeMap.SetActive(false);
-            }
-            if (clickedObject != null && (clickedObject.name == "RecipeBook" || clickedObject.name == "Recipe"))
+            }*/
+
+            if (clickedObject != null && (clickedObject.name == "Recipe" || clickedObject.name == "Recipe"))
             {
-                RecipeBook.SetActive(true);
-                CafeMap.SetActive(false);
-                Beverage.SetActive(false);
+                RecipeBookUI.OpenRecipeBook();
             }
-            */
+
             if (clickedObject != null && clickedObject.name == "Extract")
             {
-                StartCoroutine(ActivateObjectAfterDelay(2f, Shot));
+                StartCoroutine(ShotActivateObjectAfterDelay(2f, Shot));
                 SoundManager.Instance.PlaySFX("grinding coffee");
+                Debug.Log("Extract button clicked.");
             }
-            if (clickedObject != null && clickedObject.name == "TeaInventory")
+            if (clickedObject != null && clickedObject.name == "Steam")
+            {
+                StartCoroutine(SteamActivateObjectAfterDelay(2f, Steam));
+                //SoundManager.Instance.PlaySFX("grinding coffee");
+            }
+            if (clickedObject.name == "btnLeft")
+            {
+                Debug.Log("왼쪽 버튼 클릭됨!");
+                inventoryController.MoveInventory(-1);
+            }
+            else if (clickedObject.name == "btnRight")
+            {
+                Debug.Log("오른쪽 버튼 클릭됨!");
+                inventoryController.MoveInventory(1);
+            }
+            else if (clickedObject.name == "TrashCan")
+            {
+                Debug.Log("쓰레기통 클릭됨!");
+                TrashController trashController = FindObjectOfType<TrashController>();
+                if (trashController != null)
+                {
+                    trashController.HandleTrashClick();
+                }
+            }
+
+            /*if (clickedObject != null && clickedObject.name == "TeaInventory")
             {
                 Vector2 currentPosition = clickedObject.transform.position;
 
@@ -107,19 +152,44 @@ public class GameManager : MonoBehaviour
                     clickedObject.transform.position = targetPosition1;
                     Debug.Log("Moved to: " + targetPosition1);
                 }
-                else
-                {
-                    Debug.Log("No match found for current position.");
-                }
+                
+            }*/
+            else
+            {
+                Debug.Log("No match found for current position.");
             }
-
 
         }
     }
-    IEnumerator ActivateObjectAfterDelay(float delay, GameObject obj)
+
+
+    IEnumerator ShotActivateObjectAfterDelay(float delay, GameObject obj)
     {
+        ShotAniObj.SetActive(true);
+        AniShot.enabled = true;
         SoundManager.Instance.PlaySFX("coffee machine (espresso)");
-        yield return new WaitForSeconds(delay);
+        AniShot.Play("StartShotAnimation");
+        yield return new WaitForSeconds(2f);
+        ShotAniObj.SetActive(false);
+        AniShot.enabled = false;
         obj.SetActive(true);
+
     }
+
+    IEnumerator SteamActivateObjectAfterDelay(float delay, GameObject obj)
+    {
+        SteamAniObj.SetActive(true);
+        AniSteam.enabled = true;
+        SoundManager.Instance.PlaySFX("coffee machine (espresso)");
+        AniSteam.Play("StartSteamAnimation");
+        yield return new WaitForSeconds(2f);
+        SteamAniObj.SetActive(false);
+        AniSteam.enabled = false;
+        obj.SetActive(true);
+
+    }
+
+
+
+
 }

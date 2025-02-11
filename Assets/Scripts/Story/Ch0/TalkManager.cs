@@ -64,6 +64,7 @@ public class TalkManager : MonoBehaviour
 
     public int currentDialogueIndex = 0; // 현재 대사 인덱스
     private bool isActivated = false; // TalkManager가 활성화되었는지 여부
+    private bool isWaitingForPlayer = false;
 
     public bool isAllNPCActivated = false; //모든 npc와 대화 완료되었는지 여부
 
@@ -113,7 +114,7 @@ public class TalkManager : MonoBehaviour
 
     void Update()
     {
-        if (isActivated && !isFadingOut && (Input.GetKeyDown(KeyCode.Space) || Input.GetMouseButtonDown(0)))
+        if (isActivated && !isFadingOut && !isWaitingForPlayer && (Input.GetKeyDown(KeyCode.Space) || Input.GetMouseButtonDown(0)))
         {
             if (isAnimationPlaying)
             {
@@ -160,7 +161,8 @@ public class TalkManager : MonoBehaviour
         if (currentDialogueIndex == 96)
         {
             mapTutorial.SetActive(true);
-            DeactivateTalk(); // 대화 잠시 종료
+            //DeactivateTalk(); // 대화 잠시 종료
+            isWaitingForPlayer = true;
         }
     }
 
@@ -241,7 +243,7 @@ public class TalkManager : MonoBehaviour
         };
     }
 
-    void PrintProDialogue(int index)
+    public void PrintProDialogue(int index)
     {
         if (index >= proDialogue.Count)
         {
@@ -350,6 +352,47 @@ public class TalkManager : MonoBehaviour
             dialogueBar.SetDialogue(currentDialogue.speaker, currentDialogue.line); // 타이핑 효과 적용
         }
 
+        //침대를 사용했고 잠에 들려고 하는 경우만 객실 활성화
+        if (MapTutorial.bedUsed && MapTutorial.isSleeping)
+        {
+            //모든 npc와 대화한 경우
+            if (isAllNPCActivated)
+            {
+                if (currentDialogueIndex >= 173 && currentDialogueIndex <= 177)
+                {
+                    trainRoom.SetActive(true);
+                    if (currentDialogueIndex == 173)
+                    {
+                        DayNightCycleManager.Instance.ChangeDayTime();
+                        Debug.Log(DayNightCycleManager.Instance.GetNowDayTime());
+                    }
+                    if (currentDialogueIndex == 177)
+                    {
+                        StartCoroutine(FadeOutAndLoadScene(trainRoom, "ch1Scene"));
+                    }
+                }
+            }
+            //모든 npc와 대화하지 않은 경우
+            if (!isAllNPCActivated)
+            {
+                if (currentDialogueIndex == 172)
+                {
+                    trainRoom.SetActive(true);
+                    playerController.StartMove();
+                }
+                if (currentDialogueIndex == 173)
+                {
+                    MapTutorial.bedUsed = false; // 침대 사용과 잠에 드는지 여부 둘다 false로 초기화
+                    MapTutorial.isSleeping = false;
+                    playerController.StartMove(); //대사 끝나고 플레이어 움직임 재개
+                    //DeactivateTalk();
+                    narration.SetActive(false);
+                    dialogue.SetActive(false);
+                    isWaitingForPlayer = true;
+                }
+            }
+        }
+
         CheckTalk(currentDialogue.location);
     }
 
@@ -357,11 +400,17 @@ public class TalkManager : MonoBehaviour
     {
         this.gameObject.SetActive(true);
         isActivated = true;
+        isWaitingForPlayer = false;
 
         //위치가 객실이고 npc와 다 대화하지 않은 경우 예외처리 
         if (locationName == locationTrainRoom && !isAllNPCActivated)
         {
             currentDialogueIndex = 172;
+            PrintProDialogue(currentDialogueIndex);
+        }
+        else if (locationName == locationTrainRoom && isAllNPCActivated)
+        {
+            currentDialogueIndex = 173;
             PrintProDialogue(currentDialogueIndex);
         }
         else
@@ -517,7 +566,10 @@ public class TalkManager : MonoBehaviour
                 }
                 else if (currentDialogueIndex == 98)
                 {
-                    DeactivateTalk();
+                    //DeactivateTalk();
+                    narration.SetActive(false);
+                    dialogue.SetActive(false);
+                    isWaitingForPlayer = true;
                     playerController.StartMove(); //대사 끝나고 플레이어 움직임 재개
                 }
                 break;
@@ -528,7 +580,10 @@ public class TalkManager : MonoBehaviour
                 }
                 else if (currentDialogueIndex == 100)
                 {
-                    DeactivateTalk();
+                    //DeactivateTalk();
+                    narration.SetActive(false);
+                    dialogue.SetActive(false);
+                    isWaitingForPlayer = true;
                     playerController.StartMove(); //대사 끝나고 플레이어 움직임 재개
                 }
                 break;
@@ -539,7 +594,10 @@ public class TalkManager : MonoBehaviour
                 }
                 else if (currentDialogueIndex == 102)
                 {
-                    DeactivateTalk();
+                    //DeactivateTalk();
+                    narration.SetActive(false);
+                    dialogue.SetActive(false);
+                    isWaitingForPlayer = true;
                     playerController.StartMove(); //대사 끝나고 플레이어 움직임 재개
                 }
                 break;
@@ -589,13 +647,14 @@ public class TalkManager : MonoBehaviour
                 }
                 break;
             case locationTrainRoom:
+                PlayMusic(locationTrainRoom);
+                /*
                 //침대를 사용했고 잠에 들려고 하는 경우만 객실 활성화
                 if (MapTutorial.bedUsed && MapTutorial.isSleeping)
                 {
                     //모든 npc와 대화한 경우
                     if (isAllNPCActivated)
                     {
-                        
                         if (currentDialogueIndex == 172)
                         {
                             StartCoroutine(screenFader.FadeIn(trainRoom));
@@ -610,7 +669,7 @@ public class TalkManager : MonoBehaviour
                             }
                             if (currentDialogueIndex == 177)
                             {
-                                StartCoroutine(FadeOutAndLoadScene(trainRoom, "ch1Scene 1"));
+                                StartCoroutine(FadeOutAndLoadScene(trainRoom, "ch1Scene"));
                             }
                         }
                     }
@@ -630,6 +689,7 @@ public class TalkManager : MonoBehaviour
                         }
                     }
                 }
+                */
                 break;
         }
     }
@@ -684,8 +744,9 @@ public class TalkManager : MonoBehaviour
         yield return StartCoroutine(screenFader.FadeOut(obj)); // FadeOut이 완료될 때까지 기다립니다.
         narration.SetActive(false);
         dialogue.SetActive(false);
-        DeactivateTalk(); // FadeOut이 완료된 후 대화 비활성화
+        //DeactivateTalk(); // FadeOut이 완료된 후 대화 비활성화
         isFadingOut = false; // 페이드아웃 종료
+        isWaitingForPlayer = true;
         playerController.StartMove(); //대사 끝나고 플레이어 움직임 재개
     }
 
