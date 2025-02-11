@@ -270,18 +270,6 @@ public class Ch4TalkManager : MonoBehaviour
             case 0:
                 //1일차 아침
                 SetPlayerActive(false); // 플레이어 비활성화
-                ChangeScene(backGround, "DEFAULT");
-                break;
-            case 1:
-                break;
-            case 9:
-                SetScene(backGround, true); // 검은 화면을 활성화
-                break;
-            case 10:
-                break;
-            case 11:
-                ChangeScene(trainRoom);
-                player.SetActive(true);
                 break;
             default:
                 break; //아무 것도 활성화하지 않음
