@@ -624,7 +624,7 @@ public class CafeMakeController : MonoBehaviour
     {
         MintLatteAnimator.SetActive(true);
         mintLatteAnimator.Play("MintLatteAnimation");
-        SoundManager.Instance.PlaySFX("mixing liquids");
+        SoundManager.Instance.PlaySFX("blender");
 
         yield return new WaitForSeconds(mintLatteAnimator.GetCurrentAnimatorStateInfo(0).length);
 
@@ -634,7 +634,7 @@ public class CafeMakeController : MonoBehaviour
     {
         SweetPotatoLatteAnimator.SetActive(true);
         sweetPotatoLatteAnimator.Play("SweetPotatoLatteAnimation");
-        SoundManager.Instance.PlaySFX("mixing liquids");
+        SoundManager.Instance.PlaySFX("blender");
 
         yield return new WaitForSeconds(sweetPotatoLatteAnimator.GetCurrentAnimatorStateInfo(0).length);
 
