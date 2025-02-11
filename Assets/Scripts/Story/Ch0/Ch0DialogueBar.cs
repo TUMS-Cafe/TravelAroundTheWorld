@@ -109,6 +109,12 @@ public class Ch0DialogueBar : MonoBehaviour
             speakerKey = talkManager.currentDialogue.speaker;
         }
 
+        else if (sceneName == "Ch4Scene")
+        {
+            Ch4TalkManager talkManager = GameObject.FindObjectOfType<Ch4TalkManager>();
+            speakerKey = talkManager.speakerKey;
+        }
+
         Debug.Log($"SpeakerKey : {speakerKey}");
 
         return speakerKey;
