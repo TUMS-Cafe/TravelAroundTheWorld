@@ -4,6 +4,11 @@ using UnityEngine;
 
 public class CafeMakeController : MonoBehaviour
 {
+    public GameObject Water, Ice, Milk;
+    public GameObject Hibiscus, Chamomile, Rooibos, Green, Luna;
+    public GameObject IceCream, CaramelSyrup, VanillaSyrup, Cinnamon;
+    public GameObject Strawberry, Mango, Blueberry, Mint, SweetPotato;
+
     public GameObject Espresso, HotAmericano, IceAmericano, HotLatte, IceLatte;
     public GameObject HibiscusTea, ChamomileTea, RooibosTea, GreenTea, LunaTea;
     public GameObject Affogato, HotCaramelLatte, IceCaramelLatte, HotCinnamonLatte, IceCinnamonLatte, HotVanillaLatte, IceVanillaLatte, MintLatte;
@@ -55,9 +60,11 @@ public class CafeMakeController : MonoBehaviour
     public Sprite HotCupWithChamomile;
     public Sprite HotCupWithRooibos;
 
-    //addzzz 임시 챕터, 해금 식재료 리스트
-    private int currentChapter = 1; 
+    //임시 챕터, 해금 식재료 리스트
+    public string currentChapter;
     private List<string> unlockedIngredients = new List<string>();
+    private Dictionary<string, List<GameObject>> ingredientObjects = new Dictionary<string, List<GameObject>>();
+
 
     //ani
     public GameObject StrawberryJuiceAnimation; 
@@ -74,8 +81,11 @@ public class CafeMakeController : MonoBehaviour
 
     void Start()
     {
-        unlockedIngredients = new List<string>();
-        UnlockIngredients();
+        currentChapter = PlayerManager.Instance.GetSceneName(); 
+        //currentChapter = "Ch3";
+        Debug.Log($" currentChapter: {currentChapter}");
+        InitializeIngredientUnlockMap();
+        UnlockIngredientsByChapter();
 
         iceCupSpriteRenderer = makeIceCup.GetComponent<SpriteRenderer>();
         hotCupSpriteRenderer = makeHotCup.GetComponent<SpriteRenderer>();
@@ -94,7 +104,7 @@ public class CafeMakeController : MonoBehaviour
         HotCupWithMilk = Resources.Load<Sprite>("CafeMaking/IHotCup+Milk");
         HotCupWithGreen = Resources.Load<Sprite>("CafeMaking/HotCup+Green");
         HotCupWithHibiscus = Resources.Load<Sprite>("CafeMaking/HotCup+Hibiscus");
-        HotCupWithChamomile = Resources.Load<Sprite>("CafeMaking/HotCup+Chamonile");
+        HotCupWithChamomile = Resources.Load<Sprite>("CafeMaking/HotCup+Chamomile");
         HotCupWithRooibos = Resources.Load<Sprite>("CafeMaking/HotCup+Rooibos");
 
         //ani
@@ -106,30 +116,58 @@ public class CafeMakeController : MonoBehaviour
 
     }
 
-    //addzzz
-    public void UnlockIngredients()
+    private void InitializeIngredientUnlockMap()
     {
-        if (currentChapter >= 0)
-            unlockedIngredients.AddRange(new string[] { "Water", "Shot", "Ice" });
-        if (currentChapter >= 1)
-            unlockedIngredients.AddRange(new string[] { "Milk", "HibiscusLeaf", "RooibosLeaf", "GreenTeaLeaf", "ChamomileLeaf", "LunaLeaf" });
-        if (currentChapter >= 2)
-            unlockedIngredients.AddRange(new string[] { "IceCream", "CaramelSyrup", "VanillaSyrup", "Cinnamon" });
-        if (currentChapter >= 3)
-            unlockedIngredients.AddRange(new string[] { "Strawberry", "Mango", "Blueberry", "Mint", "SweetPotato" });
+        if (ingredientObjects == null)
+        {
+            ingredientObjects = new Dictionary<string, List<GameObject>>(); // 초기화
+        }
+
+        ingredientObjects["Ch0"] = new List<GameObject> { Water, Ice, Milk };
+        ingredientObjects["Ch1"] = new List<GameObject> { Hibiscus, Rooibos, Green, Chamomile, Luna};
+        ingredientObjects["Ch2"] = new List<GameObject> { IceCream, CaramelSyrup, VanillaSyrup, Cinnamon };
+        ingredientObjects["Ch3"] = new List<GameObject> { Strawberry, Mango, Blueberry, Mint, SweetPotato };
+       // Debug.Log("Ingredient unlock map initialized.");
+        
+    }
+
+    public void UnlockIngredientsByChapter()
+    {
+        foreach (var chapterEntry in ingredientObjects)
+        {
+            string chapter = chapterEntry.Key;
+            bool isUnlocked = string.Compare(chapter, currentChapter) <= 0;
+
+            foreach (GameObject ingredient in chapterEntry.Value)
+            {
+                if (ingredient != null)
+                {
+                    ingredient.SetActive(isUnlocked);  // 🔹 GameObject 직접 활성화
+                }
+            }
+        }
+
+        //Debug.Log($"Updated ingredient visibility based on chapter: {currentChapter}");
     }
 
     public bool CanUseIngredient(string ingredient)
     {
-        return unlockedIngredients.Contains(ingredient);
+        foreach (var chapterEntry in ingredientObjects)
+        {
+            if (chapterEntry.Value.Exists(obj => obj.name == ingredient))
+            {
+                return string.Compare(chapterEntry.Key, currentChapter) <= 0;
+            }
+        }
+        return false;
     }
 
     void OnEnable()
     {
-        /*deliveryOrder = deliveryData.deliveryOrder;
+        deliveryOrder = deliveryData.deliveryOrder;
         Debug.Log("deliveryNum = " + deliveryNum);
         Debug.Log("delivery menu = " + deliveryData.deliveryOrder);
-*/
+
     }
     
 
@@ -144,6 +182,11 @@ public class CafeMakeController : MonoBehaviour
                 SoundManager.Instance.PlaySFX("espresso");
                 Shot.SetActive(false);
             }
+            if (ingredient.name == "MilkSteam")
+            {
+                SoundManager.Instance.PlaySFX("espresso");
+                MilkSteam.SetActive(false);
+            }
             else if (ingredient.name == "Water" || ingredient.name =="Milk")
             {
                 SoundManager.Instance.PlaySFX("pouring water");
@@ -157,9 +200,16 @@ public class CafeMakeController : MonoBehaviour
                 SoundManager.Instance.PlaySFX("cupsetdown");
             }
             else if (ingredient.name == "GreenTeaLeaf" || ingredient.name == "HibiscusLeaf" ||
-                ingredient.name == "RooibosLeaf"|| ingredient.name == "ChamomileLeaf")
+                ingredient.name == "RooibosLeaf"|| ingredient.name == "ChamomileLeaf" || ingredient.name == "LunaLeaf")
             {
                 SoundManager.Instance.PlaySFX("tea stir");
+            }
+            else if (ingredient.name == "IceCream" || ingredient.name == "CaramelSyrup" ||
+                ingredient.name == "VanillaSyrup" || ingredient.name == "Cinnamon" || 
+                ingredient.name == "Strawberry" || ingredient.name == "Mango" || ingredient.name == "Blueberry" || 
+                ingredient.name == "Mint" || ingredient.name == "SweetPotato")
+            {
+                SoundManager.Instance.PlaySFX("click sound");
             }
         }
         CupDisPlay();
@@ -233,6 +283,13 @@ public class CafeMakeController : MonoBehaviour
                 makeHotCup.SetActive(false);
                 currentIngredients.Clear();
             }
+            else if (currentIngredients.Contains("IceCream"))
+            {
+                Affogato.SetActive(true);
+                Debug.Log("Affogato is maded");
+                makeHotCup.SetActive(false);
+                currentIngredients.Clear();
+            }
             else
             {
                 Espresso.SetActive(true);
@@ -291,13 +348,6 @@ public class CafeMakeController : MonoBehaviour
             currentIngredients.Clear();
         }
         //------------------------------
-        else if ((currentIngredients.Contains("HotCup") || currentIngredients.Contains("MakeHotCup")) && currentIngredients.Contains("IceCream") && currentIngredients.Contains("Shot"))
-        {
-            Affogato.SetActive(true);
-            Debug.Log("Affogato is maded");
-            makeHotCup.SetActive(false);
-            currentIngredients.Clear();
-        }
         else if ((currentIngredients.Contains("HotCup") || currentIngredients.Contains("MakeHotCup")) && currentIngredients.Contains("Shot") && currentIngredients.Contains("MilkSteam") && currentIngredients.Contains("CaramelSyrup"))
         {
             HotCaramelLatte.SetActive(true);
@@ -543,7 +593,8 @@ public class CafeMakeController : MonoBehaviour
 
     IEnumerator PlayStrawberryJuiceAnimation(){
         StrawberryJuiceAnimation.SetActive(true); 
-        strawberryJuiceAnimator.Play("StrawberryJuiceAnimation"); 
+        strawberryJuiceAnimator.Play("StrawberryJuiceAnimation");
+        SoundManager.Instance.PlaySFX("blender");
 
         yield return new WaitForSeconds(strawberryJuiceAnimator.GetCurrentAnimatorStateInfo(0).length); 
 
@@ -553,6 +604,7 @@ public class CafeMakeController : MonoBehaviour
     {
         MangoJuiceAnimation.SetActive(true);
         mangoJuiceAnimator.Play("MangoJuiceAnimation");
+        SoundManager.Instance.PlaySFX("blender");
 
         yield return new WaitForSeconds(mangoJuiceAnimator.GetCurrentAnimatorStateInfo(0).length);
 
@@ -562,6 +614,7 @@ public class CafeMakeController : MonoBehaviour
     {
         BlueberryJuiceAnimation.SetActive(true);
         blueberryJuiceAnimator.Play("BlueberryJuiceAnimation");
+        SoundManager.Instance.PlaySFX("blender");
 
         yield return new WaitForSeconds(blueberryJuiceAnimator.GetCurrentAnimatorStateInfo(0).length);
 
@@ -571,6 +624,7 @@ public class CafeMakeController : MonoBehaviour
     {
         MintLatteAnimator.SetActive(true);
         mintLatteAnimator.Play("MintLatteAnimation");
+        SoundManager.Instance.PlaySFX("mixing liquids");
 
         yield return new WaitForSeconds(mintLatteAnimator.GetCurrentAnimatorStateInfo(0).length);
 
@@ -580,6 +634,7 @@ public class CafeMakeController : MonoBehaviour
     {
         SweetPotatoLatteAnimator.SetActive(true);
         sweetPotatoLatteAnimator.Play("SweetPotatoLatteAnimation");
+        SoundManager.Instance.PlaySFX("mixing liquids");
 
         yield return new WaitForSeconds(sweetPotatoLatteAnimator.GetCurrentAnimatorStateInfo(0).length);
 

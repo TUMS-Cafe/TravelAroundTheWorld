@@ -21,8 +21,8 @@ public class OrderController : MonoBehaviour
 
     public Transform orderListParent;
 
-    public Vector3 startPosition = new Vector3(2f, 0f, -2f);
-    public Vector3 offset = new Vector3(-1.35f, 0, 0);
+    public Transform orderSpawnPoint;
+    public Vector3 offset = new Vector3(-1.7f, 0, 0);
 
     private List<string> generatedOrders = new List<string>();
 
@@ -117,7 +117,7 @@ public class OrderController : MonoBehaviour
     //가장 오른쪽 부분부터 음료 주문을 띄우기 시작 (start Position) 
     public void DisplayRandomOrders()
     {
-        Vector3 currentPosition = startPosition;
+        Vector3 currentPosition = orderSpawnPoint.position;
 
         foreach (var order in generatedOrders)
         {
@@ -162,7 +162,7 @@ public class OrderController : MonoBehaviour
         if (orderPrefab != null)
         {
             GameObject newOrder = Instantiate(orderPrefab, orderListParent);
-            newOrder.transform.localPosition = startPosition;
+            newOrder.transform.position = orderSpawnPoint.position;
         }
 
     }

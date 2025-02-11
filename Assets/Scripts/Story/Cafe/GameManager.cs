@@ -31,11 +31,20 @@ public class GameManager : MonoBehaviour
 
     public CafeMakeController cafeMake;
     public OrderController orderController;
+    public InventoryController inventoryController;
 
     void Start()
     {
 
-        UnlockNewIngredients();
+        if (cafeMake != null)
+        {
+            Debug.Log("Unlocking Ingredients...");
+            cafeMake.UnlockIngredientsByChapter();
+        }
+        else
+        {
+            Debug.LogError("CafeMakeController is not assigned in GameManager!");
+        }
 
         SoundManager.Instance.PlayMusic("CAFE", true);
 
@@ -57,13 +66,6 @@ public class GameManager : MonoBehaviour
         }
     }
 
-//addzzz
-    void UnlockNewIngredients()
-    {
-        int chapter = 1;
-        if (cafeMake != null){
-        cafeMake.UnlockIngredients();
-    }}
 
 
     void Update()
@@ -114,13 +116,23 @@ public class GameManager : MonoBehaviour
             if (clickedObject.name == "btnLeft")
             {
                 Debug.Log("왼쪽 버튼 클릭됨!");
-                FindObjectOfType<InventoryController>().MoveInventory(-1);
+                inventoryController.MoveInventory(-1);
             }
             else if (clickedObject.name == "btnRight")
             {
                 Debug.Log("오른쪽 버튼 클릭됨!");
-                FindObjectOfType<InventoryController>().MoveInventory(1);
+                inventoryController.MoveInventory(1);
             }
+            else if (clickedObject.name == "TrashCan")
+            {
+                Debug.Log("쓰레기통 클릭됨!");
+                TrashController trashController = FindObjectOfType<TrashController>();
+                if (trashController != null)
+                {
+                    trashController.HandleTrashClick();
+                }
+            }
+
             /*if (clickedObject != null && clickedObject.name == "TeaInventory")
             {
                 Vector2 currentPosition = clickedObject.transform.position;
@@ -180,4 +192,4 @@ public class GameManager : MonoBehaviour
 
 
 
-    }
+}
