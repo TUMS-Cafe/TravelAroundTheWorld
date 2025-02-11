@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class InventoryController : MonoBehaviour
 {
-    
+
     public List<GameObject> inventories;  // 인벤토리 리스트 (1~4)
     public Transform leftPosition;  // 왼쪽 인벤토리 위치
     public Transform rightPosition; // 오른쪽 인벤토리 위치
@@ -14,7 +14,7 @@ public class InventoryController : MonoBehaviour
 
     private int leftIndex = 0;  // 현재 왼쪽에 위치한 인벤토리 인덱스
     private int rightIndex = 1; // 현재 오른쪽에 위치한 인벤토리 인덱스
-    private int chapter = 3;
+    private string currentChapter = PlayerManager.Instance.GetSceneName();
 
     void Start()
     {
@@ -34,7 +34,7 @@ public class InventoryController : MonoBehaviour
         int maxIndex = GetMaxInventoryIndex();
         if (direction == 1) // ▶ 오른쪽 버튼 클릭
         {
-            
+
             leftIndex = (leftIndex + 1) % inventories.Count;
             rightIndex = (rightIndex + 1) % inventories.Count;
         }
@@ -70,11 +70,11 @@ public class InventoryController : MonoBehaviour
     }
     int GetMaxInventoryIndex()
     {
-        switch (chapter)
+        switch (currentChapter)
         {
-            case 1: return 1; // 인벤토리 1, 2만 표시
-            case 2: return 2; // 인벤토리 1, 2, 3 표시
-            case 3: return 3; // 인벤토리 1, 2, 3, 4 표시
+            case "Ch1": return 1; // 인벤토리 1, 2만 표시
+            case "Ch2": return 2; // 인벤토리 1, 2, 3 표시
+            case "Ch3": return 3; // 인벤토리 1, 2, 3, 4 표시
             default: return 1; // 기본값: 1, 2 표시
         }
     }

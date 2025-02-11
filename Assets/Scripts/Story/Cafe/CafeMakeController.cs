@@ -56,7 +56,7 @@ public class CafeMakeController : MonoBehaviour
     public Sprite HotCupWithRooibos;
 
     //addzzz 임시 챕터, 해금 식재료 리스트
-    private int currentChapter = 1; 
+    private string currentChapter = PlayerManager.Instance.GetSceneName(); 
     private List<string> unlockedIngredients = new List<string>();
 
     //ani
@@ -109,13 +109,13 @@ public class CafeMakeController : MonoBehaviour
     //addzzz
     public void UnlockIngredients()
     {
-        if (currentChapter >= 0)
+        if (currentChapter == "Ch1")
             unlockedIngredients.AddRange(new string[] { "Water", "Shot", "Ice" });
-        if (currentChapter >= 1)
+        if (currentChapter == "Ch1")
             unlockedIngredients.AddRange(new string[] { "Milk", "HibiscusLeaf", "RooibosLeaf", "GreenTeaLeaf", "ChamomileLeaf", "LunaLeaf" });
-        if (currentChapter >= 2)
+        if (currentChapter == "Ch2")
             unlockedIngredients.AddRange(new string[] { "IceCream", "CaramelSyrup", "VanillaSyrup", "Cinnamon" });
-        if (currentChapter >= 3)
+        if (currentChapter == "Ch3")
             unlockedIngredients.AddRange(new string[] { "Strawberry", "Mango", "Blueberry", "Mint", "SweetPotato" });
     }
 
@@ -543,7 +543,8 @@ public class CafeMakeController : MonoBehaviour
 
     IEnumerator PlayStrawberryJuiceAnimation(){
         StrawberryJuiceAnimation.SetActive(true); 
-        strawberryJuiceAnimator.Play("StrawberryJuiceAnimation"); 
+        strawberryJuiceAnimator.Play("StrawberryJuiceAnimation");
+        SoundManager.Instance.PlaySFX("blender");
 
         yield return new WaitForSeconds(strawberryJuiceAnimator.GetCurrentAnimatorStateInfo(0).length); 
 
@@ -553,6 +554,7 @@ public class CafeMakeController : MonoBehaviour
     {
         MangoJuiceAnimation.SetActive(true);
         mangoJuiceAnimator.Play("MangoJuiceAnimation");
+        SoundManager.Instance.PlaySFX("blender");
 
         yield return new WaitForSeconds(mangoJuiceAnimator.GetCurrentAnimatorStateInfo(0).length);
 
@@ -562,6 +564,7 @@ public class CafeMakeController : MonoBehaviour
     {
         BlueberryJuiceAnimation.SetActive(true);
         blueberryJuiceAnimator.Play("BlueberryJuiceAnimation");
+        SoundManager.Instance.PlaySFX("blender");
 
         yield return new WaitForSeconds(blueberryJuiceAnimator.GetCurrentAnimatorStateInfo(0).length);
 
@@ -571,6 +574,7 @@ public class CafeMakeController : MonoBehaviour
     {
         MintLatteAnimator.SetActive(true);
         mintLatteAnimator.Play("MintLatteAnimation");
+        SoundManager.Instance.PlaySFX("mixing liquids");
 
         yield return new WaitForSeconds(mintLatteAnimator.GetCurrentAnimatorStateInfo(0).length);
 
@@ -580,6 +584,7 @@ public class CafeMakeController : MonoBehaviour
     {
         SweetPotatoLatteAnimator.SetActive(true);
         sweetPotatoLatteAnimator.Play("SweetPotatoLatteAnimation");
+        SoundManager.Instance.PlaySFX("mixing liquids");
 
         yield return new WaitForSeconds(sweetPotatoLatteAnimator.GetCurrentAnimatorStateInfo(0).length);
 
