@@ -98,6 +98,8 @@ public class TrashController : MonoBehaviour
     {
         Debug.Log("쓰레기통 클릭됨. 모든 음료 제거 실행.");
 
+        SoundManager.Instance.PlaySFX("trash");
+
         // Drinks 내의 모든 자식 오브젝트 비활성화
         if (drinksParent != null)
         {

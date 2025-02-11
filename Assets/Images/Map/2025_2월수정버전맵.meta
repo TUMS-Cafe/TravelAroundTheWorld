@@ -1,6 +1,10 @@
 fileFormatVersion: 2
+<<<<<<<< HEAD:Assets/Scenes/TAP.unity.meta
+guid: e8451a2130cad3a4996fc82d5aba91aa
+========
 guid: 3621f8a924587e54e9bcf3c6de1e05ac
 folderAsset: yes
+>>>>>>>> main:Assets/Images/Map/2025_2월수정버전맵.meta
 DefaultImporter:
   externalObjects: {}
   userData: 

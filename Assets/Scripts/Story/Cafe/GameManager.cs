@@ -23,6 +23,7 @@ public class GameManager : MonoBehaviour
     public GameObject ShotAniObj;
     public GameObject SteamAniObj;
 
+    public RecipeBookUI RecipeBookUI;
 
     //private bool buyMilk = PlayerManager.Instance.IsBoughtCafeItem("우유");
     //private bool buyTeaSet = PlayerManager.Instance.IsBoughtCafeItem("티 세트");
@@ -94,14 +95,13 @@ public class GameManager : MonoBehaviour
             {
                 Delivery.SetActive(true);
                 CafeMap.SetActive(false);
-            }
-            if (clickedObject != null && (clickedObject.name == "RecipeBook" || clickedObject.name == "Recipe"))
+            }*/
+
+            if (clickedObject != null && (clickedObject.name == "Recipe" || clickedObject.name == "Recipe"))
             {
-                RecipeBook.SetActive(true);
-                CafeMap.SetActive(false);
-                Beverage.SetActive(false);
+                RecipeBookUI.OpenRecipeBook();
             }
-            */
+
             if (clickedObject != null && clickedObject.name == "Extract")
             {
                 StartCoroutine(ShotActivateObjectAfterDelay(2f, Shot));
