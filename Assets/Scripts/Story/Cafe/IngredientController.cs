@@ -25,6 +25,8 @@ public class IngredientController : MonoBehaviour
     public GameObject RooibosTea;
     public GameObject GreenTea;
 
+    public GameObject Affogato;
+
 
     void Start()
     {
@@ -37,6 +39,7 @@ public class IngredientController : MonoBehaviour
 
     void OnMouseDown()
     {
+        defaultPos = transform.position;
         offset = transform.position - GetMouseWorldPosition();
         isDragging = true;
     }
@@ -59,7 +62,7 @@ public class IngredientController : MonoBehaviour
     
      private void CheckForMakeArea()
     {
-        if (makeArea != null && makeArea.GetComponent<Collider2D>().bounds.Contains(transform.position))
+        if (makeArea.GetComponent<Collider2D>().OverlapPoint(transform.position))
         {
             if (!Espresso.activeSelf && !IceAmericano.activeSelf && !HotAmericano.activeSelf && !IceLatte.activeSelf && !HotLatte.activeSelf &&
                 !GreenTea.activeSelf && !HibiscusTea.activeSelf && !ChamomileTea.activeSelf && !RooibosTea.activeSelf)
@@ -81,7 +84,7 @@ public class IngredientController : MonoBehaviour
                 }
             }
         }
-        
+
         transform.position = defaultPos;
     }
 
@@ -93,7 +96,7 @@ public class IngredientController : MonoBehaviour
         if (trashCollider != null && thisCollider != null && thisCollider.bounds.Intersects(trashCollider.bounds))
         {
             Debug.Log(gameObject.name + " dropped on trashcan");
-            trashController.HandleTrashCan(gameObject);
+            //trashController.HandleTrashCan(gameObject);
             SoundManager.Instance.PlaySFX("trash");
         }
     }

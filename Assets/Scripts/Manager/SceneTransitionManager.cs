@@ -54,9 +54,14 @@ public class SceneTransitionManager : MonoBehaviour
 
     public string GetCafeOrders()
     {
+        if (toCafeOrders == null || toCafeOrders.Count == 0)
+        {
+            Debug.LogError("Error: No orders found in toCafeOrders!");
+            return null; 
+        }
         return toCafeOrders[0].MenuItem;
     }
- 
+
     //직접 와서 주문 받는 형식(주문자가 정해져 있음)
     public void HandleDialogueTransition(string fromScene, string toScene, int returnIdx, List<CafeOrder> orders)
     {
@@ -108,7 +113,7 @@ public class SceneTransitionManager : MonoBehaviour
         return cafeOrders.Exists(o =>
             //o.CustomerName == order.CustomerName &&
             o.MenuItem == order.MenuItem); //&&
-            //o.MenuQuantity == order.MenuQuantity);
+                                           //o.MenuQuantity == order.MenuQuantity);
     }
 
     //랜덤메뉴 설정
@@ -121,7 +126,7 @@ public class SceneTransitionManager : MonoBehaviour
         randomMenuNum = 0;
         randomMenuTransitionNum = randomNum;
         StartCoroutine(HandleRandomMenuSceneTransition(fromScene, toScene, returnIdx, randomNum));
-        
+
     }
 
     //랜덤메뉴 설정
@@ -199,7 +204,7 @@ public class SceneTransitionManager : MonoBehaviour
     //스토리 진행 중 다른 씬으로 이동
     public void HandleDialogueTransition(string fromScene, string toScene, int fromSceneIdx, int toSceneIdx, int returnIdx)
     {
-        returnDialogueIndex = returnIdx; 
+        returnDialogueIndex = returnIdx;
         targetScene = fromScene;
         StartCoroutine(HandleSceneTransition(fromScene, toScene, fromSceneIdx, toSceneIdx, returnIdx));
     }
@@ -357,7 +362,7 @@ public class SceneTransitionManager : MonoBehaviour
         // 로깅 작업 수행
         Debug.Log("Performing post-transition tasks...");
     }
-    
+
 }
 
 

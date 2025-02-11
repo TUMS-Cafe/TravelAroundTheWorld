@@ -47,6 +47,18 @@ public class Ch3BedButton : MonoBehaviour
         talkManager.map.SetActive(false);
         talkManager.trainRoom.SetActive(true);
 
+        talkManager.backCafe.SetActive(true);
+        talkManager.backBakery.SetActive(true);
+        talkManager.backMedicalRoom.SetActive(true);
+        talkManager.backBalcony.SetActive(true);
+        talkManager.assetCafe.SetActive(true);
+        talkManager.backCafeNight.SetActive(false);
+        talkManager.backBakeryNight.SetActive(false);
+        talkManager.backMedicalRoomNight.SetActive(false);
+        talkManager.backBalconyNight.SetActive(false);
+        talkManager.assetCafeNight.SetActive(false);
+        talkManager.map.SetActive(false);
+
         //1일차 밤->2일차 아침
         if (talkManager.currentDialogueIndex == 76)
         {
@@ -63,6 +75,42 @@ public class Ch3BedButton : MonoBehaviour
         if (talkManager.currentDialogueIndex == 226)
         {
             talkManager.currentDialogueIndex = 253;
+            talkManager.PrintProDialogue(talkManager.currentDialogueIndex);
+        }
+        //4일차 밤->5일차 아침
+        if (talkManager.currentDialogueIndex == 356)
+        {
+            talkManager.currentDialogueIndex = 391;
+            talkManager.PrintProDialogue(talkManager.currentDialogueIndex);
+        }
+        //5일차 밤->6일차 아침
+        if (talkManager.currentDialogueIndex == 418)
+        {
+            talkManager.currentDialogueIndex = 453;
+            talkManager.PrintProDialogue(talkManager.currentDialogueIndex);
+        }
+        //6일차 밤->7일차 아침 (해피엔딩, 미니게임 성공)
+        if (talkManager.isCh2HappyEnding && PlayerManager.Instance.IsCh3MiniGameSuccess() && talkManager.currentDialogueIndex == 533)
+        {
+            talkManager.currentDialogueIndex = 534;
+            talkManager.PrintProDialogue(talkManager.currentDialogueIndex);
+        }
+        //6일차 밤->7일차 아침 (해피엔딩, 미니게임 실패)
+        if (talkManager.isCh2HappyEnding && !PlayerManager.Instance.IsCh3MiniGameSuccess() && talkManager.currentDialogueIndex == 533)
+        {
+            talkManager.currentDialogueIndex = 534;
+            talkManager.PrintProDialogue(talkManager.currentDialogueIndex);
+        }
+        //6일차 밤->7일차 아침 (배드엔딩, 미니게임 성공)
+        if (!talkManager.isCh2HappyEnding && PlayerManager.Instance.IsCh3MiniGameSuccess() && talkManager.currentDialogueIndex == 683)
+        {
+            talkManager.currentDialogueIndex = 684;
+            talkManager.PrintProDialogue(talkManager.currentDialogueIndex);
+        }
+        //6일차 밤->7일차 아침 (해피엔딩, 미니게임 실패)
+        if (!talkManager.isCh2HappyEnding && !PlayerManager.Instance.IsCh3MiniGameSuccess() && talkManager.currentDialogueIndex == 683)
+        {
+            talkManager.currentDialogueIndex = 684;
             talkManager.PrintProDialogue(talkManager.currentDialogueIndex);
         }
 

@@ -10,6 +10,7 @@ public class Bed : MonoBehaviour
     private PlayerAnimationController playerAnimationController;
 
     public GameObject bedNarration;
+    public TalkManager talkManager;
 
     private void Start()
     {
@@ -23,7 +24,14 @@ public class Bed : MonoBehaviour
         {
             bedNarration.SetActive(true);
             UIManager.Instance.ToggleUI("Bed");
-            player.GetComponent<PlayerController>().StopMove();
+            if(!talkManager.isAllNPCActivated && talkManager.currentDialogueIndex == 173)
+            {
+                player.GetComponent<PlayerController>().StartMove();
+            }
+            else
+            {
+                player.GetComponent<PlayerController>().StopMove();
+            }
         }
     }
 

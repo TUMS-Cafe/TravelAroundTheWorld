@@ -72,21 +72,49 @@ public class Ch3MapManager : MonoBehaviour
 
     public void UpdateMapState()
     {
-        if (playerPosition.x >= -88 && playerPosition.x <= -68 && playerPosition.y >= -5f && playerPosition.y <= 5f)
+        if (playerPosition.x >= -126.1 && playerPosition.x <= -106.1 && playerPosition.y >= -5f && playerPosition.y <= 5f)
         {
             currentState = MapState.MechanicalRoom;
         }
-        else if (playerPosition.x >= -68 && playerPosition.x <= -48 && playerPosition.y >= -5f && playerPosition.y <= 5f)
+        else if (playerPosition.x >= -106.1 && playerPosition.x <= -86.1 && playerPosition.y >= -5f && playerPosition.y <= 5f)
         {
             currentState = MapState.EngineRoom;
         }
-        else if (playerPosition.x >= -48 && playerPosition.x <= -38.8 && playerPosition.y >= 1.8f && playerPosition.y <= 9.8f)
+        else if (playerPosition.x >= -85.5 && playerPosition.x <= -77.5 && playerPosition.y >= 1.8f && playerPosition.y <= 9.8f)
         {
-            currentState = MapState.TrainRoom3;
+            currentState = MapState.TrainRoom101;
+        }
+        else if (playerPosition.x >= -76.2 && playerPosition.x <= -68.2 && playerPosition.y >= 1.8f && playerPosition.y <= 9.8f)
+        {
+            currentState = MapState.TrainRoom102;
+        }
+        else if (playerPosition.x >= -66.4 && playerPosition.x <= -58.4 && playerPosition.y >= 1.8f && playerPosition.y <= 9.8f)
+        {
+            currentState = MapState.TrainRoom201;
+        }
+        else if (playerPosition.x >= -56.9 && playerPosition.x <= -48.9 && playerPosition.y >= 1.8f && playerPosition.y <= 9.8f)
+        {
+            currentState = MapState.TrainRoom202;
+        }
+        else if (playerPosition.x >= -47.2 && playerPosition.x <= -39.2 && playerPosition.y >= 1.8f && playerPosition.y <= 9.8f)
+        {
+            currentState = MapState.TrainRoom301;
+        }
+        else if (playerPosition.x >= -37.7 && playerPosition.x <= -29.7 && playerPosition.y >= 1.8f && playerPosition.y <= 9.8f)
+        {
+            currentState = MapState.TrainRoom302;
+        }
+        else if (playerPosition.x >= -86.1 && playerPosition.x <= -67.2 && playerPosition.y >= -5f && playerPosition.y <= 1.8f)
+        {
+            currentState = MapState.Hallway1;
+        }
+        else if (playerPosition.x >= -67.2 && playerPosition.x <= -48 && playerPosition.y >= -5f && playerPosition.y <= 1.8f)
+        {
+            currentState = MapState.Hallway2;
         }
         else if (playerPosition.x >= -48 && playerPosition.x <= -28.8 && playerPosition.y >= -5f && playerPosition.y <= 1.8f)
         {
-            currentState = MapState.Hallway;
+            currentState = MapState.Hallway3;
         }
         else if (playerPosition.x >= -28.8 && playerPosition.x <= -9.6 && playerPosition.y >= -5f && playerPosition.y <= 5f)
         {

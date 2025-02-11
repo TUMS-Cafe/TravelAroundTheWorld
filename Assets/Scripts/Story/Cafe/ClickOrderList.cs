@@ -16,7 +16,7 @@ public class ClickOrderList : MonoBehaviour
     public GameObject CafeMap;
 
     private float speed = 2300; // 이동 속도
-    // 
+
 
     private Vector3 RSHide = new Vector3 (-2000, 0, 0);
     private Vector3 RSShow = new Vector3(-300, 0, 0);

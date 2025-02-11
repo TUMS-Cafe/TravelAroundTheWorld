@@ -9,7 +9,7 @@ public class Ch3NpcScript : MonoBehaviour
     public Ch3TalkManager talkManager; // Ch3TalkManager 참조
     public Transform player; // 플레이어의 위치
 
-    public float interactionRange = 5f; // NPC와 상호작용 가능한 범위
+    public float interactionRange = 1f; // NPC와 상호작용 가능한 범위
 
     private bool isPlayerInRange = false; // 플레이어가 범위 내에 있는지 확인
     public string currentNpc="Null";
@@ -48,7 +48,7 @@ public class Ch3NpcScript : MonoBehaviour
                 dialogueButton.SetActive(true);
                 currentNpc = "Npc_Kuraya";
             }
-            else if (gameObject.name == "Npc_Rusk" && !talkManager.HasTalkedToRusk)
+            else if (!talkManager.isCh2HappyEnding && gameObject.name == "Npc_Rusk" && !talkManager.HasTalkedToRusk)
             {
                 dialogueButton.SetActive(true);
                 currentNpc = "Npc_Rusk";
@@ -135,6 +135,121 @@ public class Ch3NpcScript : MonoBehaviour
                 currentNpc = "Null";
             }
         }
+        // 4일차 밤 Npc 대화
+        else if (isPlayerInRange && talkManager.currentDialogueIndex == 356)
+        {
+            if (gameObject.name == "Npc_Rayviyak" && !talkManager.HasTalkedToRayviyak)
+            {
+                dialogueButton.SetActive(true);
+                currentNpc = "Npc_Rayviyak";
+            }
+            else if (gameObject.name == "Npc_Nicksy" && !talkManager.HasTalkedToNicksy)
+            {
+                dialogueButton.SetActive(true);
+                currentNpc = "Npc_Nicksy";
+            }
+            else if (talkManager.isCh2HappyEnding && gameObject.name == "Npc_Kuraya" && !talkManager.HasTalkedToKuraya)
+            {
+                dialogueButton.SetActive(true);
+                currentNpc = "Npc_Kuraya";
+            }
+            else if (!talkManager.isCh2HappyEnding && gameObject.name == "Npc_Rusk" && !talkManager.HasTalkedToRusk)
+            {
+                dialogueButton.SetActive(true);
+                currentNpc = "Npc_Rusk";
+            }
+            else if (gameObject.name == "Npc_MrHam" && !talkManager.HasTalkedToMrHam)
+            {
+                dialogueButton.SetActive(true);
+                currentNpc = "Npc_MrHam";
+            }
+            else if (gameObject.name == "Npc_Ash" && !talkManager.HasTalkedToAsh)
+            {
+                dialogueButton.SetActive(true);
+                currentNpc = "Npc_Ash";
+            }
+            else if (gameObject.name == "Npc_Violet" || gameObject.name == "Npc_Coco")
+            {
+                dialogueButton.SetActive(false);
+            }
+            else if (gameObject.name != "Npc_Rayviyak" && gameObject.name != "Npc_Naru" && gameObject.name != "Npc_Violet" && gameObject.name != "Npc_Kuraya" && gameObject.name != "Npc_Rusk" && gameObject.name != "Npc_Coco" && gameObject.name != "Npc_Nicksy" && gameObject.name != "Npc_MrHam" && gameObject.name != "Npc_Ash")
+            {
+                dialogueButton.SetActive(false);
+                currentNpc = "Null";
+            }
+        }
+        // 5일차 밤 Npc 대화
+        else if (isPlayerInRange && talkManager.currentDialogueIndex == 418)
+        {
+            if (gameObject.name == "Npc_Rayviyak" && !talkManager.HasTalkedToRayviyak)
+            {
+                dialogueButton.SetActive(true);
+                currentNpc = "Npc_Rayviyak";
+            }
+            else if (gameObject.name == "Npc_Violet" && !talkManager.HasTalkedToViolet)
+            {
+                dialogueButton.SetActive(true);
+                currentNpc = "Npc_Violet";
+            }
+            else if (talkManager.isCh2HappyEnding && gameObject.name == "Npc_Rusk" && !talkManager.HasTalkedToRusk)
+            {
+                dialogueButton.SetActive(true);
+                currentNpc = "Npc_Rusk";
+            }
+            else if (!talkManager.isCh2HappyEnding && gameObject.name == "Npc_Rusk" && !talkManager.HasTalkedToRusk)
+            {
+                dialogueButton.SetActive(true);
+                currentNpc = "Npc_Rusk";
+            }
+            else if (gameObject.name == "Npc_MrHam" && !talkManager.HasTalkedToMrHam)
+            {
+                dialogueButton.SetActive(true);
+                currentNpc = "Npc_MrHam";
+            }
+            else if (gameObject.name == "Npc_Naru" && !talkManager.HasTalkedToNaru)
+            {
+                dialogueButton.SetActive(true);
+                currentNpc = "Npc_Naru";
+            }
+            else if (gameObject.name == "Npc_Nicksy" || gameObject.name == "Npc_Coco" || gameObject.name == "Npc_Kuraya")
+            {
+                dialogueButton.SetActive(false);
+            }
+            else if (gameObject.name != "Npc_Rayviyak" && gameObject.name != "Npc_Naru" && gameObject.name != "Npc_Violet" && gameObject.name != "Npc_Kuraya" && gameObject.name != "Npc_Rusk" && gameObject.name != "Npc_Coco" && gameObject.name != "Npc_Nicksy" && gameObject.name != "Npc_MrHam" && gameObject.name != "Npc_Ash")
+            {
+                dialogueButton.SetActive(false);
+                currentNpc = "Null";
+            }
+        }
+        /*
+        // 6일차 밤 미니게임 npc 찾았을때 대화
+        else if (isPlayerInRange && !talkManager.isTimeOut && talkManager.currentDialogueIndex == 499)
+        {
+            if (talkManager.isCh2HappyEnding && gameObject.name == "Npc_Coco" && !talkManager.HasTalkedToCoco)
+            {
+                dialogueButton.SetActive(true);
+                currentNpc = "Npc_Coco";
+            }
+            else if (talkManager.isCh2HappyEnding && gameObject.name == "Npc_Nicksy" && !talkManager.HasTalkedToNicksy)
+            {
+                dialogueButton.SetActive(true);
+                currentNpc = "Npc_Nicksy";
+            }
+        }
+        else if (isPlayerInRange && !talkManager.isTimeOut && talkManager.currentDialogueIndex == 674)
+        {
+            if (!talkManager.isCh2HappyEnding && gameObject.name == "Npc_Coco" && !talkManager.HasTalkedToCoco)
+            {
+                dialogueButton.SetActive(true);
+                currentNpc = "Npc_Coco";
+            }
+            else if (!talkManager.isCh2HappyEnding && gameObject.name == "Npc_Nicksy" && !talkManager.HasTalkedToNicksy)
+            {
+                dialogueButton.SetActive(true);
+                currentNpc = "Npc_Nicksy";
+            }
+        }
+        */
         else
         {
             dialogueButton.SetActive(false);
