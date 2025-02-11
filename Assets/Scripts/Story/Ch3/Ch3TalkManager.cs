@@ -90,6 +90,8 @@ public class Ch3TalkManager : MonoBehaviour
     public GameObject backBalconyNight;
     public GameObject assetCafeNight;
 
+    public CutSceneManager cutSceneManager;
+
     public string currentMusic = ""; // 현재 재생 중인 음악의 이름을 저장
 
     public bool isAnimationPlaying = false;
@@ -495,6 +497,39 @@ public class Ch3TalkManager : MonoBehaviour
                         narration.SetActive(false);
                         dialogue.SetActive(false);
                     }
+                }
+                // 7일차 낮 컷씬 부분
+                if (currentDialogueIndex == 684 && !isAnimationPlaying)
+                {
+                    isAnimationPlaying = true;
+                    player.SetActive(false);
+                    map.SetActive(false);
+                    backGround.SetActive(false);
+                    trainRoom.SetActive(false);
+                    cafe.SetActive(false);
+                    narration.SetActive(false);
+                    dialogue.SetActive(false);
+                    cutSceneManager.ShowCutscene();
+                }
+                if (currentDialogueIndex == 685)
+                {
+                    player.SetActive(false);
+                    map.SetActive(false);
+                    backGround.SetActive(true);
+                    trainRoom.SetActive(false);
+                    cafe.SetActive(false);
+                    narration.SetActive(false);
+                    dialogue.SetActive(false);
+                }
+                if (currentDialogueIndex == 686)
+                {
+                    player.SetActive(false);
+                    map.SetActive(false);
+                    backGround.SetActive(false);
+                    trainRoom.SetActive(true);
+                    cafe.SetActive(false);
+                    narration.SetActive(true);
+                    dialogue.SetActive(false);
                 }
                 // 7일차 낮 엔딩
                 if (currentDialogueIndex == 743)
