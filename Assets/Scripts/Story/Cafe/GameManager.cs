@@ -36,7 +36,15 @@ public class GameManager : MonoBehaviour
     void Start()
     {
 
-        UnlockNewIngredients();
+        if (cafeMake != null)
+        {
+            Debug.Log("Unlocking Ingredients...");
+            cafeMake.UnlockIngredientsByChapter();
+        }
+        else
+        {
+            Debug.LogError("CafeMakeController is not assigned in GameManager!");
+        }
 
         SoundManager.Instance.PlayMusic("CAFE", true);
 
@@ -58,13 +66,6 @@ public class GameManager : MonoBehaviour
         }
     }
 
-//addzzz
-    void UnlockNewIngredients()
-    {
-        int chapter = 1;
-        if (cafeMake != null){
-        cafeMake.UnlockIngredients();
-    }}
 
 
     void Update()
@@ -115,12 +116,12 @@ public class GameManager : MonoBehaviour
             if (clickedObject.name == "btnLeft")
             {
                 Debug.Log("왼쪽 버튼 클릭됨!");
-                inventoryManager.MoveInventory(-1);
+                inventoryController.MoveInventory(-1);
             }
             else if (clickedObject.name == "btnRight")
             {
                 Debug.Log("오른쪽 버튼 클릭됨!");
-                inventoryManager.MoveInventory(1);
+                inventoryController.MoveInventory(1);
             }
             else if (clickedObject.name == "TrashCan")
             {
@@ -191,4 +192,4 @@ public class GameManager : MonoBehaviour
 
 
 
-    }
+}

@@ -39,6 +39,7 @@ public class IngredientController : MonoBehaviour
 
     void OnMouseDown()
     {
+        defaultPos = transform.position;
         offset = transform.position - GetMouseWorldPosition();
         isDragging = true;
     }
@@ -95,7 +96,7 @@ public class IngredientController : MonoBehaviour
         if (trashCollider != null && thisCollider != null && thisCollider.bounds.Intersects(trashCollider.bounds))
         {
             Debug.Log(gameObject.name + " dropped on trashcan");
-            trashController.HandleTrashCan(gameObject);
+            //trashController.HandleTrashCan(gameObject);
             SoundManager.Instance.PlaySFX("trash");
         }
     }

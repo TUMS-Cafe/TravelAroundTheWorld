@@ -75,7 +75,6 @@ public class TrashController : MonoBehaviour
     public float spriteChangeDuration = 0.1f;
 
     public Transform drinksParent;  // Drinks 오브젝트 부모
-    public Transform beverageParent;  // Beverage 오브젝트 부모
 
     void Start()
     {
@@ -103,15 +102,6 @@ public class TrashController : MonoBehaviour
         if (drinksParent != null)
         {
             foreach (Transform child in drinksParent)
-            {
-                child.gameObject.SetActive(false);
-            }
-        }
-
-        // Beverage 내의 모든 자식 오브젝트 비활성화
-        if (beverageParent != null)
-        {
-            foreach (Transform child in beverageParent)
             {
                 child.gameObject.SetActive(false);
             }

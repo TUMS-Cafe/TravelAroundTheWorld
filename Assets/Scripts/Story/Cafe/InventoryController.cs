@@ -14,7 +14,6 @@ public class InventoryController : MonoBehaviour
 
     private int leftIndex = 0;  // 현재 왼쪽에 위치한 인벤토리 인덱스
     private int rightIndex = 1; // 현재 오른쪽에 위치한 인벤토리 인덱스
-    private string currentChapter = PlayerManager.Instance.GetSceneName();
 
     void Start()
     {
@@ -30,8 +29,8 @@ public class InventoryController : MonoBehaviour
     public void MoveInventory(int direction)
     {
         Debug.Log($"Button Clicked! Direction: {(direction == 1 ? "Right ▶" : "Left ◀")}");
+        SoundManager.Instance.PlaySFX("click sound");
 
-        int maxIndex = GetMaxInventoryIndex();
         if (direction == 1) // ▶ 오른쪽 버튼 클릭
         {
 
@@ -44,38 +43,23 @@ public class InventoryController : MonoBehaviour
             rightIndex = (rightIndex - 1 + inventories.Count) % inventories.Count;
         }
 
-        Debug.Log($"New LeftIndex: {leftIndex}, RightIndex: {rightIndex}");
+        //Debug.Log($"New LeftIndex: {leftIndex}, RightIndex: {rightIndex}");
         UpdateInventoryDisplay();
     }
 
     // 인벤토리 상태 업데이트
     void UpdateInventoryDisplay()
     {
-        int maxIndex = GetMaxInventoryIndex();
-
         // 모든 인벤토리를 비활성화
         for (int i = 0; i < inventories.Count; i++)
         {
             inventories[i].SetActive(false);
         }
+        inventories[leftIndex].SetActive(true);
+        inventories[leftIndex].transform.position = leftPosition.position;
 
-        if (leftIndex <= maxIndex && rightIndex <= maxIndex)
-        {
-            inventories[leftIndex].SetActive(true);
-            inventories[leftIndex].transform.position = leftPosition.position;
-
-            inventories[rightIndex].SetActive(true);
-            inventories[rightIndex].transform.position = rightPosition.position;
-        }
-    }
-    int GetMaxInventoryIndex()
-    {
-        switch (currentChapter)
-        {
-            case "Ch1": return 1; // 인벤토리 1, 2만 표시
-            case "Ch2": return 2; // 인벤토리 1, 2, 3 표시
-            case "Ch3": return 3; // 인벤토리 1, 2, 3, 4 표시
-            default: return 1; // 기본값: 1, 2 표시
-        }
+        inventories[rightIndex].SetActive(true);
+        inventories[rightIndex].transform.position = rightPosition.position;
+        
     }
 }
