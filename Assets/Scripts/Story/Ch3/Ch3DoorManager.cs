@@ -124,6 +124,32 @@ public class Ch3DoorManager : MonoBehaviour
                 player.transform.position = new Vector3(player.transform.position.x - 1.7f, player.transform.position.y, player.transform.position.z);
             }
         }
+        else if (doorName == "Door7")
+        {
+            if (playerState == MapState.Hallway2)
+            {
+                // 플레이어의 x 좌표를 오른쪽으로 이동
+                player.transform.position = new Vector3(player.transform.position.x + 1.7f, player.transform.position.y, player.transform.position.z);
+            }
+            else if (playerState == MapState.Hallway3)
+            {
+                // 플레이어의 x 좌표를 왼쪽으로 이동
+                player.transform.position = new Vector3(player.transform.position.x - 1.7f, player.transform.position.y, player.transform.position.z);
+            }
+        }
+        else if (doorName == "Door8")
+        {
+            if (playerState == MapState.Hallway1)
+            {
+                // 플레이어의 x 좌표를 오른쪽으로 이동
+                player.transform.position = new Vector3(player.transform.position.x + 1.7f, player.transform.position.y, player.transform.position.z);
+            }
+            else if (playerState == MapState.Hallway2)
+            {
+                // 플레이어의 x 좌표를 왼쪽으로 이동
+                player.transform.position = new Vector3(player.transform.position.x - 1.7f, player.transform.position.y, player.transform.position.z);
+            }
+        }
         else if (doorName == "Door3")
         {
             if (playerState == MapState.Garden)
