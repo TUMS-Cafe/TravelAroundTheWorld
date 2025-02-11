@@ -8,6 +8,7 @@ public class SaveSlot : MonoBehaviour
     public int slotIndex;
     public TextMeshProUGUI playTimeText;
     public GameObject checkImage;
+    public GameObject PlayerImage;
 
     private bool isUsed = false;
 
@@ -41,6 +42,7 @@ public class SaveSlot : MonoBehaviour
         int seconds = Mathf.FloorToInt(playTime % 60);
         playTimeText.text = used ? string.Format("{0:00}:{1:00}", minutes, seconds) : "";
         checkImage.SetActive(used);
+        PlayerImage.SetActive(used);
     }
 
     public void OnDeleteSlot()
