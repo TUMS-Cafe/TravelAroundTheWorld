@@ -97,10 +97,9 @@ public class GameManager : MonoBehaviour
                 CafeMap.SetActive(false);
             }*/
 
-            if (clickedObject != null && (clickedObject.name == "RecipeBook" || clickedObject.name == "Recipe"))
+            if (clickedObject != null && (clickedObject.name == "Recipe" || clickedObject.name == "Recipe"))
             {
                 RecipeBookUI.OpenRecipeBook();
-                Beverage.SetActive(false);
             }
 
             if (clickedObject != null && clickedObject.name == "Extract")
