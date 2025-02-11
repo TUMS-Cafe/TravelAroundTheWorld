@@ -18,6 +18,7 @@ public class Ch2TalkManager : MonoBehaviour
     public bool isInputDisabled = false; // 입력 차단 여부
     public bool DoNotDisplayDialogue = false; //다이얼로그 출력 여부
     private int overrideDialogueIndex = -1; // 특정 대사 인덱스를 강제로 출력
+    private Rigidbody2D rb;
 
     public GameObject choiceUI; // 선택지 UI 패널
     public Button choiceButton1; // 첫 번째 선택 버튼 
@@ -83,6 +84,14 @@ public class Ch2TalkManager : MonoBehaviour
 
         // 기본적으로 선택지 UI 비활성화
         choiceUI.SetActive(false);
+
+        
+        rb = player.GetComponent<Rigidbody2D>();
+        if (rb != null)
+        {
+            rb.gravityScale = 0f; // 중력 제거 (떨어지지 않게)
+            rb.constraints = RigidbodyConstraints2D.FreezeRotation; // 회전 방지 (Y축 이동 가능)
+        }
     }
 
     void Update()
@@ -409,11 +418,10 @@ public class Ch2TalkManager : MonoBehaviour
             case 56:
                 //1일차 밤
                 ChangeScene(cafe3);
-                player.GetComponent<PlayerController>().enabled = false; // 플레이어 이동 비활성화
-                //player.GetComponent<PlayerController>().enabled = true; // 다시 이동 가능하게 설정
-                break;
+               break;
             case 59:
                 //레이비야크와 상호작용
+                player.SetActive(true);
                 InteractWithNPC(Npc_Rayviyak, new Vector2(-15, 0), map);
                 break;
             case 62:
@@ -460,7 +468,9 @@ public class Ch2TalkManager : MonoBehaviour
                 break;
             case 102:
                 //레이비야크와 상호작용
+                player.SetActive(true);
                 InteractWithNPC(Npc_Rayviyak, new Vector2(-15, 0), map);
+
                 break;
             case 103:
                 ResetNpcInteraction(); //NPC 상호작용 끝내기
@@ -522,10 +532,14 @@ public class Ch2TalkManager : MonoBehaviour
                 break;
             case 140:
                 ChangeScene(bakery, "bakery");
+                player.SetActive(true); 
                 player.transform.position = new Vector2(1, 0); // 플레이어 위치 이동
+                player.GetComponent<PlayerController>().enabled = false; // 플레이어 이동 불가능
                 break;
             case 189:
                 //레이비야크와 상호작용
+                player.SetActive(true);
+                player.GetComponent<PlayerController>().enabled = true; // 플레이어 이동 가능
                 InteractWithNPC(Npc_Rayviyak, new Vector2(-15, 0), map);
                 break;
             case 190:
@@ -560,6 +574,7 @@ public class Ch2TalkManager : MonoBehaviour
                 Npc_MrHam.SetActive(false);
 
                 //4일차 아침
+                player.SetActive(false);
                 DeactivateAllScenes();
                 SetScene(backGround, true);
                 break;
@@ -583,6 +598,11 @@ public class Ch2TalkManager : MonoBehaviour
             case 234: 
                 //메모 활성화
                 memo.SetActive(true);
+                player.SetActive(false);
+                player.transform.position = new Vector2(0, 0); // 플레이어 위치 이동
+                                                               
+                Camera.main.transform.position = new Vector3(0, 0, Camera.main.transform.position.z); //카메라 위치 이동
+
                 //메모 텍스트
                 memoText.GetComponent<TMP_Text>().text = dialogues[currentDialogueIndex].대사;
 
@@ -634,6 +654,7 @@ public class Ch2TalkManager : MonoBehaviour
                 break;
             case 367:
                 //레이비야크와 상호작용
+                player.SetActive(true);
                 InteractWithNPC(Npc_Rayviyak, new Vector2(-15, 0), map);
                 break;
             case 369:
@@ -672,7 +693,7 @@ public class Ch2TalkManager : MonoBehaviour
                 Npc_MrHam.SetActive(false);
                 break;
             case 381:
-                ChangeScene(trainRoom);
+                DeactivateAllScenes();
                 break;
             case 382:
                 //6일차 낮
@@ -715,6 +736,7 @@ public class Ch2TalkManager : MonoBehaviour
                 break;
             case 674:
                 //레이비야크와 상호작용
+                player.SetActive(true);
                 InteractWithNPC(Npc_Rayviyak, new Vector2(-15, 0), map);
                 break;
             case 676:
@@ -761,6 +783,7 @@ public class Ch2TalkManager : MonoBehaviour
                 break;
             case 727:
                 //레이비야크와 상호작용
+                player.SetActive(true);
                 InteractWithNPC(Npc_Rayviyak, new Vector2(-15, 0), map);
                 break;
             case 729:
@@ -849,6 +872,7 @@ public class Ch2TalkManager : MonoBehaviour
         {
             SetScene(sceneToDeactivate, false);
         }
+
     }
 
     IEnumerator EnableInputAfterDelay(float delay)
