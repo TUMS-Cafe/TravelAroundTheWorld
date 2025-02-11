@@ -334,7 +334,8 @@ MonoBehaviour:
   roomNumber: {fileID: 603798926}
   drinkImg: {fileID: 1856901904}
   drinkName: {fileID: 855356513}
-  talkManager: {fileID: 0}
+  talkManager1: {fileID: 0}
+  talkManager3: {fileID: 0}
 --- !u!114 &228624834
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1853,7 +1854,8 @@ MonoBehaviour:
   roomNumber: {fileID: 603798926}
   drinkImg: {fileID: 1856901904}
   drinkName: {fileID: 855356513}
-  talkManager: {fileID: 48156033}
+  talkManager1: {fileID: 48156033}
+  talkManager3: {fileID: 0}
 --- !u!114 &1271147883
 MonoBehaviour:
   m_ObjectHideFlags: 0
