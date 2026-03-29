@@ -1,4 +1,4 @@
-# 🚆 TravelAroundTheWorld
+# 🚆 Travel Around The World
 
 ![TRWThumbnail](https://github.com/user-attachments/assets/ab6c66e7-be18-44e3-a491-1836e1691aba)
 
